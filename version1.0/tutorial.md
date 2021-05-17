@@ -240,9 +240,11 @@ function map_events() {
 	var stdin = process.stdin;
 	stdin.setRawMode(true);
 	stdin.resume();
+	stdin.setEncoding("utf8");
 	stdin.on("data", function(key) {
 		//  Exit on ctrl-c
 		if (key === "\u0003") {
+			console.clear();
 			process.exit();
 		}
 		process.stdout.write(key);
@@ -271,6 +273,8 @@ $ ktty sample.txt
 ```
 
 If you didn't install the `ktty` command globally, you can run `node ./ktty.js sample.txt` instead.
+
+When you're done testing, `ctrl-c` should quit the program.
 <br/><br/><br/><br/>
 
 
