@@ -2,6 +2,11 @@
 ;
 ////  SECTION 1:  Imports.
 
+//  Importing NodeJS libraries. 
+var process      = require("process");
+var fs           = require("fs");
+
+
 ////  SECTION 2:  App memory. 
 
 ////  SECTION 3:  Boot stuff.
