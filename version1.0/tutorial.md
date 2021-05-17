@@ -240,9 +240,9 @@ function map_events() {
 	var stdin = process.stdin;
 	stdin.setRawMode(true);
 	stdin.resume();
-	stdin.on(‘data’, function(key) {
+	stdin.on("data", function(key) {
 		//  Exit on ctrl-c
-		if (key === “\u0003”) {
+		if (key === "\u0003") {
 			process.exit();
 		}
 		process.stdout.write(key);
