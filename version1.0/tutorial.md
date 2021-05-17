@@ -204,29 +204,45 @@ function draw() {
 
 
 
-###  ☑️ Step 8. 		map_events()
+###  ☑️ Step 8. 		Outline draw()
 
-Back in the Events section of the code, add this to the end of the main function:
+
+Now, in the code’s 5th section, we’ll outline the draw() function.
+*This function will ultimately call 4 different other functions to draw the screen.*
+
+For now, just call the first function `draw_buffer()`. Comment the rest.
 
 ```javascript
-////  SECTION 3:  EVENTS
+////  SECTION 5:  DRAW FUNCTIONS
 
-//  Map keyboard input events.
-function map_events() {
-
-	//  Map keyboard input 
-	var stdin = process.stdin;
-	stdin.setRawMode(true);
-	stdin.resume();
-	stdin.on(‘data’, function(key) {
-		//  Exit on ctrl-c
-		if (key === “\u0003”) {
-			process.exit();
-		}
-		process.stdout.write(key);
-	});
-
+//  The draw function -- called after any data change.
+function draw() {
+    draw_buffer();
+    // draw_status_bar();
+    // draw_feedback_bar();
+    // position_cursor();
 }
+```
+<br/><br/><br/><br/>
+
+
+
+
+###  ☑️ Step 9. 		draw_buffer()
+
+Now let’s implement `draw_buffer()`, which we'll put right below our `draw()` function.
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS 
+
+function draw() {  ...  }
+
+//  Drawing the buffer.
+function draw_buffer() {
+    console.clear();
+    console.log(_buffer);
+}
+
 ```
 
 *Later, we'll need to modify the keys so the behaviour is linked to the buffer.
@@ -235,7 +251,7 @@ For now, we’ll be able to move the cursor anywhere on the page.*
 
 
 
-###  ☑️ Step 9. 		☞  Test the code!  
+###  ☑️ Step 10. 		☞  Test the code!  
 
 Running this code should open the file on the screen, let you move the cursor, and type.
 If it throws an error, check for typos & missing code.
@@ -249,7 +265,7 @@ If you didn't install the `ktty` command globally, you can run `node ./ktty.js s
 
 
 
-###  ☑️ Step 10. 		❖ Part A review.
+###  ☑️ Step 11. 		❖ Part A review.
 
 The finished code for this section is available here...
 
