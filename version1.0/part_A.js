@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 ;
+
 ////  SECTION 1:  Imports.
 
 //  Importing NodeJS libraries. 
@@ -7,11 +8,13 @@ var process      = require("process");
 var fs           = require("fs");
 
 
+
 ////  SECTION 2:  App memory. 
 
 //  Setting up app memory.
 var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension. 
+
 
 
 ////  SECTION 3:  Boot stuff.
@@ -33,6 +36,7 @@ function boot() {
 
 }
 boot();  //  Boot it!! 
+
 
 
 ////  SECTION 4:  Events.
@@ -57,6 +61,7 @@ function map_events() {
 }
 
 
+
 ////  SECTION 5:  Draw functions.
 
 //  The draw function -- called after any data change.
@@ -74,6 +79,7 @@ function draw_buffer() {
 }
 
 
+
 ////  SECTION 6:  Algorithms.
 
 //  Getting the file's contents, put it in the "buffer".
@@ -89,3 +95,6 @@ function a_load_file_to_buffer() {
         }
     }
 }
+
+
+
