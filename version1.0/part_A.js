@@ -9,6 +9,10 @@ var fs           = require("fs");
 
 ////  SECTION 2:  App memory. 
 
+//  Setting up app memory.
+var _buffer            = "";      //  The text being edited. 
+var _filename          = "";      //  Filename - including extension. 
+
 ////  SECTION 3:  Boot stuff.
 
 ////  SECTION 4:  Events.
