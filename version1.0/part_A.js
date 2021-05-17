@@ -37,7 +37,42 @@ boot();  //  Boot it!!
 
 ////  SECTION 4:  Events.
 
+//  Map keyboard input.
+function map_events() {
+
+    //  Map keyboard input 
+    var stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+    stdin.on("data", function(key) {
+	    //  Exit on ctrl-c
+	    if (key === "\u0003") {
+		console.clear();
+		process.exit();
+	    }
+	    process.stdout.write(key);
+	});
+
+}
+
+
 ////  SECTION 5:  Draw functions.
+
+//  The draw function -- called after any data change.
+function draw() {
+    draw_buffer();
+    // draw_status_bar();
+    // draw_feedback_bar();
+    // position_cursor();
+}
+
+//  Drawing the buffer.  
+function draw_buffer() {
+    console.clear();
+    console.log(_buffer);
+}
+
 
 ////  SECTION 6:  Algorithms.
 
