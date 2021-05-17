@@ -233,7 +233,7 @@ Back in the Events section of the code, add this to the end of the main function
 ```javascript
 ////  SECTION 3:  EVENTS
 
-//  Map keyboard input.                                                                                                                                
+//  Map keyboard input.
 function map_events() {
 
 	//  Map keyboard input 
