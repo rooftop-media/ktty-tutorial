@@ -40,3 +40,17 @@ boot();  //  Boot it!!
 ////  SECTION 5:  Draw functions.
 
 ////  SECTION 6:  Algorithms.
+
+//  Getting the file's contents, put it in the "buffer".
+function a_load_file_to_buffer() {
+    _filename = process.argv[2]; 
+    if ( _filename == undefined ) {
+        _buffer = "";
+    } else {
+        try {
+            _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
+        } catch (err) {
+            _buffer = "Unable to find a file at '" + _filepath + "'";
+        }
+    }
+}
