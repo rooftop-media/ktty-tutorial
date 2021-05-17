@@ -84,7 +84,7 @@ We’ll import two standard libraries from NodeJS.  That’s all for the imports
 ```javascript
 ////  SECTION 1:  Imports.
 
-//  Importing NodeJS libraries.                                                                                                                        
+//  Importing NodeJS libraries.
 var process      = require("process");
 var fs           = require("fs");
 ```
@@ -107,8 +107,8 @@ We’ll also record the `_filename` being edited.
 ```javascript
 ////  SECTION 2:  APP MEMORY
 
-//  Setting up app memory.                                                                                                                             
-var _buffer            = "";      //  The text being edited.                                                                                           
+//  Setting up app memory.
+var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension. 
 ```
 
@@ -130,9 +130,9 @@ Ultimately, we'll have *four function calls in boot()*:
 We'll leave `get_window_size()` commented out for now.
 
 ```javascript
-////  SECTION 3:  Boot stuff.                                                                                                                          
+////  SECTION 3:  Boot stuff.
 
-//  The boot sequence.                                                                                                                                 
+//  The boot sequence.
 function boot() {
 
     /**  Load a file to the buffer.       **/
@@ -163,9 +163,9 @@ We’ll implement it in section 6, with the algorithms.
 ```javascript
 ////  SECTION 6:  Algorithms.
 
-//  Getting the file's contents, put it in the "buffer".                                                                                               
+//  Getting the file's contents, put it in the "buffer".
 function a_load_file_to_buffer() {
-    _filename = process.argv[2];      
+    _filename = process.argv[2]; 
     if ( _filename == undefined ) {
         _buffer = "";
     } else {
@@ -190,9 +190,9 @@ Now, in the code’s 5th section, we’ll outline the draw() function.
 For now, just call the first function `draw_buffer()`. Comment the rest.
 
 ```javascript
-////  SECTION 5:  DRAW FUNCTIONS                                                                                                                       
+////  SECTION 5:  DRAW FUNCTIONS
 
-//  The draw function -- called after any data change.                                                                                                 
+//  The draw function -- called after any data change.
 function draw() {
     draw_buffer();
     // draw_status_bar();
@@ -204,23 +204,47 @@ function draw() {
 
 
 
-###  ☑️ Step 8. 		map_events()
+
+###  ☑️ Step 8. 		draw_buffer()
+
+Now let’s implement `draw_buffer()`, which we'll put right below our `draw()` function.
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS 
+
+function draw() {  ...  }
+
+//  Drawing the buffer.
+function draw_buffer() {
+    console.clear();
+    console.log(_buffer);
+}
+
+```
+<br/><br/><br/><br/>
+
+
+
+
+###  ☑️ Step 9. 		map_events()
 
 Back in the Events section of the code, add this to the end of the main function:
 
 ```javascript
 ////  SECTION 3:  EVENTS
 
-//  Map keyboard input events.                                                                                                                                
+//  Map keyboard input.
 function map_events() {
 
 	//  Map keyboard input 
 	var stdin = process.stdin;
 	stdin.setRawMode(true);
 	stdin.resume();
-	stdin.on(‘data’, function(key) {
+	stdin.setEncoding("utf8");
+	stdin.on("data", function(key) {
 		//  Exit on ctrl-c
-		if (key === “\u0003”) {
+		if (key === "\u0003") {
+			console.clear();
 			process.exit();
 		}
 		process.stdout.write(key);
@@ -229,13 +253,17 @@ function map_events() {
 }
 ```
 
+We’ll need to modify the keys so the behaviour is linked to the buffer.
+For now, we’ll be able to move the cursor anywhere on the page.  
+
+
 *Later, we'll need to modify the keys so the behaviour is linked to the buffer.
 For now, we’ll be able to move the cursor anywhere on the page.*
 <br/><br/><br/><br/>
 
 
 
-###  ☑️ Step 9. 		☞  Test the code!  
+###  ☑️ Step 10. 		☞  Test the code!  
 
 Running this code should open the file on the screen, let you move the cursor, and type.
 If it throws an error, check for typos & missing code.
@@ -245,11 +273,13 @@ $ ktty sample.txt
 ```
 
 If you didn't install the `ktty` command globally, you can run `node ./ktty.js sample.txt` instead.
+
+When you're done testing, `ctrl-c` should quit the program.
 <br/><br/><br/><br/>
 
 
 
-###  ☑️ Step 10. 		❖ Part A review.
+###  ☑️ Step 11. 		❖ Part A review.
 
 The finished code for this section is available here...
 
