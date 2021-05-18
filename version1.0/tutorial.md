@@ -365,7 +365,25 @@ function b_get_window_size() {
 
 
 
-<h3 id="b-4"> ☑️ Step 4. draw_status_bar() </h3>
+<h3 id="b-4"> ☑️ Step 4.  Editing draw() </h3>
+We also need to uncomment the function call to `draw_status_bar()` ,
+which is inside the `draw()` function.
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS
+
+//  The draw function -- called after any data change. 
+function draw() {
+    draw_buffer();
+    draw_status_bar();
+    // draw_feedback_bar(); 
+    // position_cursor();
+}
+```
+
+
+
+<h3 id="b-5"> ☑️ Step 5. draw_status_bar() </h3>
 
 In this step, we’re going to draw the status bar at the bottom of the window.  
 The status bar will be reverse-video, drawn 2 spaces from the BOTTOM of the screen.
@@ -416,7 +434,7 @@ Notice that we used an algorithm `c_get_cursor_pos()`.  We'll define that next!
 
 
 
-<h3 id="b-5"> ☑️ Step 5. a_get_cursor_pos() </h3>
+<h3 id="b-6"> ☑️ Step 6. c_get_cursor_pos() </h3>
 
 In that last function, we called the algorithm `c_get_cursor_pos()` . 
 
@@ -433,7 +451,7 @@ function a_load_file_to_buffer() { ... }
 function b_get_window_size() { ... }
 
 function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
-                                                                                                                                                       
+
     var cursor_position = [1,1];
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
 
@@ -449,38 +467,82 @@ function c_get_cursor_pos() {            //  Returns a 2 index array, [int line,
 
 }
 ```
+<br/><br/><br/><br/>
 
 
 
-<h3 id="b-6"> ☑️ Step 6.  Editing draw() </h3>
-We also need to uncomment the function call to `draw_status_bar()` ,
-which is inside the `draw()` function.
 
-```javascript
-////  SECTION 5:  DRAW FUNCTIONS
-
-//  The draw function -- called after any data change. 
-function draw() {
-    draw_buffer();
-    draw_status_bar();
-    // draw_feedback_bar(); 
-    // position_cursor();
-}
-```
-
-
-
-<h3 id="b-6"> ☑️ Step 7.  ☞  Test the code! </h3>
+<h3 id="b-7"> ☑️ Step 7.  ☞  Test the code! </h3>
 
 At this point, the buffer & status bar should draw without error!
 
 We can still move the cursor & type text to the screen, but the cursor is left 
 at the end of the status bar.  We’ll fix that in the next step.
 
+<br/><br/><br/><br/>
+
+
+<h3 id="b-8"> ☑️ Step 8.  Editing draw() again </h3>
+
+Let’s go back into our draw function and make sure we’re calling that position_cursor() function.
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS 
+
+//  The draw function -- called after any data change.
+function draw() {
+    draw_buffer();
+    draw_status_bar();
+    // draw_feedback_bar();
+    position_cursor(); 
+}
+```
+<br/><br/><br/><br/>
 
 
 
 
+<h3 id="b-9"> ☑️ Step 9.  position_cursor() </h3>
+
+This function will move the cursor to the correct part of the screen, using an ANSI code.
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS
+
+function draw() {  ...  }
+
+function draw_buffer() {  ...  }
+
+function draw_status_bar() {  ...  }
+
+//  Move the cursor to its position in the buffer.   
+function position_cursor() {
+    var cursor_position = a_get_cursor_pos(); //  a_get_cursor_pos is an algorithm.
+    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+}
+```
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="b-10"> ☑️ Step 10.  ☞  Test the code! </h3>
+
+Run the code again -- the buffer & status bar should both draw, 
+but now the cursor should reposition in the upper left corner of the screen afterwards.
+<br/><br/><br/><br/>
+
+
+
+<h3 id="b-11"> ☑️ Step 11.  ❖  Part B review. </h3>
+The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_B.js).
+
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
+<h2 id="part-c" align="center">  Part C:  The Cursor & Feedback Bar </h2>
 
 
 
