@@ -303,13 +303,13 @@ Let’s declare them here:
 ```javascript
 ////  SECTION 2:  APP MEMORY
 
-//  Setting up app memory.                                                                                                                             
-var _buffer            = "";      //  The text being edited.                                                                                           
+//  Setting up app memory.
+var _buffer            = "";      //  The text being edited.
 var _filename          = "";      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
-var _window_h          = 0;       //  Window height (in text char's).                                                                                  
+var _window_h          = 0;       //  Window height (in text char's).
 var _window_w          = 0;       //  Window width (in text char's).
 ```
 
@@ -355,7 +355,7 @@ We'll get the window height and width with this algorithm.
 
 function a_load_file_to_buffer() { ... }   //  Algorithm A's code is here.
 
-//  Get the window size.     
+//  Get the window size. 
 function b_get_window_size() {
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
@@ -385,7 +385,7 @@ function draw() {  ...  }
 
 function draw_buffer() { ... }
 
-//  Drawing the file's status bar -- filename, modified status, and cursor position.     
+//  Drawing the file's status bar -- filename, modified status, and cursor position. 
 function draw_status_bar() {
 
     process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
@@ -457,14 +457,14 @@ We also need to uncomment the function call to `draw_status_bar()` ,
 which is inside the `draw()` function.
 
 ```javascript
-////  SECTION 5:  DRAW FUNCTIONS                                                                                                                       
+////  SECTION 5:  DRAW FUNCTIONS
 
-//  The draw function -- called after any data change.                                                                                                 
+//  The draw function -- called after any data change. 
 function draw() {
     draw_buffer();
-    draw_status_bar();                 
-    // draw_feedback_bar();       
-    // position_cursor();                                                                           
+    draw_status_bar();
+    // draw_feedback_bar(); 
+    // position_cursor();
 }
 ```
 
