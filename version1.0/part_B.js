@@ -71,7 +71,7 @@ function map_events() {
 //  The draw function -- called after any data change.
 function draw() {
     draw_buffer();
-    // draw_status_bar();
+    draw_status_bar();
     // draw_feedback_bar();
     // position_cursor();
 }
@@ -80,6 +80,31 @@ function draw() {
 function draw_buffer() {
     console.clear();
     console.log(_buffer);
+}
+
+//  Drawing the file's status bar -- filename, modified status, and cursor position. 
+function draw_status_bar() {
+
+    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
+
+    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
+    if (_modified) {                                           /**  Add the [modified] indicator.     **/
+        status_bar_text += "     [modified]";
+    } else {
+        status_bar_text += "               ";
+    }
+
+    var cursor_position = c_get_cursor_pos();                  /**  Using our algorithm a_get_cursor_pos!   **/
+    status_bar_text += "  cursor on line " + cursor_position[0];
+    status_bar_text += ", row " + cursor_position[1];
+
+    while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
+        status_bar_text += " ";
+    }
+
+    process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
 }
 
 
@@ -104,4 +129,21 @@ function a_load_file_to_buffer() {
 function b_get_window_size() {
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
+}
+
+function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
+
+    var cursor_position = [1,1];
+    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
+
+	var current = _buffer[i];
+        if (current == "\n") {
+            cursor_position[0]++;        /**  Advance a line.        **/
+            cursor_position[1] = 1;      /**  Reset character pos.   **/
+        } else {
+            cursor_position[1]++;        /**  Advance a character.   **/
+        }
+    }
+    return cursor_position;
+
 }
