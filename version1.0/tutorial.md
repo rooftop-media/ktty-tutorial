@@ -280,7 +280,7 @@ When you're done testing, `ctrl-c` should quit the program.
 
 <h3 id="a-11"> ☑️ Step 11. ❖ Part A review. </h3>
 
-The finished code for this section is available here...
+The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_A.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -295,7 +295,7 @@ The status bar will have the file name, cursor position, & modified status for t
 
 
 
-<h3 id="b-1"> ☑️ Step 1. ❖ Adding variables. </h3>
+<h3 id="b-1"> ☑️ Step 1. Adding variables. </h3>
 The status bar will describe some app new variables.  
 
 Let’s declare them here:
@@ -315,6 +315,167 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 <br/><br/><br/><br/>
 
+
+<h3 id="b-2"> ☑️ Step 2. Edit boot() </h3>
+
+It's time to edit `boot()`, to uncomment the `b_get_window_size()` function call.
+
+```javascript
+////  SECTION 3:  Boot stuff.
+
+//  The boot sequence.
+function boot() {
+
+    /**  Load a file to the buffer.       **/
+    a_load_file_to_buffer();
+
+    /**  Load window height & width.      **/
+    b_get_window_size();
+
+    /**  Map the event listeners.         **/
+    map_events();
+
+    /**  Update the screen.               **/
+    draw();
+
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="b-3"> ☑️ Step 3. b_get_window_size() </h3>
+
+We'll get the window height and width with this algorithm.
+*We’ll need the window height to accurately position the status bar. *
+
+```javascript
+////  SECTION 6:  Algorithms.
+
+function a_load_file_to_buffer() { ... }   //  Algorithm A's code is here.
+
+//  Get the window size.     
+function b_get_window_size() {
+    _window_h = process.stdout.rows;
+    _window_w = process.stdout.columns;
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="b-4"> ☑️ Step 4. draw_status_bar() </h3>
+
+In this step, we’re going to draw the status bar at the bottom of the window.  
+The status bar will be reverse-video, drawn 2 spaces from the BOTTOM of the screen.
+
+The status bar will include:
+ - the name of the file being edited,
+ - the modified status, &
+ - the cursor position line & row numbers.
+
+We'll put it in section 5 of the code. Here it is:
+
+```javascript
+
+////  SECTION 5:  DRAW FUNCTIONS 
+
+function draw() {  ...  }
+
+function draw_buffer() { ... }
+
+//  Drawing the file's status bar -- filename, modified status, and cursor position.     
+function draw_status_bar() {
+
+    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
+
+    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
+    if (_modified) {                                           /**  Add the [modified] indicator.     **/
+        status_bar_text += "     [modified]";
+    } else {
+        status_bar_text += "               ";
+    }
+
+    var cursor_position = c_get_cursor_pos();                  /**  Using our algorithm a_get_cursor_pos!   **/
+    status_bar_text += "  cursor on line " + cursor_position[0];
+    status_bar_text += ", row " + cursor_position[1];
+
+    while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
+        status_bar_text += " ";
+    }
+
+    process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+}
+```
+
+Notice that we used an algorithm `c_get_cursor_pos()`.  We'll define that next!
+<br/><br/><br/><br/>
+
+
+
+<h3 id="b-5"> ☑️ Step 5. a_get_cursor_pos() </h3>
+
+In that last function, we called the algorithm `c_get_cursor_pos()` . 
+
+The cursor is stored as a single integer, in the global variable _cursor_buffer_pos.
+This variable is relative to the characters in _buffer’s string.
+
+But that variable doesn’t take into account line breaks, 
+& we want to display the line number & x coordinate.
+
+```javascript
+////  SECTION 6:  Algorithms. 
+
+function a_load_file_to_buffer() { ... }
+function b_get_window_size() { ... }
+
+function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
+                                                                                                                                                       
+    var cursor_position = [1,1];
+    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
+
+	var current = _buffer[i];
+        if (current == "\n") {
+            cursor_position[0]++;        /**  Advance a line.        **/
+            cursor_position[1] = 1;      /**  Reset character pos.   **/
+        } else {
+            cursor_position[1]++;        /**  Advance a character.   **/
+        }
+    }
+    return cursor_position;
+
+}
+```
+
+
+
+<h3 id="b-6"> ☑️ Step 6.  Editing draw() </h3>
+We also need to uncomment the function call to `draw_status_bar()` ,
+which is inside the `draw()` function.
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS                                                                                                                       
+
+//  The draw function -- called after any data change.                                                                                                 
+function draw() {
+    draw_buffer();
+    draw_status_bar();                 
+    // draw_feedback_bar();       
+    // position_cursor();                                                                           
+}
+```
+
+
+
+<h3 id="b-6"> ☑️ Step 7.  ☞  Test the code! </h3>
+
+At this point, the buffer & status bar should draw without error!
+
+We can still move the cursor & type text to the screen, but the cursor is left 
+at the end of the status bar.  We’ll fix that in the next step.
 
 
 
