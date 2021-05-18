@@ -12,17 +12,16 @@ This tutorial requires that you've completed the [initial set up steps](https://
 
 
 
-##  Part A:  Drawing the Buffer
+<h2 id="part-a" align="center">  Part A:  Drawing the Buffer </h2>
 
 The steps in this part will culminate in us displaying the text file on the screen, along with controls to move and type.  
 
 Along the way, we’ll break the code into 6 code sections with comments, and add code to 5 of 6 sections.  
-
-
-
 <br/><br/><br/><br/>
 
-###  ☑️ Step 1:  Add a sample file
+
+
+<h3 id="a-1">  ☑️ Step 1:  Add a sample file </h3>
 
 We’ll add a text file to the directory too, called `sample.txt`. 
 It just needs a couple lines of any text. Here’s what I wrote:
@@ -47,7 +46,7 @@ Our goal will be to open & edit this file with ktty.
 
 
 
-###  ☑️ Step 2. 		Outlining ktty.js
+<h3 id="a-2">  ☑️ Step 2. Outlining ktty.js  </h3>
 
 Let’s go into ktty.js and add some comments to plan our architecture.  
 
@@ -76,7 +75,7 @@ We’ll reference these 6 sections throughout the rest of this version.
 
 
 
-###  ☑️ Step 3. 		Imports
+<h3 id="a-3"> ☑️ Step 3. Imports </h3>
 
 We’ll import two standard libraries from NodeJS.  That’s all for the imports, for this version. 
 
@@ -94,7 +93,7 @@ var fs           = require("fs");
 
 
 
-###  ☑️ Step 4. 		App data
+<h3 id="a-4"> ☑️ Step 4. App data </h3>
 
 We’ll declare our variables in section 2.  For now, let’s keep it to two variables.  
 *(Note that I name global variables starting with an underscore, like `_buffer`.  )*
@@ -117,7 +116,7 @@ var _filename          = "";      //  Filename - including extension.
 
 
 
-###  ☑️ Step 5. 		Outline boot()
+<h3 id="a-5"> ☑️ Step 5. Outline boot() </h3>
 
 Now, in section 3 of the code, we’ll outline the boot function.
 
@@ -155,7 +154,7 @@ boot();  //  Boot it!!
 
 
 
-###  ☑️ Step 6. 		a_load_file_to_buffer()
+<h3 id="a-6"> ☑️ Step 6. a_load_file_to_buffer() </h3>
 
 This is a we called in the `boot()` function.  
 We’ll implement it in section 6, with the algorithms.
@@ -181,7 +180,7 @@ function a_load_file_to_buffer() {
 
 
 
-###  ☑️ Step 7. 		Outline draw()
+<h3 id="a-7"> ☑️ Step 7. Outline draw() </h3>
 
 
 Now, in the code’s 5th section, we’ll outline the draw() function.
@@ -205,7 +204,7 @@ function draw() {
 
 
 
-###  ☑️ Step 8. 		draw_buffer()
+<h3 id="a-8"> ☑️ Step 8. draw_buffer() </h3>
 
 Now let’s implement `draw_buffer()`, which we'll put right below our `draw()` function.
 
@@ -226,7 +225,7 @@ function draw_buffer() {
 
 
 
-###  ☑️ Step 9. 		map_events()
+<h3 id="a-9"> ☑️ Step 9. map_events() </h3>
 
 Back in the Events section of the code, add this to the end of the main function:
 
@@ -263,7 +262,7 @@ For now, we’ll be able to move the cursor anywhere on the page.*
 
 
 
-###  ☑️ Step 10. 		☞  Test the code!  
+<h3 id="a-10"> ☑️ Step 10. ☞  Test the code!  </h3>
 
 Running this code should open the file on the screen, let you move the cursor, and type.
 If it throws an error, check for typos & missing code.
@@ -279,11 +278,42 @@ When you're done testing, `ctrl-c` should quit the program.
 
 
 
-###  ☑️ Step 11. 		❖ Part A review.
+<h3 id="a-11"> ☑️ Step 11. ❖ Part A review. </h3>
 
 The finished code for this section is available here...
 
+<br/><br/><br/><br/><br/><br/><br/><br/>
 
+
+
+<h2 id="part-b" align="center">  Part B:  Drawing the Status Bar </h2>
+
+In this step, we’ll draw the *status bar*, which will display below the text buffer.
+
+The status bar will have the file name, cursor position, & modified status for the buffer above.
+<br/><br/><br/><br/>
+
+
+
+<h3 id="b-1"> ☑️ Step 1. ❖ Adding variables. </h3>
+The status bar will describe some app new variables.  
+
+Let’s declare them here:
+
+```javascript
+////  SECTION 2:  APP MEMORY
+
+//  Setting up app memory.                                                                                                                             
+var _buffer            = "";      //  The text being edited.                                                                                           
+var _filename          = "";      //  Filename - including extension.
+var _modified          = false;   //  Has the buffer been modified?
+var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
+
+var _window_h          = 0;       //  Window height (in text char's).                                                                                  
+var _window_w          = 0;       //  Window width (in text char's).
+```
+
+<br/><br/><br/><br/>
 
 
 
