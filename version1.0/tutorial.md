@@ -585,15 +585,15 @@ It will store a string of text.
 ```javascript
 ////  SECTION 2:  APP MEMORY
 
-//  Setting up app memory.                                                                                                                             
-var _buffer            = "";      //  The text being edited.                                                                                           
+//  Setting up app memory. 
+var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
 var _feedback_bar      = "";      //  The text to display in the feedback bar.
 
-var _window_h          = 0;       //  Window height (in text char's).                                                                                  
+var _window_h          = 0;       //  Window height (in text char's). 
 var _window_w          = 0;       //  Window width (in text char's).
 ```
 <br/><br/><br/><br/>
@@ -607,9 +607,9 @@ For now, we'll leave a lot of the event function calls commented out.
 
 
 ```javascript
-////  SECTION 3:  EVENTS   
+////  SECTION 3:  EVENTS 
 
-//  These functions fire in response to "events" like keyboard input.  
+//  These functions fire in response to "events" like keyboard input. 
 var _events      = {
 
     "LEFT":   function() {
@@ -661,7 +661,7 @@ Now, we’ll capture the arrow key inputs & call functions to move only within t
 *Notice that the functions we’re calling correspond to our event map/dictionary!*
 
 ```javascript
-//  Map keyboard events.                                                                                                                               
+//  Map keyboard events.
 function map_events() {
     var stdin = process.stdin;
     stdin.setRawMode( true );
@@ -751,7 +751,6 @@ function c_move_cursor_right() {
 
 <h3 id="c-6"> ☑️ Step 6.  ☞  Test the code! </h3>
 
-```javascript
 Before we get to the UP/DOWN arrows, run the code to make sure you can navigate left & right.
 
 When pressing RIGHT, the cursor should go to the end of the first line, then jump to the next,
@@ -759,7 +758,7 @@ and stop at the end of the file.
 
 When pressing LEFT, the cursor should go to the beginning of the current line, then jump back,
 and stop at the beginning of the file. 
-```
+
 <br/><br/><br/><br/>
 
 
@@ -869,9 +868,9 @@ Next we’ll uncomment the call to `draw_feedback_bar()` in the `draw()` functio
 After we implement it, we’ll be done with the draw section for this version!
 
 ```javascript
-////  SECTION 5:  DRAW FUNCTIONS                                                                                                                       
+////  SECTION 5:  DRAW FUNCTIONS 
 
-//  The draw function -- called after any data change.                                                                                                 
+//  The draw function -- called after any data change. 
 function draw() {
     draw_buffer();
     draw_status_bar();
@@ -889,7 +888,7 @@ This function will draw the feedback bar every time the screen is refreshed.
 Basically, it displays info for the event that caused the last draw() call.
 
 ```javascript
-//  Drawing the feedback bar.         
+//  Drawing the feedback bar.
 function draw_feedback_bar() {
     process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
     process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.         **/
