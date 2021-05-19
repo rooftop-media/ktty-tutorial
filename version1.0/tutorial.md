@@ -609,6 +609,9 @@ For now, we'll leave a lot of the event function calls commented out.
 ```javascript
 ////  SECTION 3:  EVENTS 
 
+//  Map keyboard events.
+function map_events() { ... }
+
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
 
@@ -661,6 +664,8 @@ Now, we’ll capture the arrow key inputs & call functions to move only within t
 *Notice that the functions we’re calling correspond to our event map/dictionary!*
 
 ```javascript
+////  SECTION 3:  EVENTS 
+
 //  Map keyboard events.
 function map_events() {
     var stdin = process.stdin;
