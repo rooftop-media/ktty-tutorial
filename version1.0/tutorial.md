@@ -893,6 +893,16 @@ This function will draw the feedback bar every time the screen is refreshed.
 Basically, it displays info for the event that caused the last draw() call.
 
 ```javascript
+////  SECTION 5:  Draw functions.
+
+function draw() {  ...  }
+
+function draw_buffer() {  ...  }
+
+function draw_status_bar() {  ...  }
+
+function position_cursor() {  ...  }
+
 //  Drawing the feedback bar.
 function draw_feedback_bar() {
     process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
