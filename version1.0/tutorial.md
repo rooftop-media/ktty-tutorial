@@ -19,7 +19,7 @@ Click a part title to jump down to it, in this file.
 | Tutorial Parts              | Description  | Status |
 | --------------------------- | ------------ | ------ |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. | Complete, tested. |
-| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, not tested. |
+| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. |
 | [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | In progress. |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Todo |
 | [Part E - Save, Quit, & Prompt](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Save on ctrl-s, add a "save modified?" prompt. | Todo |
@@ -401,6 +401,7 @@ function draw() {
     // position_cursor();
 }
 ```
+<br/><br/><br/><br/>
 
 
 
@@ -538,7 +539,7 @@ function draw_status_bar() {  ...  }
 
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
-    var cursor_position = a_get_cursor_pos(); //  a_get_cursor_pos is an algorithm.
+    var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 ```
@@ -573,6 +574,7 @@ And typing should insert a character into the buffer, rather than replacing a ch
 
 We’ll also log key events to the feedback bar, completing the Draw function.
 <br/><br/><br/><br/>
+
 
 
 <h3 id="c-1"> ☑️ Step 1.  Adding variables </h3>
