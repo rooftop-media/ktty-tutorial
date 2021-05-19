@@ -616,35 +616,35 @@ function map_events() { ... }
 var _events      = {
 
     "LEFT":   function() {
-        b_move_cursor_left();
+        d_move_cursor_left();
     },
     "RIGHT":  function() {
-        c_move_cursor_right();
+        e_move_cursor_right();
     },
 
     "UP":     function() {
-        d_move_cursor_up();
+        f_move_cursor_up();
     },
     "DOWN":   function() {
-        e_move_cursor_down();
+        g_move_cursor_down();
     },
 
     "TEXT":   function(key) {
-	 // f_add_to_buffer(key);
+	 // h_add_to_buffer(key);
     },
     "ENTER":  function() {
-        // f_add_to_buffer("\n");
+        // h_add_to_buffer("\n");
     },
     "BACKSPACE": function() {
-        // g_delete_from_buffer();
+        // i_delete_from_buffer();
     },
 
     "SAVE": function() {
-        // i_save_buffer_to_file();
+        // l_save_buffer_to_file();
     },
 
     "QUIT": function() {
-        // j_quit();
+        // m_quit();
 	console.clear();
         process.exit();
     },
