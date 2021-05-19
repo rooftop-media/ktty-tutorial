@@ -251,7 +251,7 @@ function draw_buffer() {
 Back in the Events section of the code, add this to the end of the main function:
 
 ```javascript
-////  SECTION 3:  EVENTS
+////  SECTION 4:  EVENTS
 
 //  Map keyboard input.
 function map_events() {
@@ -585,15 +585,15 @@ It will store a string of text.
 ```javascript
 ////  SECTION 2:  APP MEMORY
 
-//  Setting up app memory.                                                                                                                             
-var _buffer            = "";      //  The text being edited.                                                                                           
+//  Setting up app memory. 
+var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
 var _feedback_bar      = "";      //  The text to display in the feedback bar.
 
-var _window_h          = 0;       //  Window height (in text char's).                                                                                  
+var _window_h          = 0;       //  Window height (in text char's). 
 var _window_w          = 0;       //  Window width (in text char's).
 ```
 <br/><br/><br/><br/>
@@ -607,9 +607,12 @@ For now, we'll leave a lot of the event function calls commented out.
 
 
 ```javascript
-////  SECTION 3:  EVENTS   
+////  SECTION 4:  EVENTS 
 
-//  These functions fire in response to "events" like keyboard input.  
+//  Map keyboard events.
+function map_events() { ... }
+
+//  These functions fire in response to "events" like keyboard input. 
 var _events      = {
 
     "LEFT":   function() {
@@ -661,7 +664,9 @@ Now, we’ll capture the arrow key inputs & call functions to move only within t
 *Notice that the functions we’re calling correspond to our event map/dictionary!*
 
 ```javascript
-//  Map keyboard events.                                                                                                                               
+////  SECTION 4:  EVENTS 
+
+//  Map keyboard events.
 function map_events() {
     var stdin = process.stdin;
     stdin.setRawMode( true );
@@ -669,28 +674,28 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
 
-            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q                                                                 
-                _events[“QUIT”]();
+            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q 
+                _events["QUIT"]();
             }
-            else if ( key === '\u0013' ) {       // ctrl-s                                                                                             
-                _events[“SAVE”]();
+            else if ( key === '\u0013' ) {       // ctrl-s  
+                _events["SAVE"]();
             }
-            else if ( key === '\u001b[A' ) {     //  up                                                                                                
+            else if ( key === '\u001b[A' ) {     //  up 
                 _events["UP"]();
             }
-            else if ( key === '\u001b[B' ) {     //  down                                                                                              
+            else if ( key === '\u001b[B' ) {     //  down
                 _events["DOWN"]();
             }
-            else if ( key === '\u001b[C' ) {     //  right                                                                                             
+            else if ( key === '\u001b[C' ) {     //  right 
                 _events["RIGHT"]();
             }
-            else if ( key === '\u001b[D' ) {     //  left                                                                                              
+            else if ( key === '\u001b[D' ) {     //  left
                 _events["LEFT"]();
             }
-            else if ( key === '\u000D' ) {     //  enter                                                                                               
+            else if ( key === '\u000D' ) {     //  enter 
                 _events["ENTER"]();
             }
-            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete                                                                          
+            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete 
                 _events["BACKSPACE"]();
             }
 
@@ -712,7 +717,7 @@ function map_events() {
 This is an algorithm we’ll use to move the cursor left on the buffer.
 
 ```javascript
-function b_move_cursor_left() {
+function d_move_cursor_left() {
 
     _cursor_buffer_pos -= 1;
     if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
@@ -732,7 +737,7 @@ function b_move_cursor_left() {
 And we’ll need an algorithm to move right, too. 
 
 ```javascript
-function c_move_cursor_right() {
+function e_move_cursor_right() {
 
     _cursor_buffer_pos += 1;
 
@@ -751,7 +756,6 @@ function c_move_cursor_right() {
 
 <h3 id="c-6"> ☑️ Step 6.  ☞  Test the code! </h3>
 
-```javascript
 Before we get to the UP/DOWN arrows, run the code to make sure you can navigate left & right.
 
 When pressing RIGHT, the cursor should go to the end of the first line, then jump to the next,
@@ -759,7 +763,7 @@ and stop at the end of the file.
 
 When pressing LEFT, the cursor should go to the beginning of the current line, then jump back,
 and stop at the beginning of the file. 
-```
+
 <br/><br/><br/><br/>
 
 
@@ -769,7 +773,7 @@ and stop at the beginning of the file.
 Moving the cursor up will be a bit more difficult.
 
 ```javascript
-function d_move_cursor_up() {
+function f_move_cursor_up() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
     var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
@@ -802,7 +806,7 @@ function d_move_cursor_up() {
 Now let’s write an algorithm to move down a line. 
 
 ```javascript
-function e_move_cursor_down() {
+function g_move_cursor_down() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
     var current_line_length = 0;         /**   To find the length of *this* line.                      **/
@@ -869,9 +873,9 @@ Next we’ll uncomment the call to `draw_feedback_bar()` in the `draw()` functio
 After we implement it, we’ll be done with the draw section for this version!
 
 ```javascript
-////  SECTION 5:  DRAW FUNCTIONS                                                                                                                       
+////  SECTION 5:  DRAW FUNCTIONS 
 
-//  The draw function -- called after any data change.                                                                                                 
+//  The draw function -- called after any data change. 
 function draw() {
     draw_buffer();
     draw_status_bar();
@@ -889,7 +893,7 @@ This function will draw the feedback bar every time the screen is refreshed.
 Basically, it displays info for the event that caused the last draw() call.
 
 ```javascript
-//  Drawing the feedback bar.         
+//  Drawing the feedback bar.
 function draw_feedback_bar() {
     process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
     process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.         **/
