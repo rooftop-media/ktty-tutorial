@@ -12,6 +12,24 @@ This tutorial requires that you've completed the [initial set up steps](https://
 
 
 
+##  Table of Contents
+
+Click a part title to jump down to it, in this file.
+
+| Tutorial Parts              | Description  |
+| --------------------------- | ------------ |
+| [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. |
+| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. |
+| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. |
+| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. |
+| [Part E - Save, Quit, & Prompt](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Save on ctrl-s, add a "save modified?" prompt. |
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
+
+
 <h2 id="part-a" align="center">  Part A:  Drawing the Buffer </h2>
 
 The steps in this part will culminate in us displaying the text file on the screen, along with controls to move and type.  
