@@ -675,10 +675,10 @@ function map_events() {
     stdin.on( 'data', function( key ){
 
             if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q 
-                _events[“QUIT”]();
+                _events["QUIT"]();
             }
             else if ( key === '\u0013' ) {       // ctrl-s  
-                _events[“SAVE”]();
+                _events["SAVE"]();
             }
             else if ( key === '\u001b[A' ) {     //  up 
                 _events["UP"]();
