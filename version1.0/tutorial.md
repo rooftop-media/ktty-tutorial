@@ -674,28 +674,28 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
 
-            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q                                                                 
+            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q 
                 _events[“QUIT”]();
             }
-            else if ( key === '\u0013' ) {       // ctrl-s                                                                                             
+            else if ( key === '\u0013' ) {       // ctrl-s  
                 _events[“SAVE”]();
             }
-            else if ( key === '\u001b[A' ) {     //  up                                                                                                
+            else if ( key === '\u001b[A' ) {     //  up 
                 _events["UP"]();
             }
-            else if ( key === '\u001b[B' ) {     //  down                                                                                              
+            else if ( key === '\u001b[B' ) {     //  down
                 _events["DOWN"]();
             }
-            else if ( key === '\u001b[C' ) {     //  right                                                                                             
+            else if ( key === '\u001b[C' ) {     //  right 
                 _events["RIGHT"]();
             }
-            else if ( key === '\u001b[D' ) {     //  left                                                                                              
+            else if ( key === '\u001b[D' ) {     //  left
                 _events["LEFT"]();
             }
-            else if ( key === '\u000D' ) {     //  enter                                                                                               
+            else if ( key === '\u000D' ) {     //  enter 
                 _events["ENTER"]();
             }
-            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete                                                                          
+            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete 
                 _events["BACKSPACE"]();
             }
 
