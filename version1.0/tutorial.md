@@ -551,7 +551,7 @@ the cursor should jump to the beginning of the next line.
 And typing should insert a character into the buffer, rather than replacing a character.
 
 We’ll also log key events to the feedback bar, completing the Draw function.
-
+<br/><br/><br/><br/>
 
 
 <h3 id="c-1"> ☑️ Step 1.  Adding variables </h3>
@@ -625,10 +625,277 @@ var _events      = {
 
 }
 ```
+<br/><br/><br/><br/>
 
 
 
-<h3 id="c-3"> ☑️ Step 3.  Outline the event map. </h3>
+<h3 id="c-3"> ☑️ Step 3.  Edit map_events() </h3>
+
+We’ll also add to the `map_events()` function (which is called in boot(). )
+
+Before, we were logging every keypress straight to stdout, indiscriminately. 
+Now, we’ll capture the arrow key inputs & call functions to move only within the buffer.
+*Notice that the functions we’re calling correspond to our event map/dictionary!*
+
+```javascript
+//  Map keyboard events.                                                                                                                               
+function map_events() {
+    var stdin = process.stdin;
+    stdin.setRawMode( true );
+    stdin.resume();
+    stdin.setEncoding( 'utf8' );
+    stdin.on( 'data', function( key ){
+
+            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q                                                                 
+                _events[“QUIT”]();
+            }
+            else if ( key === '\u0013' ) {       // ctrl-s                                                                                             
+                _events[“SAVE”]();
+            }
+            else if ( key === '\u001b[A' ) {     //  up                                                                                                
+                _events["UP"]();
+            }
+            else if ( key === '\u001b[B' ) {     //  down                                                                                              
+                _events["DOWN"]();
+            }
+            else if ( key === '\u001b[C' ) {     //  right                                                                                             
+                _events["RIGHT"]();
+            }
+            else if ( key === '\u001b[D' ) {     //  left                                                                                              
+                _events["LEFT"]();
+            }
+            else if ( key === '\u000D' ) {     //  enter                                                                                               
+                _events["ENTER"]();
+            }
+            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete                                                                          
+                _events["BACKSPACE"]();
+            }
+
+            else {
+                _events["TEXT"](key);
+            }
+
+            draw();
+
+        });
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-4"> ☑️ Step 4.  d_move_cursor_left() </h3>
+
+This is an algorithm we’ll use to move the cursor left on the buffer.
+
+```javascript
+function b_move_cursor_left() {
+
+    _cursor_buffer_pos -= 1;
+    if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
+        _cursor_buffer_pos++;
+    } else {
+        _feedback_bar = "Moved left.";
+    }
+
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-5"> ☑️ Step 5.  e_move_cursor_right() </h3>
+
+And we’ll need an algorithm to move right, too. 
+
+```javascript
+function c_move_cursor_right() {
+
+    _cursor_buffer_pos += 1;
+
+    var buff_limit = _buffer.length;     /**   Don't let the cursor position exceed the buffer.   **/
+    if ( _cursor_buffer_pos > buff_limit ) {
+        _cursor_buffer_pos--;
+    } else {
+        _feedback_bar = "Moved right.";
+    }
+
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-6"> ☑️ Step 6.  ☞  Test the code! </h3>
+
+```javascript
+Before we get to the UP/DOWN arrows, run the code to make sure you can navigate left & right.
+
+When pressing RIGHT, the cursor should go to the end of the first line, then jump to the next,
+and stop at the end of the file.
+
+When pressing LEFT, the cursor should go to the beginning of the current line, then jump back,
+and stop at the beginning of the file. 
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-7"> ☑️ Step 7.  f_move_cursor_up() </h3>
+
+Moving the cursor up will be a bit more difficult.
+
+```javascript
+function d_move_cursor_up() {
+
+    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
+    var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
+    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
+        if (_buffer[i] == "\n") {
+            prev_line_length = current_x_pos;
+            current_x_pos = 1;
+        } else {
+            current_x_pos++;
+        }
+    }
+
+    if (prev_line_length > current_x_pos) {        /**   If we're going up **into** a line...        **/
+        _cursor_buffer_pos -= prev_line_length;
+    }
+    else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
+        _cursor_buffer_pos -= current_x_pos;
+    }
+
+    _feedback_bar = "Moved up.";
+
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-8"> ☑️ Step 8.  g_move_cursor_down() </h3>
+
+Now let’s write an algorithm to move down a line. 
+
+```javascript
+function e_move_cursor_down() {
+
+    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
+    var current_line_length = 0;         /**   To find the length of *this* line.                      **/
+    var next_line_length = 0;            /**   To find the length of the *next* line, to jump forward. **/
+    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
+        if (_buffer[i] == "\n") {
+            current_x_pos = 1;
+        } else {
+            current_x_pos++;
+        }
+    }
+
+    var j = _cursor_buffer_pos;          /**  Using a while loop to iterate further, to find the *next* line length.  **/
+    var found_line_start = false;
+    current_line_length = current_x_pos;
+    while (j < _buffer.length) {
+        if (!found_line_start && _buffer[j] == "\n") {
+            found_line_start = true;
+        }
+        else if (!found_line_start && _buffer[j] != "\n") {
+            current_line_length++;
+        }
+        else if (found_line_start && _buffer[j] != "\n") {
+            next_line_length++;
+        }
+        else if (found_line_start && _buffer[j] == "\n") {
+            break;
+        }
+        j++;
+    }
+
+    if (next_line_length > current_x_pos) {          /**   If we're going down **into** a line...        **/
+        _cursor_buffer_pos += current_line_length;
+    }
+    else if (next_line_length <= current_x_pos) {    /**   If we're going down **above** a line...       **/
+        _cursor_buffer_pos += current_line_length;
+        _cursor_buffer_pos -= current_x_pos;         /**     This should get us to the start of the next line...  **/
+        _cursor_buffer_pos += next_line_length + 1;  /**     ...and then we jump to the end.    **/
+    }
+
+    var buff_limit = _buffer.length;     /**   Don't let the cursor position exceed the buffer.   **/
+if ( _cursor_buffer_pos > buff_limit ) {
+        _cursor_buffer_pos--;
+    } else {
+        _feedback_bar = "Moved down.";
+    }
+
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-9"> ☑️ Step 9.  ☞  Test the code! </h3>
+
+The UP and DOWN arrow key events should now work! 
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-10"> ☑️ Step 10.  Edit draw() </h3>
+
+Next we’ll uncomment the call to `draw_feedback_bar()` in the `draw()` function.
+After we implement it, we’ll be done with the draw section for this version!
+
+```javascript
+////  SECTION 5:  DRAW FUNCTIONS                                                                                                                       
+
+//  The draw function -- called after any data change.                                                                                                 
+function draw() {
+    draw_buffer();
+    draw_status_bar();
+    draw_feedback_bar();
+    position_cursor();
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-11"> ☑️ Step 11.  draw_feedback_bar() </h3>
+
+This function will draw the feedback bar every time the screen is refreshed.
+Basically, it displays info for the event that caused the last draw() call.
+
+```javascript
+//  Drawing the feedback bar.         
+function draw_feedback_bar() {
+    process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
+    process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.         **/
+    process.stdout.write(_feedback_bar);
+    _feedback_bar = "";
+    process.stdout.write("\x1b[0m");                           /**  Back to undim text.               **/
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-12"> ☑️ Step 12.  ☞  Test the code! </h3>
+
+Running the code now should draw the feedback bar every time we move the cursor. 
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-13"> ☑️ Step 13.  ❖  Part C review. </h3>
+
+Our file is up to 331 lines! 
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
+<h2 id="part-d" align="center">  Part D:  File Editing </h2>
+
 
 
 
