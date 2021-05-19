@@ -73,7 +73,7 @@ function draw() {
     draw_buffer();
     draw_status_bar();
     // draw_feedback_bar();
-    // position_cursor();
+    position_cursor();
 }
 
 //  Drawing the buffer.  
@@ -105,6 +105,12 @@ function draw_status_bar() {
 
     process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
     process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+}
+
+//  Move the cursor to its position in the buffer.   
+function position_cursor() {
+    var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
+    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 
 
