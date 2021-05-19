@@ -932,6 +932,116 @@ Our file is up to 331 lines!
 
 
 <h2 id="part-d" align="center">  Part D:  File Editing </h2>
+In this section, we’ll add some more events we outlined, including typing characters, backspace, & enter.  
+<br/><br/><br/><br/>
+
+
+<h3 id="d-1">  ☑️ Step 1:  Edit map_events() </h3>
+We’ll want to uncomment some functions in our event map, as we’re about to implement them.
+
+```javascript
+////  SECTION 4:  EVENTS 
+
+//  Map keyboard events.
+function map_events() { ... }
+
+//  These functions fire in response to "events" like keyboard input. 
+var _events      = {
+
+    "LEFT":   function() {
+        d_move_cursor_left();
+    },
+    "RIGHT":  function() {
+        e_move_cursor_right();
+    },
+
+    "UP":     function() {
+        f_move_cursor_up();
+    },
+    "DOWN":   function() {
+        g_move_cursor_down();
+    },
+
+    "TEXT":   function(key) {
+	h_add_to_buffer(key);
+    },
+    "ENTER":  function() {
+        h_add_to_buffer("\n");
+    },
+    "BACKSPACE": function() {
+        i_delete_from_buffer();
+    },
+
+    "SAVE": function() {
+        // l_save_buffer_to_file();
+    },
+
+    "QUIT": function() {
+        // m_quit();
+	console.clear();
+        process.exit();
+    },
+
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-2">  ☑️ Step 2:  h_add_to_buffer( text ) </h3>
+This algorithm will insert text into the buffer at the cursor’s position.
+
+```javascript
+function h_add_to_buffer(new_text) {
+    var new_buffer = _buffer.slice(0, _cursor_buffer_pos);
+    new_buffer    += new_text;
+    new_buffer    += _buffer.slice(_cursor_buffer_pos, _buffer.length);
+    _buffer = new_buffer;
+    _cursor_buffer_pos++;
+    _feedback_bar = "Typed '" + new_text + "'";
+    if (!_modified) {
+        _modified = true;
+    }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-3">  ☑️ Step 3:  ☞  Test the code! </h3>
+Our `h_add_to_buffer( text )` function is used inserting text characters OR line breaks into the text buffer.  Try it out!
+
+Note that “backspace” will throw an error now, since we uncommented the function, 
+but haven’t yet implemented it. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-4">  ☑️ Step 4:  i_delete_from_buffer() </h3>
+This function will implement the backspace.  *Thank goodness.*
+
+```javascript
+function i_delete_from_buffer() {
+
+    if ( _cursor_buffer_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+
+    var new_buffer = _buffer.slice(0, _cursor_buffer_pos - 1);
+    new_buffer    += _buffer.slice(_cursor_buffer_pos, _buffer.length);
+    _buffer = new_buffer;
+    _cursor_buffer_pos--;
+    _feedback_bar = "Text deleted.";
+    if (!_modified && _cursor_buffer_pos != 0) {
+        _modified = true;
+    }
+}
+```
+
+
+
+
 
 
 
