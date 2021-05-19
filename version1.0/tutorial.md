@@ -717,7 +717,7 @@ function map_events() {
 This is an algorithm we’ll use to move the cursor left on the buffer.
 
 ```javascript
-function b_move_cursor_left() {
+function d_move_cursor_left() {
 
     _cursor_buffer_pos -= 1;
     if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
@@ -737,7 +737,7 @@ function b_move_cursor_left() {
 And we’ll need an algorithm to move right, too. 
 
 ```javascript
-function c_move_cursor_right() {
+function e_move_cursor_right() {
 
     _cursor_buffer_pos += 1;
 
@@ -773,7 +773,7 @@ and stop at the beginning of the file.
 Moving the cursor up will be a bit more difficult.
 
 ```javascript
-function d_move_cursor_up() {
+function f_move_cursor_up() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
     var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
@@ -806,7 +806,7 @@ function d_move_cursor_up() {
 Now let’s write an algorithm to move down a line. 
 
 ```javascript
-function e_move_cursor_down() {
+function g_move_cursor_down() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
     var current_line_length = 0;         /**   To find the length of *this* line.                      **/
