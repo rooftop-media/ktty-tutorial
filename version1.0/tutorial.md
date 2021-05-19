@@ -535,7 +535,7 @@ but now the cursor should reposition in the upper left corner of the screen afte
 
 
 <h3 id="b-11"> ☑️ Step 11.  ❖  Part B review. </h3>
-The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_B.js).
+The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_B.js) .
 
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -544,6 +544,91 @@ The complete code for Part A is available [here](https://github.com/rooftop-medi
 
 <h2 id="part-c" align="center">  Part C:  The Cursor & Feedback Bar </h2>
 
+In these steps, we’ll be making the cursor properly move around the buffer text.
+
+For example, if the cursor is at the end of a text line, and the RIGHT key is pressed,
+the cursor should jump to the beginning of the next line.  
+And typing should insert a character into the buffer, rather than replacing a character.
+
+We’ll also log key events to the feedback bar, completing the Draw function.
+
+
+
+<h3 id="c-1"> ☑️ Step 1.  Adding variables </h3>
+
+For this section, we’ll add a single variable, named `_feedback_bar`.
+It will store a string of text.
+
+```javascript
+////  SECTION 2:  APP MEMORY
+
+//  Setting up app memory.                                                                                                                             
+var _buffer            = "";      //  The text being edited.                                                                                           
+var _filename          = "";      //  Filename - including extension.
+var _modified          = false;   //  Has the buffer been modified?
+var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
+
+var _feedback_bar      = "";      //  The text to display in the feedback bar.
+
+var _window_h          = 0;       //  Window height (in text char's).                                                                                  
+var _window_w          = 0;       //  Window width (in text char's).
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-2"> ☑️ Step 2.  Outline the event map. </h3>
+
+Events are described in a Javascript object, mapping event names to functions. 
+For now, we'll leave a lot of the event function calls commented out.
+
+
+```javascript
+////  SECTION 3:  EVENTS   
+
+//  These functions fire in response to "events" like keyboard input.  
+var _events      = {
+
+    "LEFT":   function() {
+        b_move_cursor_left();
+    },
+    "RIGHT":  function() {
+        c_move_cursor_right();
+    },
+
+    "UP":     function() {
+        d_move_cursor_up();
+    },
+    "DOWN":   function() {
+        e_move_cursor_down();
+    },
+
+    "TEXT":   function(key) {
+	 // f_add_to_buffer(key);
+    },
+    "ENTER":  function() {
+        // f_add_to_buffer("\n");
+    },
+    "BACKSPACE": function() {
+        // g_delete_from_buffer();
+    },
+
+    "SAVE": function() {
+        // i_save_buffer_to_file();
+    },
+
+    "QUIT": function() {
+        // j_quit();
+	console.clear();
+        process.exit();
+    },
+
+}
+```
+
+
+
+<h3 id="c-3"> ☑️ Step 3.  Outline the event map. </h3>
 
 
 
