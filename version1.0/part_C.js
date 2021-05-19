@@ -136,7 +136,7 @@ var _events      = {
 function draw() {
     draw_buffer();
     draw_status_bar();
-    // draw_feedback_bar();
+    draw_feedback_bar();
     position_cursor();
 }
 
@@ -176,6 +176,17 @@ function position_cursor() {
     var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
+
+//  Drawing the feedback bar.
+function draw_feedback_bar() {
+    process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
+    process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.         **/
+    process.stdout.write(_feedback_bar);
+    _feedback_bar = "";
+    process.stdout.write("\x1b[0m");                           /**  Back to undim text.               **/
+}
+
+
 
 
 
