@@ -251,7 +251,7 @@ function draw_buffer() {
 Back in the Events section of the code, add this to the end of the main function:
 
 ```javascript
-////  SECTION 3:  EVENTS
+////  SECTION 4:  EVENTS
 
 //  Map keyboard input.
 function map_events() {
@@ -607,7 +607,7 @@ For now, we'll leave a lot of the event function calls commented out.
 
 
 ```javascript
-////  SECTION 3:  EVENTS 
+////  SECTION 4:  EVENTS 
 
 //  Map keyboard events.
 function map_events() { ... }
@@ -664,7 +664,7 @@ Now, we’ll capture the arrow key inputs & call functions to move only within t
 *Notice that the functions we’re calling correspond to our event map/dictionary!*
 
 ```javascript
-////  SECTION 3:  EVENTS 
+////  SECTION 4:  EVENTS 
 
 //  Map keyboard events.
 function map_events() {
