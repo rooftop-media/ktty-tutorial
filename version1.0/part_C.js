@@ -241,3 +241,77 @@ function e_move_cursor_right() {
     }
 
 }
+
+function f_move_cursor_up() {
+
+    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
+    var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
+    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
+        if (_buffer[i] == "\n") {
+            prev_line_length = current_x_pos;
+            current_x_pos = 1;
+        } else {
+            current_x_pos++;
+        }
+    }
+
+    if (prev_line_length > current_x_pos) {        /**   If we're going up **into** a line...        **/
+        _cursor_buffer_pos -= prev_line_length;
+    }
+    else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
+        _cursor_buffer_pos -= current_x_pos;
+    }
+
+    _feedback_bar = "Moved up.";
+
+}
+
+function g_move_cursor_down() {
+
+    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
+    var current_line_length = 0;         /**   To find the length of *this* line.                      **/
+    var next_line_length = 0;            /**   To find the length of the *next* line, to jump forward. **/
+    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
+        if (_buffer[i] == "\n") {
+            current_x_pos = 1;
+        } else {
+            current_x_pos++;
+        }
+    }
+
+    var j = _cursor_buffer_pos;          /**  Using a while loop to iterate further, to find the *next* line length.  **/
+    var found_line_start = false;
+    current_line_length = current_x_pos;
+    while (j < _buffer.length) {
+        if (!found_line_start && _buffer[j] == "\n") {
+            found_line_start = true;
+        }
+        else if (!found_line_start && _buffer[j] != "\n") {
+            current_line_length++;
+        }
+        else if (found_line_start && _buffer[j] != "\n") {
+            next_line_length++;
+        }
+        else if (found_line_start && _buffer[j] == "\n") {
+            break;
+        }
+        j++;
+    }
+
+    if (next_line_length > current_x_pos) {          /**   If we're going down **into** a line...        **/
+        _cursor_buffer_pos += current_line_length;
+    }
+    else if (next_line_length <= current_x_pos) {    /**   If we're going down **above** a line...       **/
+        _cursor_buffer_pos += current_line_length;
+        _cursor_buffer_pos -= current_x_pos;         /**     This should get us to the start of the next line...  **/
+        _cursor_buffer_pos += next_line_length + 1;  /**     ...and then we jump to the end.    **/
+    }
+
+    var buff_limit = _buffer.length;     /**   Don't let the cursor position exceed the buffer.   **/
+    if ( _cursor_buffer_pos > buff_limit ) {
+        _cursor_buffer_pos--;
+    } else {
+        _feedback_bar = "Moved down.";
+    }
+
+}
