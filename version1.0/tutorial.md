@@ -1038,8 +1038,21 @@ function i_delete_from_buffer() {
     }
 }
 ```
+<br/><br/><br/><br/>
 
 
+
+
+<h3 id="d-5">  ☑️ Step 5:  Test the code! </h3>☞  
+At this point, you should be able to type text, & then delete it!
+
+Make sure that pressing “backspace” at the beginning of the file doesn’t cause any errors. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-6">  ☑️ Step 6:  ❖ Part D review. </h3>☞  
 
 
 
