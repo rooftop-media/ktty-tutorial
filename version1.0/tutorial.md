@@ -938,6 +938,7 @@ In this section, we’ll add some more events we outlined, including typing char
 
 <h3 id="d-1">  ☑️ Step 1:  Edit map_events() </h3>
 We’ll want to uncomment some functions in our event map, as we’re about to implement them.
+For now, 
 
 ```javascript
 ////  SECTION 4:  EVENTS 
@@ -971,9 +972,16 @@ var _events      = {
     "BACKSPACE": function() {
         i_delete_from_buffer();
     },
+    
+    "UNDO":  function() {
+        h_add_to_buffer("\n");
+    },
+    "REDO": function() {
+        i_delete_from_buffer();
+    },
 
     "SAVE": function() {
-        // l_save_buffer_to_file();
+        l_save_buffer_to_file();
     },
 
     "QUIT": function() {
@@ -1043,7 +1051,7 @@ function i_delete_from_buffer() {
 
 
 
-<h3 id="d-5">  ☑️ Step 5:  Test the code! </h3>☞  
+<h3 id="d-5">  ☑️ Step 5:  ☞ Test the code! </h3>☞  
 At this point, you should be able to type text, & then delete it!
 
 Make sure that pressing “backspace” at the beginning of the file doesn’t cause any errors. 
@@ -1052,13 +1060,27 @@ Make sure that pressing “backspace” at the beginning of the file doesn’t c
 
 
 
-<h3 id="d-6">  ☑️ Step 6:  ❖ Part D review. </h3>☞  
+<h3 id="d-6">  ☑️ Step 6:  ❖ Part D review. </h3> 
+
+In this part, we added some basic editing controls. 
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
 
 
 
+<h2 id="part-e" align="center">  Part E:   Open & Quit Prompts </h2>
+
+In this section, we’ll be implementing `_feedback_mode`.  In Feedback Mode, the feedback bar prompts the user for text input.
+
+We’ll be using it in two ways here:  
+ - When opening with no filename or a non-existing filename, prompt the user appropriately.  
+ - When quitting with a modified file, prompt the user to save. 
 
 
+<br/><br/><br/><br/>
 
+
+<h3 id="e-1">  ☑️ Step 1:  Adding variables </h3>☞  
 
 
 
