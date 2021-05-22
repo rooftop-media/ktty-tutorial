@@ -116,6 +116,13 @@ var _events      = {
 	i_delete_from_buffer();
     },
 
+    "UNDO":  function() {
+        // j_undo()
+    },
+    "REDO": function() {
+        // k_redo()
+    },
+
     "SAVE": function() {
         l_save_buffer_to_file();
     },
@@ -353,4 +360,10 @@ function i_delete_from_buffer() {
     if (!_modified && _cursor_buffer_pos != 0) {
         _modified = true;
     }
+}
+
+function l_save_buffer_to_file() {
+    fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
+    _modified = false;
+    _feedback_bar = "saved :)";
 }
