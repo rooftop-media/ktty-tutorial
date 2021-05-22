@@ -638,6 +638,13 @@ var _events      = {
     "BACKSPACE": function() {
         // i_delete_from_buffer();
     },
+    
+    "UNDO":  function() {
+        // j_undo()
+    },
+    "REDO": function() {
+        // k_redo()
+    },
 
     "SAVE": function() {
         // l_save_buffer_to_file();
@@ -974,10 +981,10 @@ var _events      = {
     },
     
     "UNDO":  function() {
-        h_add_to_buffer("\n");
+        // j_undo()
     },
     "REDO": function() {
-        i_delete_from_buffer();
+        // k_redo()
     },
 
     "SAVE": function() {
@@ -1060,7 +1067,32 @@ Make sure that pressing “backspace” at the beginning of the file doesn’t c
 
 
 
-<h3 id="d-6">  ☑️ Step 6:  ❖ Part D review. </h3> 
+<h3 id="d-6">  ☑️ Step 6:  l_save_buffer_to_file() </h3>
+This algorithm will save the file, & update the `_modified` variable.
+*Note that the lowercase "l" looks like a 1 or a i sorta.  Sorry*
+
+```javascript
+function l_save_buffer_to_file() {
+    fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
+    _modified = false;
+    _feedback_bar = "saved :)";
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-7">  ☑️ Step 7:  ☞ Test the code! </h3>
+
+Try typing some text into the buffer, and deleting some text.  
+Then, save with ctrl-s, and quit.  Then open the file back up -- your changes should be saved!
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-8">  ☑️ Step 8:  ❖ Part D review. </h3> 
 
 In this part, we added some basic editing controls. 
 
