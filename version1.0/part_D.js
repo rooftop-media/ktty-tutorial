@@ -338,3 +338,19 @@ function h_add_to_buffer(new_text) {
         _modified = true;
     }
 }
+
+function i_delete_from_buffer() {
+
+    if ( _cursor_buffer_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+
+    var new_buffer = _buffer.slice(0, _cursor_buffer_pos - 1);
+    new_buffer    += _buffer.slice(_cursor_buffer_pos, _buffer.length);
+    _buffer = new_buffer;
+    _cursor_buffer_pos--;
+    _feedback_bar = "Text deleted.";
+    if (!_modified && _cursor_buffer_pos != 0) {
+        _modified = true;
+    }
+}
