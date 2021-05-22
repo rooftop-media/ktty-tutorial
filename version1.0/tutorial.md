@@ -20,12 +20,12 @@ Click a part title to jump down to it, in this file.
 | --------------------------- | ------------ | ------ |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. | Complete, tested. |
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. |
-| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | In progress. |
-| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Todo |
-| [Part E - Save, Quit, & Prompt](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Save on ctrl-s, add a "save modified?" prompt. | Todo |
+| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  |
+| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested.  |
+| [Part E - Open & Quit Prompts](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Prompt before quitting with a modified buffer. | In progress. |
 | [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | Todo |
 | [Part G - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Adds history tracking, for undo & redo. | Todo |
-| [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | With v1.0 complete, you can move to v2.0. | Todo |
+| [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | With v1.0 complete, you can move to v2.0. | Todo |
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -1058,7 +1058,7 @@ function i_delete_from_buffer() {
 
 
 
-<h3 id="d-5">  ☑️ Step 5:  ☞ Test the code! </h3>☞  
+<h3 id="d-5">  ☑️ Step 5:  ☞ Test the code! </h3>
 At this point, you should be able to type text, & then delete it!
 
 Make sure that pressing “backspace” at the beginning of the file doesn’t cause any errors. 
@@ -1100,7 +1100,10 @@ In this part, we added some basic editing controls.
 
 
 
+
 <h2 id="part-e" align="center">  Part E:   Open & Quit Prompts </h2>
+
+KTTY will be able to run in different **modes**.
 
 In this section, we’ll be implementing `_feedback_mode`.  In Feedback Mode, the feedback bar prompts the user for text input.
 
@@ -1112,7 +1115,37 @@ We’ll be using it in two ways here:
 <br/><br/><br/><br/>
 
 
-<h3 id="e-1">  ☑️ Step 1:  Adding variables </h3>☞  
+<h3 id="e-1">  ☑️ Step 1:  Adding variables </h3>
+We're adding three variables, all related to the feedback bar's prompt function.  
+
+We'll add a boolean, `_feedback_prompt`, which will be true when we're capturing feedback.
+We'll add a string, `_feedback_input`, which is where we'll store the feedback text.
+And we'll add a variable that will store a *function*, which we'll call `_feedback_event`.
+
+```javascript
+////  SECTION 2:  APP MEMORY
+
+//  Setting up app memory. 
+var _buffer            = "";      //  The text being edited. 
+var _filename          = "";      //  Filename - including extension.
+var _modified          = false;   //  Has the buffer been modified?
+var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
+
+var _feedback_bar      = "";      //  The text to display in the feedback bar.
+var _feedback_mode     = false;   //  Is the feedback bar waiting for user input? 
+var _feedback_input    = "";      //  What has the user typed? 
+var _feedback_event    = function (response) {}; 
+
+var _window_h          = 0;       //  Window height (in text char's). 
+var _window_w          = 0;       //  Window width (in text char's).
+```
+
+<br/><br/><br/><br/>
+
+
+<h3 id="e-2">  ☑️ Step 2:  Editing map_events() </h3>
+
+
 
 
 
