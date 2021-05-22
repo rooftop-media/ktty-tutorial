@@ -22,7 +22,7 @@ Click a part title to jump down to it, in this file.
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. |
 | [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested.  |
-| [Part E - Open & Quit Prompts](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Prompt before quitting with a modified buffer. | In progress. |
+| [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | In progress. |
 | [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | Todo |
 | [Part G - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Adds history tracking, for undo & redo. | Todo |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | With v1.0 complete, you can move to v2.0. | Todo |
@@ -1101,13 +1101,17 @@ In this part, we added some basic editing controls.
 
 
 
-<h2 id="part-e" align="center">  Part E:   Open & Quit Prompts </h2>
+<h2 id="part-e" align="center">  Part E:   Feedback Mode </h2>
 
-KTTY will be able to run in different **modes**.
+KTTY will be able to run in different **modes**, which affect what the keyboard events do.   
 
-In this section, we’ll be implementing `_feedback_mode`.  In Feedback Mode, the feedback bar prompts the user for text input.
+Up until now, we've been building Buffer Editor Mode.  
+In Buffer Editor Mode, keyboard input edits the contents of the `_buffer`.
 
-We’ll be using it in two ways here:  
+In this section, we’ll be implementing Feedback Mode.   
+In Feedback Mode, keyboard input types to the `_feedback_input`.
+
+We’ll be using Feedback Mode in two ways, in this version:  
  - When opening with no filename or a non-existing filename, prompt the user appropriately.  
  - When quitting with a modified file, prompt the user to save. 
 
@@ -1116,34 +1120,190 @@ We’ll be using it in two ways here:
 
 
 <h3 id="e-1">  ☑️ Step 1:  Adding variables </h3>
-We're adding three variables, all related to the feedback bar's prompt function.  
+We're adding four variables, all related to the feedback bar's prompt function.  
 
-We'll add a boolean, `_feedback_prompt`, which will be true when we're capturing feedback.
-We'll add a string, `_feedback_input`, which is where we'll store the feedback text.
+At the top, we'll add a string `_mode`, which we'll use to store a string naming the current mode.
+
+We'll also add a string, `_feedback_input`, which is where we'll store the feedback text.
+We'll add a integer, `_feedback_cursor`, which tracks the cursor's position in the feedback input.
 And we'll add a variable that will store a *function*, which we'll call `_feedback_event`.
 
 ```javascript
 ////  SECTION 2:  APP MEMORY
 
 //  Setting up app memory. 
+var _mode              = "BUFFER-EDITOR"  //  Options: "BUFFER-EDITOR", "FEEDBACK"
+
 var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
 var _feedback_bar      = "";      //  The text to display in the feedback bar.
-var _feedback_mode     = false;   //  Is the feedback bar waiting for user input? 
+
 var _feedback_input    = "";      //  What has the user typed? 
+var _feedback_cursor   = 0;       //  Where is the feedback input cursor? 
 var _feedback_event    = function (response) {}; 
 
 var _window_h          = 0;       //  Window height (in text char's). 
 var _window_w          = 0;       //  Window width (in text char's).
 ```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-2">  ☑️ Step 2:  Changing _events to _mode_events  </h3>
+
+Up until now, we stored all the events in an event dictionary, called `_events`.  
+*(We originally defined that variable in [part C, step 2](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-2) if you're curious.)*
+
+In Feedback Mode, we'll want to capture the *same* events, but react with *different* functions.  
+To do this, we'll *add another layer* to our "event dictionary", and rename it to `_mode_events` like so:
+
+```javascript
+////  SECTION 4:  EVENTS 
+
+//  Map keyboard events.
+function map_events() { ... }
+
+//  These functions fire in response to "events" like keyboard input. 
+vvar _mode_events      = {
+
+    "BUFFER-EDITOR" {
+        "LEFT":   function() {
+            d_move_cursor_left();
+        },
+        "RIGHT":  function() {
+            e_move_cursor_right();
+        },
+
+        "UP":     function() {
+            f_move_cursor_up();
+        },
+        "DOWN":   function() {
+            g_move_cursor_down();
+        },
+
+        "TEXT":   function(key) {
+            h_add_to_buffer(key);
+        },
+        "ENTER":  function() {
+            h_add_to_buffer("\n");
+        },
+        "BACKSPACE": function() {
+            i_delete_from_buffer();
+        },
+
+        "UNDO":  function() {
+            // j_undo()                                                                                                                                
+        },
+        "REDO": function() {
+            // k_redo()                                                                                                                                
+        },
+
+        "SAVE": function() {
+            l_save_buffer_to_file();
+        },
+
+        "QUIT": function() {
+            // m_quit();                                                                                                                               
+            console.clear();
+            process.exit();
+	}
+    },
+
+    "FEEDBACK": {
+        "LEFT":   function() {
+            //
+        },
+        "RIGHT":  function() {
+            //
+        },
+
+        "TEXT":   function(key) {
+            //
+        },
+        "ENTER":  function() {
+            //
+        },
+        "BACKSPACE": function() {
+            //
+        }
+    }
+}
+```
+Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
 
 <br/><br/><br/><br/>
 
 
-<h3 id="e-2">  ☑️ Step 2:  Editing map_events() </h3>
+
+<h3 id="e-3">  ☑️ Step 3:  Editing map_events() </h3>
+
+We'll need to modify the `map_events()` function, to map key events to the event appropriate for the current mode.
+When we originally wrote `map_events()` (back in [part c, step 3](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-3)), we referenced the event dictionary, which was called `_events`.
+
+That dictionary doesn't exist anymore, but we can get the equivilant dictionary with a single line:
+
+```javascript
+var events = _mode_events[ _mode ];
+```
+
+Note that, since our new `event` variable is calculated locally, I've removed the `_` from its name.  
+The `map_events()` code now looks like this, accounting for that name change:
+
+```javascript
+//  Map keyboard events.                                                                                                                               
+function map_events() {
+    var stdin = process.stdin;
+    stdin.setRawMode( true );
+    stdin.resume();
+    stdin.setEncoding( 'utf8' );
+    stdin.on( 'data', function( key ){
+    
+  	    var events = _mode_events[ _mode ];
+
+            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q                                                                 
+                events["QUIT"]();
+            }
+            else if ( key === '\u0013' ) {       // ctrl-s                                                                                             
+                events["SAVE"]();
+            }
+            else if ( key === '\u001b[A' ) {     //  up                                                                                                
+                events["UP"]();
+            }
+            else if ( key === '\u001b[B' ) {     //  down                                                                                              
+                events["DOWN"]();
+            }
+            else if ( key === '\u001b[C' ) {     //  right                                                                                             
+                events["RIGHT"]();
+            }
+            else if ( key === '\u001b[D' ) {     //  left                                                                                              
+                events["LEFT"]();
+            }
+            else if ( key === '\u000D' ) {       //  enter                                                                                               
+                events["ENTER"]();
+            }
+            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete                                                                          
+                events["BACKSPACE"]();
+            }
+
+            else {
+                events["TEXT"](key);
+            }
+
+            draw();
+
+        });
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-4">  ☑️ Step 4:   </h3>
+
+
 
 
 
