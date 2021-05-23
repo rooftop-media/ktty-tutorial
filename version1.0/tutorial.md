@@ -1442,7 +1442,7 @@ Let's run the code again to make sure the cursor gets positioned correctly.
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
 ```javascript
-function q_add_to_feedback_input(new_text) {
+function o_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
     new_fb_input      += new_text;
     new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
@@ -1459,7 +1459,7 @@ function q_add_to_feedback_input(new_text) {
 This algorithm will delete text from `_feedback_input`.
 
 ```javascript
-function r_delete_from_feedback_input() {
+function p_delete_from_feedback_input() {
     if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
@@ -1480,7 +1480,7 @@ function r_delete_from_feedback_input() {
 A function to move the feedback input cursor left one, if possible. 
 
 ```javascript
-function o_move_feedback_cursor_left() {
+function q_move_feedback_cursor_left() {
     _feedback_cursor--;
     if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
     	_feedback_cursor++;
@@ -1496,7 +1496,7 @@ function o_move_feedback_cursor_left() {
 This time we're going right, unless we're at the end of `_feedback_input`.
 
 ```javascript
-function p_move_feedback_cursor_right() {
+function r_move_feedback_cursor_right() {
     _feedback_cursor++;
     if (_feedback_cursor > _feedback_input.length - 1) {      // don't "surpass" the end of _feeback_input
         _feedback_cursor--;
