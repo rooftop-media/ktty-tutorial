@@ -1260,6 +1260,8 @@ Note that, since our new `event` variable is calculated locally, I've removed th
 The `map_events()` code now looks like this, accounting for that name change:
 
 ```javascript
+////  SECTION 4:  Events.                                                                                                                              
+
 //  Map keyboard events.                                                                                                                               
 function map_events() {
     var stdin = process.stdin;
