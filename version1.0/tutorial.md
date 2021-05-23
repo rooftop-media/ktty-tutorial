@@ -1419,7 +1419,7 @@ function position_cursor() {
         var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
-        var x_pos = _feedback_bar.length + _feedback_input.length + 2;
+        var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
 }
@@ -1517,7 +1517,7 @@ This time we're going right, unless we're at the end of `_feedback_input`.
 ```javascript
 function r_move_feedback_cursor_right() {
     _feedback_cursor++;
-    if (_feedback_cursor > _feedback_input.length - 1) {      // don't "surpass" the end of _feeback_input
+    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
         _feedback_cursor--;
     }
 }
