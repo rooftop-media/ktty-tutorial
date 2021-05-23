@@ -1418,7 +1418,7 @@ function position_cursor() {
         var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
-        var x_pos = _feedback_bar.length + _feedback_input.length;
+        var x_pos = _feedback_bar.length + _feedback_input.length + 1;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
 }
