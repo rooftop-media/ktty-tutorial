@@ -1132,7 +1132,7 @@ And we'll add a variable that will store a *function*, which we'll call `_feedba
 ////  SECTION 2:  APP MEMORY
 
 //  Setting up app memory. 
-var _mode              = "BUFFER-EDITOR"  //  Options: "BUFFER-EDITOR", "FEEDBACK"
+var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK"
 
 var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension.
