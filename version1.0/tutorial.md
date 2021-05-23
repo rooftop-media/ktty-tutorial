@@ -1220,6 +1220,9 @@ vvar _mode_events      = {
             p_delete_from_feedback_input();          //  Remove text from the feedback input. 
         },
 	
+	"UP":     function() {  },
+        "DOWN":   function() {  },
+	
 	"LEFT":   function() {
             q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
         },
@@ -1240,6 +1243,8 @@ vvar _mode_events      = {
 }
 ```
 Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
+
+Note that for FEEDBACK mode, some events, like UP and DOWN, won't trigger any reaction at all.  
 
 <br/><br/><br/><br/>
 
