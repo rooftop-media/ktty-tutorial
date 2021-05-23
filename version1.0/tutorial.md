@@ -1310,7 +1310,43 @@ function map_events() {
 
 
 
-<h3 id="e-4">  ☑️ Step 4:  Edit a_load_file_to_buffer(filepath) </h3>
+<h3 id="e-4">  ☑️ Step 4:  Editing draw_feedback_bar() </h3>
+
+We'll also edit `draw_feedback_bar()` to draw the feedback bar text in a different color, in feedback mode.
+
+```javascript
+////  SECTION 5:  Draw functions. 
+
+function draw() {  ...  }
+function draw_buffer() {  ...  }
+function draw_status_bar() {  ...  }
+function position_cursor() {  ...  }
+
+//  Drawing the feedback bar.                                                                                                                          
+function draw_feedback_bar() {
+    if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, draw it cyan.     **/
+        process.stdout.write("\x1b[36m"); 
+    } else {                                                   /**  If it's buffer mode feedback, dim.           **/
+        process.stdout.write("\x1b[2m"); 
+    }
+    
+    process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.                    **/
+    process.stdout.write(_feedback_bar);                       /**  Write the text.                              **/
+    process.stdout.write("\x1b[0m");                           /**  Back to undim text.                          **/
+        
+    if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, write the input too.   **/
+        process.stdout.write(_feedback_bar); 
+    } else {
+        _feedback_bar = "";
+    }
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-5">  ☑️ Step 5:  Edit a_load_file_to_buffer(filepath) </h3>
 
 We'll test our new feedback system in an edit to `a_load_file_to_buffer`.
 If ktty is opened with a blank `filepath`, ask the user if they want to create a file.
@@ -1346,7 +1382,7 @@ function a_load_file_to_buffer() {
 
 
 
-<h3 id="e-5">  ☑️ Step 5:  ☞ Test the code!  </h3>
+<h3 id="e-6">  ☑️ Step 6:  ☞ Test the code!  </h3>
 
 We can now test the code!  This time, open ktty without a filepath for an argument:
 
@@ -1362,7 +1398,7 @@ $ node ./ktty.js
 
 
 
-<h3 id="e-6">  ☑️ Step 6:  o_move_feedback_cursor_left() </h3>
+<h3 id="e-7">  ☑️ Step 7:  o_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1378,7 +1414,7 @@ function o_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  p_move_feedback_cursor_right() </h3>
+<h3 id="e-8">  ☑️ Step 8:  p_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1395,7 +1431,7 @@ function p_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-8">  ☑️ Step 8:  q_add_to_feedback_input(new_text) </h3>
+<h3 id="e-9">  ☑️ Step 9:  q_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
@@ -1412,7 +1448,7 @@ function q_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-9">  ☑️ Step 9:  r_delete_from_feedback_input() </h3>
+<h3 id="e-10">  ☑️ Step 10:  r_delete_from_feedback_input() </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
@@ -1433,7 +1469,7 @@ function r_delete_from_feedback_input() {
 
 
 
-<h3 id="e-10">  ☑️ Step 10  ☞ Test the code!  </h3>
+<h3 id="e-11">  ☑️ Step 11  ☞ Test the code!  </h3>
 
 <br/><br/><br/><br/>
 
