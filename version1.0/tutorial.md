@@ -1213,18 +1213,18 @@ vvar _mode_events      = {
     },
 
     "FEEDBACK": {
-        "LEFT":   function() {
-            o_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
-        },
-        "RIGHT":  function() {
-            p_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
-        },
-
         "TEXT":   function(key) {
-            q_add_to_feedback_input(text);   //  Add text to the feedback input. 
+            o_add_to_feedback_input(text);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
-            r_delete_from_buffer();          //  Remove text from the feedback input. 
+            p_delete_from_buffer();          //  Remove text from the feedback input. 
+        },
+	
+	"LEFT":   function() {
+            q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
+        },
+        "RIGHT":  function() {
+            r_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
         },
 	
 	"ENTER":  function() {
