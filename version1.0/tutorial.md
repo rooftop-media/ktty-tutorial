@@ -1400,6 +1400,12 @@ At this point, typing will throw an error.  You can quit error-less by pressing 
 
 
 
+
+<h3 id="e-7">  ☑️ Step 7:  Edit a_load_file_to_buffer(filepath) </h3>
+
+
+
+
 <h3 id="e-7">  ☑️ Step 7:  o_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
