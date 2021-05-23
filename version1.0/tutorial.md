@@ -1228,7 +1228,7 @@ vvar _mode_events      = {
         },
 	
 	"ENTER":  function() {
-            _feedback_event();               //  Running the feedback event. 
+            _feedback_event(_feedback_input);    //  Running the feedback event. 
         },
 	
 	"QUIT": function() {
@@ -1401,12 +1401,43 @@ At this point, typing will throw an error.  You can quit error-less by pressing 
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  Edit a_load_file_to_buffer(filepath) </h3>
+<h3 id="e-7">  ☑️ Step 7:  Edit position_cursor() </h3>
+
+While in feedback mode, we need to position the cursor differently.
+
+```javascript
+////  SECTION 5:  Draw functions.
+
+function draw() {  ...  }
+function draw_buffer() {  ...  }
+function draw_status_bar() {  ...  }
+
+//  Move the cursor to its position in the buffer.                                                                                                     
+function position_cursor() {
+    if (_mode == "BUFFER-EDITOR") {
+        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
+        process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+    } else if (_mode == "FEEDBACK") {
+        var x_pos = _feedback_bar.length + _feedback_input.length;
+        process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
+    }
+}
+```
+
+<br/><br/><br/><br/>
 
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  o_add_to_feedback_input(new_text) </h3>
+<h3 id="e-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
+
+Let's run the code again to make sure the cursor gets positioned correctly.
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-9">  ☑️ Step 9:  o_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
@@ -1423,7 +1454,7 @@ function q_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-8">  ☑️ Step 8:  p_delete_from_feedback_input() </h3>
+<h3 id="e-10">  ☑️ Step 10:  p_delete_from_feedback_input() </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
@@ -1444,7 +1475,7 @@ function r_delete_from_feedback_input() {
 
 
 
-<h3 id="e-9">  ☑️ Step 9:  q_move_feedback_cursor_left() </h3>
+<h3 id="e-11">  ☑️ Step 11:  q_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1460,7 +1491,7 @@ function o_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-10">  ☑️ Step 10:  r_move_feedback_cursor_right() </h3>
+<h3 id="e-12">  ☑️ Step 12:  r_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1476,7 +1507,9 @@ function p_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-11">  ☑️ Step 11  ☞ Test the code!  </h3>
+<h3 id="e-13">  ☑️ Step 13  ☞ Test the code!  </h3>
+
+
 
 <br/><br/><br/><br/>
 
