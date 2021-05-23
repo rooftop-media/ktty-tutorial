@@ -1214,7 +1214,7 @@ vvar _mode_events      = {
 
     "FEEDBACK": {
         "TEXT":   function(key) {
-            o_add_to_feedback_input(text);   //  Add text to the feedback input. 
+            o_add_to_feedback_input(key);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
             p_delete_from_buffer();          //  Remove text from the feedback input. 
