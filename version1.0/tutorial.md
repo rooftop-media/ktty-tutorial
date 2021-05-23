@@ -1213,18 +1213,21 @@ vvar _mode_events      = {
     },
 
     "FEEDBACK": {
-        "LEFT":   function() {
-            o_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
-        },
-        "RIGHT":  function() {
-            p_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
-        },
-
         "TEXT":   function(key) {
-            q_add_to_feedback_input(text);   //  Add text to the feedback input. 
+            o_add_to_feedback_input(key);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
-            r_delete_from_buffer();          //  Remove text from the feedback input. 
+            p_delete_from_feedback_input();          //  Remove text from the feedback input. 
+        },
+	
+	"UP":     function() {  },
+        "DOWN":   function() {  },
+	
+	"LEFT":   function() {
+            q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
+        },
+        "RIGHT":  function() {
+            r_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
         },
 	
 	"ENTER":  function() {
@@ -1240,6 +1243,8 @@ vvar _mode_events      = {
 }
 ```
 Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
+
+Note that for FEEDBACK mode, some events, like UP and DOWN, won't trigger any reaction at all.  
 
 <br/><br/><br/><br/>
 
@@ -1364,6 +1369,7 @@ function a_load_file_to_buffer() {
 	_feedback_event = function(response) {
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
+	    _feedback_bar = "";
 	}
         _buffer = "";
     } else {
@@ -1418,7 +1424,7 @@ function position_cursor() {
         var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
-        var x_pos = _feedback_bar.length + _feedback_input.length + 1;
+        var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
 }
@@ -1442,7 +1448,7 @@ Let's run the code again to make sure the cursor gets positioned correctly.
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
 ```javascript
-function q_add_to_feedback_input(new_text) {
+function o_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
     new_fb_input      += new_text;
     new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
@@ -1459,7 +1465,7 @@ function q_add_to_feedback_input(new_text) {
 This algorithm will delete text from `_feedback_input`.
 
 ```javascript
-function r_delete_from_feedback_input() {
+function p_delete_from_feedback_input() {
     if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
@@ -1475,12 +1481,30 @@ function r_delete_from_feedback_input() {
 
 
 
-<h3 id="e-11">  ☑️ Step 11:  q_move_feedback_cursor_left() </h3>
+<h3 id="e-13">  ☑️ Step 11:  ☞ Test the code!  </h3>
+
+At this point, running the code with no argument should prompt the user for a filename.  
+And this time, typing a filename should work!
+
+Try creating a new file named `new_file.txt` this way.  Test the backspace, too.
+Press enter to create the file.   
+
+Then, type some contents to the file buffer, and save with `ctrl-s`. 
+Then quit with `ctrl-c`.
+
+In your command  line, run `ls` to see if your new file was created!
+
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="e-11">  ☑️ Step 12:  q_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
 ```javascript
-function o_move_feedback_cursor_left() {
+function q_move_feedback_cursor_left() {
     _feedback_cursor--;
     if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
     	_feedback_cursor++;
@@ -1491,14 +1515,14 @@ function o_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-12">  ☑️ Step 12:  r_move_feedback_cursor_right() </h3>
+<h3 id="e-12">  ☑️ Step 13:  r_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
 ```javascript
-function p_move_feedback_cursor_right() {
+function r_move_feedback_cursor_right() {
     _feedback_cursor++;
-    if (_feedback_cursor > _feedback_input.length - 1) {      // don't "surpass" the end of _feeback_input
+    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
         _feedback_cursor--;
     }
 }
@@ -1507,8 +1531,10 @@ function p_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-13">  ☑️ Step 13  ☞ Test the code!  </h3>
+<h3 id="e-13">  ☑️ Step 14  ☞ Test the code!  </h3>
 
+Test the code again, without a filename.  
+This time, when you enter a filename, you should be able to use the arrow keys to move the feedback cursor.  
 
 
 <br/><br/><br/><br/>
