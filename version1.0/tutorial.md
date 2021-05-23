@@ -1481,7 +1481,7 @@ function p_delete_from_feedback_input() {
 
 
 
-<h3 id="e-13">  ☑️ Step 11:  ☞ Test the code!  </h3>
+<h3 id="e-11">  ☑️ Step 11:  ☞ Test the code!  </h3>
 
 At this point, running the code with no argument should prompt the user for a filename.  
 And this time, typing a filename should work!
@@ -1499,7 +1499,7 @@ In your command  line, run `ls` to see if your new file was created!
 
 
 
-<h3 id="e-11">  ☑️ Step 12:  q_move_feedback_cursor_left() </h3>
+<h3 id="e-12">  ☑️ Step 12:  q_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1515,7 +1515,7 @@ function q_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-12">  ☑️ Step 13:  r_move_feedback_cursor_right() </h3>
+<h3 id="e-13">  ☑️ Step 13:  r_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1531,7 +1531,7 @@ function r_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-13">  ☑️ Step 14  ☞ Test the code!  </h3>
+<h3 id="e-14">  ☑️ Step 14:  ☞ Test the code!  </h3>
 
 Test the code again, without a filename.  
 This time, when you enter a filename, you should be able to use the arrow keys to move the feedback cursor.  
@@ -1540,7 +1540,23 @@ This time, when you enter a filename, you should be able to use the arrow keys t
 <br/><br/><br/><br/>
 
 
+<h3 id="e-15">  ☑️ Step 15:  m_quit() </h3>
 
+<br/><br/><br/><br/>
+
+
+<h3 id="e-16">  ☑️ Step 16:  ❖  Part E review. </h3>
+
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
+
+
+<h2 id="part-f" align="center">  Part E:   Scroll & Resize </h2>
+
+<br/><br/><br/><br/>
 
 
 
