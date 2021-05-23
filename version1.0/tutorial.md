@@ -1230,6 +1230,12 @@ vvar _mode_events      = {
 	"ENTER":  function() {
             _feedback_event();               //  Running the feedback event. 
         },
+	
+	"QUIT": function() {
+            // m_quit();                                                                                                                               
+            console.clear();
+            process.exit();
+	}
     }
 }
 ```
@@ -1305,7 +1311,7 @@ function map_events() {
 <h3 id="e-4">  ☑️ Step 4:  Edit a_load_file_to_buffer(filepath) </h3>
 
 We'll test our new feedback system in an edit to `a_load_file_to_buffer`.
-If a file wasn't found at `filepath`, ask the user if they want to create that file.
+If ktty is opened with a blank `filepath`, ask the user if they want to create a file.
 
 ```javascript
 ////  SECTION 6:  Algorithms.                                                                                                                          
@@ -1315,7 +1321,11 @@ function a_load_file_to_buffer() {
     _filename = process.argv[2];
     if ( _filename == undefined ) {
         _mode         = "FEEDBACK";
-	_feedback_bar = "You opened KTTY with no filepath.  Want to create a file? (y/n)";
+	_feedback_bar = "Enter a file name to create a new file: ";
+	_feedback_event = function(response) {
+	    _filename = response;
+	    _mode     = "BUFFER-EDITOR";
+	}
         _buffer = "";
     } else {
         try {
@@ -1335,6 +1345,16 @@ function a_load_file_to_buffer() {
 
 
 <h3 id="e-5">  ☑️ Step 5:  ☞ Test the code!  </h3>
+
+We can now test the code!  This time, open ktty without a filepath for an argument:
+
+```bash
+$ ktty
+```
+Or, without the shortcut...
+```bash
+$ node ./ktty.js
+```
 
 <br/><br/><br/><br/>
 
@@ -1369,6 +1389,7 @@ function p_move_feedback_cursor_right() {
 }
 ```
 <br/><br/><br/><br/>
+
 
 
 
@@ -1407,8 +1428,6 @@ function r_delete_from_feedback_input() {
 ```
 
 <br/><br/><br/><br/>
-
-
 
 
 
