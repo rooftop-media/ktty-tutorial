@@ -1335,7 +1335,7 @@ function draw_feedback_bar() {
     process.stdout.write("\x1b[0m");                           /**  Back to undim text.                          **/
         
     if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, write the input too.   **/
-        process.stdout.write(_feedback_bar); 
+        process.stdout.write(_feedback_input); 
     } else {
         _feedback_bar = "";
     }
@@ -1348,7 +1348,8 @@ function draw_feedback_bar() {
 
 <h3 id="e-5">  ☑️ Step 5:  Edit a_load_file_to_buffer(filepath) </h3>
 
-We'll test our new feedback system in an edit to `a_load_file_to_buffer`.
+The first place we'll use Feedback Mode is in the algorithm to open files, `a_load_file_to_buffer()`.  
+
 If ktty is opened with a blank `filepath`, ask the user if they want to create a file.
 
 ```javascript
@@ -1374,9 +1375,6 @@ function a_load_file_to_buffer() {
     }
 }
 ```
-
-
-
 <br/><br/><br/><br/>
 
 
@@ -1394,44 +1392,15 @@ Or, without the shortcut...
 $ node ./ktty.js
 ```
 
+Running this code should present the `Enter a file name to create a new file:` message in the feedback bar.  
+
+At this point, typing will throw an error.  You can quit error-less by pressing `ctrl-c`.
+
 <br/><br/><br/><br/>
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  o_move_feedback_cursor_left() </h3>
-
-A function to move the feedback input cursor left one, if possible. 
-
-```javascript
-function o_move_feedback_cursor_left() {
-    _feedback_cursor--;
-    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
-    	_feedback_cursor++;
-    }
-}
-```
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-8">  ☑️ Step 8:  p_move_feedback_cursor_right() </h3>
-
-This time we're going right, unless we're at the end of `_feedback_input`.
-
-```javascript
-function p_move_feedback_cursor_right() {
-    _feedback_cursor++;
-    if (_feedback_cursor > _feedback_input.length - 1) {      // don't "surpass" the end of _feeback_input
-        _feedback_cursor--;
-    }
-}
-```
-<br/><br/><br/><br/>
-
-
-
-
-<h3 id="e-9">  ☑️ Step 9:  q_add_to_feedback_input(new_text) </h3>
+<h3 id="e-7">  ☑️ Step 7:  o_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
@@ -1448,7 +1417,7 @@ function q_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-10">  ☑️ Step 10:  r_delete_from_feedback_input() </h3>
+<h3 id="e-8">  ☑️ Step 8:  p_delete_from_feedback_input() </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
@@ -1465,6 +1434,38 @@ function r_delete_from_feedback_input() {
 }
 ```
 
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-9">  ☑️ Step 9:  q_move_feedback_cursor_left() </h3>
+
+A function to move the feedback input cursor left one, if possible. 
+
+```javascript
+function o_move_feedback_cursor_left() {
+    _feedback_cursor--;
+    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
+    	_feedback_cursor++;
+    }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-10">  ☑️ Step 10:  r_move_feedback_cursor_right() </h3>
+
+This time we're going right, unless we're at the end of `_feedback_input`.
+
+```javascript
+function p_move_feedback_cursor_right() {
+    _feedback_cursor++;
+    if (_feedback_cursor > _feedback_input.length - 1) {      // don't "surpass" the end of _feeback_input
+        _feedback_cursor--;
+    }
+}
+```
 <br/><br/><br/><br/>
 
 
