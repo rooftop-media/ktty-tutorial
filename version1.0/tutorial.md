@@ -1302,7 +1302,45 @@ function map_events() {
 
 
 
-<h3 id="e-4">  ☑️ Step 4:  o_move_feedback_cursor_left() </h3>
+<h3 id="e-4">  ☑️ Step 4:  Edit a_load_file_to_buffer(filepath) </h3>
+
+We'll test our new feedback system in an edit to `a_load_file_to_buffer`.
+If a file wasn't found at `filepath`, ask the user if they want to create that file.
+
+```javascript
+////  SECTION 6:  Algorithms.                                                                                                                          
+
+//  Getting the file's contents, put it in the "buffer".                                                                                               
+function a_load_file_to_buffer() {
+    _filename = process.argv[2];
+    if ( _filename == undefined ) {
+        _mode         = "FEEDBACK";
+	_feedback_bar = "You opened KTTY with no filepath.  Want to create a file? (y/n)";
+        _buffer = "";
+    } else {
+        try {
+            _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
+        } catch (err) {
+            _buffer = "Unable to find a file at '" + _filepath + "'";
+        }
+    }
+}
+```
+
+
+
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="e-5">  ☑️ Step 5:  ☞ Test the code!  </h3>
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-6">  ☑️ Step 6:  o_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1318,7 +1356,7 @@ function o_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-4">  ☑️ Step 4:  p_move_feedback_cursor_right() </h3>
+<h3 id="e-7">  ☑️ Step 7:  p_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1334,7 +1372,7 @@ function p_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-5">  ☑️ Step 5:  q_add_to_feedback_input(new_text) </h3>
+<h3 id="e-8">  ☑️ Step 8:  q_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
@@ -1351,21 +1389,30 @@ function q_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-6">  ☑️ Step 6:  r_delete_from_buffer() </h3>
+<h3 id="e-9">  ☑️ Step 9:  r_delete_from_feedback_input() </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
+```javascript
+function r_delete_from_feedback_input() {
+    if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+
+    var new_fb_input = _feedback_input.slice(0, _feedback_cursor - 1);
+    new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
+    _feedback_input  = new_fb_input;
+    _feedback_cursor--;
+}
+```
+
 <br/><br/><br/><br/>
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  Edit a_load_file_to_buffer(filepath) </h3>
-
-<br/><br/><br/><br/>
 
 
-
-<h3 id="e-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
+<h3 id="e-10">  ☑️ Step 10  ☞ Test the code!  </h3>
 
 <br/><br/><br/><br/>
 
