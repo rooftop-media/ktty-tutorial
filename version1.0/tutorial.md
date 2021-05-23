@@ -1364,6 +1364,7 @@ function a_load_file_to_buffer() {
 	_feedback_event = function(response) {
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
+	    _feedback_bar = "";
 	}
         _buffer = "";
     } else {
@@ -1475,7 +1476,25 @@ function p_delete_from_feedback_input() {
 
 
 
-<h3 id="e-11">  ☑️ Step 11:  q_move_feedback_cursor_left() </h3>
+<h3 id="e-13">  ☑️ Step 11:  ☞ Test the code!  </h3>
+
+At this point, running the code with no argument should prompt the user for a filename.  
+And this time, typing a filename should work!
+
+Try creating a new file named `new_file.txt` this way.  Test the backspace, too.
+Press enter to create the file.   
+
+Then, type some contents to the file buffer, and save with `ctrl-s`. 
+Then quit with `ctrl-c`.
+
+In your command  line, run `ls` to see if your new file was created!
+
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="e-11">  ☑️ Step 12:  q_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1491,7 +1510,7 @@ function q_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-12">  ☑️ Step 12:  r_move_feedback_cursor_right() </h3>
+<h3 id="e-12">  ☑️ Step 13:  r_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1507,8 +1526,10 @@ function r_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-13">  ☑️ Step 13  ☞ Test the code!  </h3>
+<h3 id="e-13">  ☑️ Step 14  ☞ Test the code!  </h3>
 
+Test the code again, without a filename.  
+This time, when you enter a filename, you should be able to use the arrow keys to move the feedback cursor.  
 
 
 <br/><br/><br/><br/>
