@@ -1542,6 +1542,40 @@ This time, when you enter a filename, you should be able to use the arrow keys t
 
 <h3 id="e-15">  ☑️ Step 15:  m_quit() </h3>
 
+We'll also use the feedback bar when the user tries to quit a file with a modified buffer.  
+
+```javascript
+function m_quit() {
+
+    if (_modified) {            /**  If the file has been modified, start the prompts!    **/
+        mode = "FEEDBACK";
+	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
+	_feedback_event = function(response) {
+	    if (response.toLowerCase() == "y") {
+	    	l_save_buffer_to_file();
+		m_quit();
+	    } else if (response.toLowerCase() == "n") {
+	        _feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
+		_feedback_event = function(response) {
+		     if (response.toLowerCase() == "y") {
+		         console.clear();
+			 process.exit();
+		     } else {
+		         mode = "BUFFER-EDITOR";
+			 _feedback_bar = "";
+		     }
+		}
+	    } else {
+	        _feedback_input = "";
+		_feedback_bar = "Modified buffer exists! Want to save? (Type "y" or "n") ";
+	    }
+	} else {              /**  If the file HASN'T been modified, since the last save just quit!     **/
+	    console.clear();
+	    process.exit();
+	}
+}
+```
+
 <br/><br/><br/><br/>
 
 
