@@ -144,18 +144,20 @@ var _mode_events      = {
     },
 
     "FEEDBACK": {
-	"LEFT":   function() {
-            o_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
-        },
-        "RIGHT":  function() {
-            p_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
-        },
-	
         "TEXT":   function(key) {
-            q_add_to_feedback_input(text);   //  Add text to the feedback input. 
+            o_add_to_feedback_input(key);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
-            r_delete_from_buffer();          //  Remove text from the feedback input. 
+            p_delete_from_feedback_input();          //  Remove text from the feedback input. 
+        },
+
+	"UP":     function() {  },
+	"DOWN":   function() {	},
+	"LEFT":   function() {
+            q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
+        },
+        "RIGHT":  function() {
+            r_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
         },
 	
 	"ENTER":  function() {
@@ -219,7 +221,7 @@ function position_cursor() {
         var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
-        var x_pos = _feedback_bar.length + _feedback_input.length + 1;
+        var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
 }
@@ -258,6 +260,7 @@ function a_load_file_to_buffer() {
 	_feedback_event = function(response) {
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
+	    _feedback_bar = "";
 	}
         _buffer = "";
     } else {
@@ -422,4 +425,37 @@ function l_save_buffer_to_file() {
     fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
     _modified = false;
     _feedback_bar = "saved :)";
+}
+
+function o_add_to_feedback_input(new_text) {
+    var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
+    new_fb_input      += new_text;
+    new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
+    _feedback_input = new_fb_input;
+    _feedback_cursor++;
+}
+
+function p_delete_from_feedback_input() {
+    if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+
+    var new_fb_input = _feedback_input.slice(0, _feedback_cursor - 1);
+    new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
+    _feedback_input  = new_fb_input;
+    _feedback_cursor--;
+}
+
+function q_move_feedback_cursor_left() {
+    _feedback_cursor--;
+    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
+	_feedback_cursor++;
+    }
+}
+
+function r_move_feedback_cursor_right() {
+    _feedback_cursor++;
+    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
+        _feedback_cursor--;
+    }
 }
