@@ -1169,7 +1169,7 @@ function map_events() { ... }
 //  These functions fire in response to "events" like keyboard input. 
 vvar _mode_events      = {
 
-    "BUFFER-EDITOR" {
+    "BUFFER-EDITOR": {
         "LEFT":   function() {
             d_move_cursor_left();
         },
