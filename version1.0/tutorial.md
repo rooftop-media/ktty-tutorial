@@ -1217,7 +1217,7 @@ vvar _mode_events      = {
             o_add_to_feedback_input(key);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
-            p_delete_from_buffer();          //  Remove text from the feedback input. 
+            p_delete_from_feedback_input();          //  Remove text from the feedback input. 
         },
 	
 	"LEFT":   function() {
@@ -1418,7 +1418,7 @@ function position_cursor() {
         var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
-        var x_pos = _feedback_bar.length + _feedback_input.length + 1;
+        var x_pos = _feedback_bar.length + _feedback_input.length + 2;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
 }
