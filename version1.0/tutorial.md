@@ -1003,7 +1003,7 @@ var _events      = {
 
 
 
-<h3 id="d-2">  ☑️ Step 2:  h_add_to_buffer( text ) </h3>
+<h3 id="d-2">  ☑️ Step 2:  h_add_to_buffer( new_text ) </h3>
 This algorithm will insert text into the buffer at the cursor’s position.
 
 ```javascript
@@ -1152,7 +1152,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="e-2">  ☑️ Step 2:  Changing _events to _mode_events  </h3>
+<h3 id="e-2">  ☑️ Step 2:  Change _events to _mode_events  </h3>
 
 Up until now, we stored all the events in an event dictionary, called `_events`.  
 *(We originally defined that variable in [part C, step 2](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-2) if you're curious.)*
@@ -1214,21 +1214,22 @@ vvar _mode_events      = {
 
     "FEEDBACK": {
         "LEFT":   function() {
-            //
+            o_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
         },
         "RIGHT":  function() {
-            //
+            p_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
         },
 
         "TEXT":   function(key) {
-            //
-        },
-        "ENTER":  function() {
-            //
+            q_add_to_feedback_input(text);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
-            //
-        }
+            r_delete_from_buffer();          //  Remove text from the feedback input. 
+        },
+	
+	"ENTER":  function() {
+            _feedback_event();               //  Running the feedback event. 
+        },
     }
 }
 ```
@@ -1301,7 +1302,78 @@ function map_events() {
 
 
 
-<h3 id="e-4">  ☑️ Step 4:   </h3>
+<h3 id="e-4">  ☑️ Step 4:  o_move_feedback_cursor_left() </h3>
+
+A function to move the feedback input cursor left one, if possible. 
+
+```javascript
+function o_move_feedback_cursor_left() {
+    _feedback_cursor--;
+    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
+    	_feedback_cursor++;
+    }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-4">  ☑️ Step 4:  p_move_feedback_cursor_right() </h3>
+
+This time we're going right, unless we're at the end of `_feedback_input`.
+
+```javascript
+function p_move_feedback_cursor_right() {
+    _feedback_cursor++;
+    if (_feedback_cursor > _feedback_input.length - 1) {      // don't "surpass" the end of _feeback_input
+        _feedback_cursor--;
+    }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-5">  ☑️ Step 5:  q_add_to_feedback_input(new_text) </h3>
+
+This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
+
+```javascript
+function q_add_to_feedback_input(new_text) {
+    var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
+    new_fb_input      += new_text;
+    new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
+    _feedback_input = new_fb_input;
+    _feedback_cursor++;
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-6">  ☑️ Step 6:  r_delete_from_buffer() </h3>
+
+This algorithm will delete text from `_feedback_input`.
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-7">  ☑️ Step 7:  Edit a_load_file_to_buffer(filepath) </h3>
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
+
+<br/><br/><br/><br/>
+
+
+
+
+
+
 
 
 
