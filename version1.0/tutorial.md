@@ -20,7 +20,7 @@ Click a part title to jump down to it, in this file.
 | --------------------------- | ------------ | ------ |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. | Complete, tested. |
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. |
-| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  |
+| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Refactored, untested.  |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested.  |
 | [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | In progress. |
 | [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | Todo |
@@ -606,7 +606,8 @@ Keyboard events like "ENTER" or "CTRL-C" come through as confusing keycodes.
 In our events section, we'll make a dictionary to rename such codes...
 
 ```javascript
-var _key_names = {
+//  A dictionary naming some special keys.
+var _key_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
   “\u0003”: “CTRL-C”,
   “\u0013”: “CTRL-S”,
   “\u001b[A”: “UP”,
@@ -703,46 +704,24 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
 
-	if (_event_names[key] 
-            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q 
-                _events["QUIT"]();
-            }
-            else if ( key === '\u0013' ) {       // ctrl-s  
-                _events["SAVE"]();
-            }
-            else if ( key === '\u001b[A' ) {     //  up 
-                _events["UP"]();
-            }
-            else if ( key === '\u001b[B' ) {     //  down
-                _events["DOWN"]();
-            }
-            else if ( key === '\u001b[C' ) {     //  right 
-                _events["RIGHT"]();
-            }
-            else if ( key === '\u001b[D' ) {     //  left
-                _events["LEFT"]();
-            }
-            else if ( key === '\u000D' ) {     //  enter 
-                _events["ENTER"]();
-            }
-            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete 
-                _events["BACKSPACE"]();
-            }
+	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+	
+	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	    _events[event_name]();
+	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+	    _events["TEXT"](key);
+	}
 
-            else {
-                _events["TEXT"](key);
-            }
+        draw();                                    /**  Redraw the whole screen on any keypress.                               **/
 
-            draw();
-
-        });
+    });
 }
 ```
 <br/><br/><br/><br/>
 
 
 
-<h3 id="c-4"> ☑️ Step 4.  d_move_cursor_left() </h3>
+<h3 id="c-5"> ☑️ Step 5.  d_move_cursor_left() </h3>
 
 This is an algorithm we’ll use to move the cursor left on the buffer.
 
@@ -762,7 +741,7 @@ function d_move_cursor_left() {
 
 
 
-<h3 id="c-5"> ☑️ Step 5.  e_move_cursor_right() </h3>
+<h3 id="c-6"> ☑️ Step 6.  e_move_cursor_right() </h3>
 
 And we’ll need an algorithm to move right, too. 
 
@@ -784,7 +763,7 @@ function e_move_cursor_right() {
 
 
 
-<h3 id="c-6"> ☑️ Step 6.  ☞  Test the code! </h3>
+<h3 id="c-7"> ☑️ Step 7.  ☞  Test the code! </h3>
 
 Before we get to the UP/DOWN arrows, run the code to make sure you can navigate left & right.
 
@@ -798,7 +777,7 @@ and stop at the beginning of the file.
 
 
 
-<h3 id="c-7"> ☑️ Step 7.  f_move_cursor_up() </h3>
+<h3 id="c-8"> ☑️ Step 8.  f_move_cursor_up() </h3>
 
 Moving the cursor up will be a bit more difficult.
 
@@ -831,7 +810,7 @@ function f_move_cursor_up() {
 
 
 
-<h3 id="c-8"> ☑️ Step 8.  g_move_cursor_down() </h3>
+<h3 id="c-9"> ☑️ Step 9.  g_move_cursor_down() </h3>
 
 Now let’s write an algorithm to move down a line. 
 
@@ -890,14 +869,14 @@ if ( _cursor_buffer_pos > buff_limit ) {
 
 
 
-<h3 id="c-9"> ☑️ Step 9.  ☞  Test the code! </h3>
+<h3 id="c-10"> ☑️ Step 10.  ☞  Test the code! </h3>
 
 The UP and DOWN arrow key events should now work! 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="c-10"> ☑️ Step 10.  Edit draw() </h3>
+<h3 id="c-11"> ☑️ Step 11.  Edit draw() </h3>
 
 Next we’ll uncomment the call to `draw_feedback_bar()` in the `draw()` function.
 After we implement it, we’ll be done with the draw section for this version!
@@ -917,7 +896,7 @@ function draw() {
 
 
 
-<h3 id="c-11"> ☑️ Step 11.  draw_feedback_bar() </h3>
+<h3 id="c-12"> ☑️ Step 12.  draw_feedback_bar() </h3>
 
 This function will draw the feedback bar every time the screen is refreshed.
 Basically, it displays info for the event that caused the last draw() call.
@@ -946,14 +925,14 @@ function draw_feedback_bar() {
 
 
 
-<h3 id="c-12"> ☑️ Step 12.  ☞  Test the code! </h3>
+<h3 id="c-13"> ☑️ Step 13.  ☞  Test the code! </h3>
 
 Running the code now should draw the feedback bar every time we move the cursor. 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="c-13"> ☑️ Step 13.  ❖  Part C review. </h3>
+<h3 id="c-14"> ☑️ Step 14.  ❖  Part C review. </h3>
 
 Our file is up to 331 lines! 
 
