@@ -600,7 +600,29 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="c-2"> ☑️ Step 2.  Outline the event map. </h3>
+<h3 id="c-2"> ☑️ Step 2.  Event Key Name Dictionary. </h3>
+
+Keyboard events like "ENTER" or "CTRL-C" come through as confusing keycodes.  
+In our events section, we'll make a dictionary to rename such codes...
+
+```javascript
+var _key_names = {
+  “\u0003”: “CTRL-C”,
+  “\u0013”: “CTRL-S”,
+  “\u001b[A”: “UP”,
+  “\u001b[B”: “DOWN”,
+  “\u001b[C”: “RIGHT”,
+  “\u001b[D”: “LEFT”,
+  “\u0008”: “BACKSPACE”,
+  “\u000D”: “ENTER”
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="c-3"> ☑️ Step 3.  The Event Map. </h3>
 
 Events are described in a Javascript object, mapping event names to functions. 
 For now, we'll leave a lot of the event function calls commented out.
@@ -662,7 +684,7 @@ var _events      = {
 
 
 
-<h3 id="c-3"> ☑️ Step 3.  Edit map_events() </h3>
+<h3 id="c-4"> ☑️ Step 4.  Edit map_events() </h3>
 
 We’ll also add to the `map_events()` function (which is called in boot(). )
 
@@ -681,6 +703,7 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
 
+	if (_event_names[key] 
             if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q 
                 _events["QUIT"]();
             }
