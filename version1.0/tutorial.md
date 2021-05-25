@@ -1544,7 +1544,7 @@ We'll also use the feedback bar when the user tries to quit a file with a modifi
 function b_quit() {
 
     if (_modified) {            /**  If the file has been modified, start the prompts!    **/
-        mode = "FEEDBACK";
+        mode = "FEEDBACK-PROMPT";
 	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
 	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
 	    if (response.toLowerCase() == "y") {
