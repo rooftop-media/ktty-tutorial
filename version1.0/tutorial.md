@@ -606,6 +606,8 @@ Keyboard events like "ENTER" or "CTRL-C" come through as confusing keycodes.
 In our events section, we'll make a dictionary to rename such codes...
 
 ```javascript
+////  SECTION 4:  EVENTS 
+
 //  A dictionary naming some special keys.
 var _key_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
   "\u0003": "CTRL-C",
@@ -632,7 +634,7 @@ For now, we'll leave a lot of the event function calls commented out.
 ```javascript
 ////  SECTION 4:  EVENTS 
 
-//  Map keyboard events.
+var _key_names = { ... }
 function map_events() { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
