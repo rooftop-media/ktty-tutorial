@@ -1236,7 +1236,7 @@ var _mode_events      = {
     "FEEDBACK-PROMPT": {
         "CTRL-C": function() {
             b_quit();
-	}
+	},
 	
         "TEXT":   function(key) {
             l_add_to_feedback_input(key);   //  Add text to the feedback input. 
