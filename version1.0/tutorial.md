@@ -608,14 +608,14 @@ In our events section, we'll make a dictionary to rename such codes...
 ```javascript
 //  A dictionary naming some special keys.
 var _key_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
-  “\u0003”: “CTRL-C”,
-  “\u0013”: “CTRL-S”,
-  “\u001b[A”: “UP”,
-  “\u001b[B”: “DOWN”,
-  “\u001b[C”: “RIGHT”,
-  “\u001b[D”: “LEFT”,
-  “\u0008”: “BACKSPACE”,
-  “\u000D”: “ENTER”
+  "\u0003": "CTRL-C",
+  "\u0013": "CTRL-S",
+  "\u001b[A": "UP",
+  "\u001b[B": "DOWN",
+  "\u001b[C": "RIGHT",
+  "\u001b[D": "LEFT",
+  "\u0008": "BACKSPACE",
+  "\u000D": "ENTER"
 }
 ```
 
