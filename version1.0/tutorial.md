@@ -641,6 +641,9 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
   "\u0003": "CTRL-C",
   "\u0013": "CTRL-S",
 }
+
+function map_events() { ... }
+
 ```
 
 <br/><br/><br/><br/>
@@ -657,7 +660,6 @@ For now, we'll leave a lot of the event function calls commented out.
 ////  SECTION 4:  EVENTS 
 
 var _event_names = { ... }
-function map_events() { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
@@ -700,6 +702,9 @@ var _events      = {
     },
 
 }
+
+function map_events() { ... }
+
 ```
 <br/><br/><br/><br/>
 
@@ -715,6 +720,9 @@ Now, we’ll capture the arrow key inputs & call functions to move only within t
 
 ```javascript
 ////  SECTION 4:  EVENTS 
+
+var _event_names = { ... }
+var _events      = { ... }
 
 //  Map keyboard events.
 function map_events() {
@@ -972,8 +980,7 @@ We’ll want to uncomment some functions in our event map, as we’re about to i
 ```javascript
 ////  SECTION 4:  EVENTS 
 
-//  Map keyboard events.
-function map_events() { ... }
+var _event_names = { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
@@ -1014,8 +1021,9 @@ var _events      = {
     "REDO": function() {
         // q_redo()
     },
-
 }
+
+function map_events() { ... }
 ```
 <br/><br/><br/><br/>
 
@@ -1180,8 +1188,7 @@ To do this, we'll *add another layer* to our "event dictionary", and rename it t
 ```javascript
 ////  SECTION 4:  EVENTS 
 
-//  Map keyboard events.
-function map_events() { ... }
+var _event_names = { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 vvar _mode_events      = {
@@ -1250,6 +1257,8 @@ vvar _mode_events      = {
         },
     }
 }
+
+function map_events()
 ```
 Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
 
@@ -1265,19 +1274,17 @@ We'll just omit such names from our list.
 We'll need to modify the `map_events()` function, to map key events to the event appropriate for the current mode.
 When we originally wrote `map_events()` (back in [part c, step 3](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-3)), we referenced the event dictionary, which was called `_events`.
 
-That dictionary doesn't exist anymore, but we can get the equivilant dictionary with a single line:
-
-```javascript
-var events = _mode_events[ _mode ];
-```
-
+That dictionary doesn't exist anymore, but we can get the equivilant dictionary with a single line.
 Note that, since our new `event` variable is calculated locally, I've removed the `_` from its name.  
 The `map_events()` code now looks like this, accounting for that name change:
 
 ```javascript
-////  SECTION 4:  Events.                                                                                                                              
+////  SECTION 4:  Events. 
 
-//  Map keyboard events.                                                                                                                               
+var _event_names = { ... }
+var _events      = { ... }
+
+//  Map keyboard events.  
 function map_events() {
     var stdin = process.stdin;
     stdin.setRawMode( true );
