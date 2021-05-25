@@ -736,7 +736,7 @@ function map_events() {
 	
 	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
 	    _events[event_name]();
-	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
 	    _events["TEXT"](key);
 	}
 
@@ -1298,7 +1298,7 @@ function map_events() {
 
         if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
             events[event_name]();
-        } else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
             events["TEXT"](key);
         }
 
