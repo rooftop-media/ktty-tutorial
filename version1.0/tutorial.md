@@ -637,7 +637,7 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
   "\u001b[C": "RIGHT",
   "\u001b[D": "LEFT",
   "\u007f": "BACKSPACE",
-  "\u000D": "ENTER"
+  "\u000D": "ENTER",
   "\u0003": "CTRL-C",
   "\u0013": "CTRL-S",
 };
