@@ -640,7 +640,7 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
   "\u000D": "ENTER"
   "\u0003": "CTRL-C",
   "\u0013": "CTRL-S",
-}
+};
 
 function map_events() { ... }
 
@@ -701,7 +701,7 @@ var _events      = {
         // q_redo()
     },
 
-}
+};
 
 function map_events() { ... }
 
@@ -1021,7 +1021,7 @@ var _events      = {
     "REDO": function() {
         // q_redo()
     },
-}
+};
 
 function map_events() { ... }
 ```
@@ -1256,7 +1256,7 @@ vvar _mode_events      = {
             _feedback_event(_feedback_input);    //  Running the feedback event. 
         },
     }
-}
+};
 
 function map_events()
 ```
