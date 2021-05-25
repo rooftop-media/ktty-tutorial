@@ -1277,40 +1277,19 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
     
-  	    var events = _mode_events[ _mode ];
+  	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
 
-            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q                                                                 
-                events["QUIT"]();
-            }
-            else if ( key === '\u0013' ) {       // ctrl-s                                                                                             
-                events["SAVE"]();
-            }
-            else if ( key === '\u001b[A' ) {     //  up                                                                                                
-                events["UP"]();
-            }
-            else if ( key === '\u001b[B' ) {     //  down                                                                                              
-                events["DOWN"]();
-            }
-            else if ( key === '\u001b[C' ) {     //  right                                                                                             
-                events["RIGHT"]();
-            }
-            else if ( key === '\u001b[D' ) {     //  left                                                                                              
-                events["LEFT"]();
-            }
-            else if ( key === '\u000D' ) {       //  enter                                                                                               
-                events["ENTER"]();
-            }
-            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete                                                                          
-                events["BACKSPACE"]();
-            }
+	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
 
-            else {
-                events["TEXT"](key);
-            }
+        if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+            events[event_name]();
+        } else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+            events["TEXT"](key);
+        }
 
-            draw();
+        draw();
 
-        });
+    });
 }
 ```
 <br/><br/><br/><br/>
