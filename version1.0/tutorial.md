@@ -264,8 +264,7 @@ function map_events() {
 	stdin.on("data", function(key) {
 		//  Exit on ctrl-c
 		if (key === "\u0003") {
-			console.clear();
-			process.exit();
+			b_quit();
 		}
 		process.stdout.write(key);
 	});
@@ -283,7 +282,28 @@ For now, we’ll be able to move the cursor anywhere on the page.*
 
 
 
-<h3 id="a-10"> ☑️ Step 10. ☞  Test the code!  </h3>
+<h3 id="a-10"> ☑️ Step 10. b_quit() </h3>
+
+The quit function is important -- without it, we'll have a hard time quitting ktty.
+For now, we'll keep the quitting process simple -- clear the screen, then exit.
+We’ll implement it in section 6:
+
+```javascript
+////  SECTION 6:  Algorithms.
+
+function a_load_file_to_buffer() {  ...  }
+
+function b_quit() {
+    console.clear();
+    process.exit();
+}
+
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="a-11"> ☑️ Step 11. ☞  Test the code!  </h3>
 
 Running this code should open the file on the screen, let you move the cursor, and type.
 If it throws an error, check for typos & missing code.
@@ -299,7 +319,7 @@ When you're done testing, `ctrl-c` should quit the program.
 
 
 
-<h3 id="a-11"> ☑️ Step 11. ❖ Part A review. </h3>
+<h3 id="a-11"> ☑️ Step 12. ❖ Part A review. </h3>
 
 The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_A.js).
 
@@ -339,7 +359,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 <h3 id="b-2"> ☑️ Step 2. Edit boot() </h3>
 
-It's time to edit `boot()`, to uncomment the `b_get_window_size()` function call.
+It's time to edit `boot()`, to uncomment the `c_get_window_size()` function call.
 
 ```javascript
 ////  SECTION 3:  Boot stuff.
@@ -351,7 +371,7 @@ function boot() {
     a_load_file_to_buffer();
 
     /**  Load window height & width.      **/
-    b_get_window_size();
+    c_get_window_size();
 
     /**  Map the event listeners.         **/
     map_events();
@@ -366,7 +386,7 @@ function boot() {
 
 
 
-<h3 id="b-3"> ☑️ Step 3. b_get_window_size() </h3>
+<h3 id="b-3"> ☑️ Step 3. c_get_window_size() </h3>
 
 We'll get the window height and width with this algorithm.
 *We’ll need the window height to accurately position the status bar. *
@@ -375,9 +395,10 @@ We'll get the window height and width with this algorithm.
 ////  SECTION 6:  Algorithms.
 
 function a_load_file_to_buffer() { ... }   //  Algorithm A's code is here.
+function b_quit() { ... }
 
 //  Get the window size. 
-function b_get_window_size() {
+function c_get_window_size() {
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
 }
@@ -438,7 +459,7 @@ function draw_status_bar() {
         status_bar_text += "               ";
     }
 
-    var cursor_position = c_get_cursor_pos();                  /**  Using our algorithm a_get_cursor_pos!   **/
+    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
     status_bar_text += "  cursor on line " + cursor_position[0];
     status_bar_text += ", row " + cursor_position[1];
 
@@ -451,14 +472,14 @@ function draw_status_bar() {
 }
 ```
 
-Notice that we used an algorithm `c_get_cursor_pos()`.  We'll define that next!
+Notice that we used an algorithm `d_get_cursor_pos()`.  We'll define that next!
 <br/><br/><br/><br/>
 
 
 
-<h3 id="b-6"> ☑️ Step 6. c_get_cursor_pos() </h3>
+<h3 id="b-6"> ☑️ Step 6. d_get_cursor_pos() </h3>
 
-In that last function, we called the algorithm `c_get_cursor_pos()` . 
+In that last function, we called the algorithm `d_get_cursor_pos()` . 
 
 The cursor is stored as a single integer, in the global variable _cursor_buffer_pos.
 This variable is relative to the characters in _buffer’s string.
@@ -470,9 +491,10 @@ But that variable doesn’t take into account line breaks,
 ////  SECTION 6:  Algorithms. 
 
 function a_load_file_to_buffer() { ... }
-function b_get_window_size() { ... }
+function b_quit() { ... }
+function c_get_window_size() { ... }
 
-function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
+function d_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
 
     var cursor_position = [1,1];
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
@@ -539,7 +561,7 @@ function draw_status_bar() {  ...  }
 
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
-    var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
+    var cursor_position = d_get_cursor_pos(); //  d_get_cursor_pos is an algorithm.
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 ```
@@ -610,14 +632,14 @@ In our events section, we'll make a dictionary to rename such codes...
 
 //  A dictionary naming some special keys.
 var _event_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
-  "\u0003": "CTRL-C",
-  "\u0013": "CTRL-S",
   "\u001b[A": "UP",
   "\u001b[B": "DOWN",
   "\u001b[C": "RIGHT",
   "\u001b[D": "LEFT",
   "\u007f": "BACKSPACE",
   "\u000D": "ENTER"
+  "\u0003": "CTRL-C",
+  "\u0013": "CTRL-S",
 }
 ```
 
@@ -639,46 +661,42 @@ function map_events() { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
-
+    "CTRL-C": function() {
+        b_quit();
+    },
+    
     "LEFT":   function() {
-        d_move_cursor_left();
+        e_move_cursor_left();
     },
     "RIGHT":  function() {
-        e_move_cursor_right();
+        f_move_cursor_right();
     },
-
     "UP":     function() {
-        f_move_cursor_up();
+        g_move_cursor_up();
     },
     "DOWN":   function() {
-        g_move_cursor_down();
+        h_move_cursor_down();
     },
 
     "TEXT":   function(key) {
-	 // h_add_to_buffer(key);
+	// i_add_to_buffer(key);
     },
     "ENTER":  function() {
-        // h_add_to_buffer("\n");
+        // i_add_to_buffer("\n");
     },
     "BACKSPACE": function() {
-        // i_delete_from_buffer();
-    },
-    
-    "CTRL-Z":  function() {
-        // j_undo()
-    },
-    "CTRL-R": function() {
-        // k_redo()
+        // j_delete_from_buffer();
     },
 
     "CTRL-S": function() {
-        // l_save_buffer_to_file();
+        // k_save_buffer_to_file();
     },
-
-    "CTRL-C": function() {
-        // m_quit();
-	console.clear();
-        process.exit();
+    
+    "CTRL-Z":  function() {
+        // p_undo()
+    },
+    "CTRL-R": function() {
+        // q_redo()
     },
 
 }
@@ -723,12 +741,12 @@ function map_events() {
 
 
 
-<h3 id="c-5"> ☑️ Step 5.  d_move_cursor_left() </h3>
+<h3 id="c-5"> ☑️ Step 5.  e_move_cursor_left() </h3>
 
 This is an algorithm we’ll use to move the cursor left on the buffer.
 
 ```javascript
-function d_move_cursor_left() {
+function e_move_cursor_left() {
 
     _cursor_buffer_pos -= 1;
     if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
@@ -743,12 +761,12 @@ function d_move_cursor_left() {
 
 
 
-<h3 id="c-6"> ☑️ Step 6.  e_move_cursor_right() </h3>
+<h3 id="c-6"> ☑️ Step 6.  f_move_cursor_right() </h3>
 
 And we’ll need an algorithm to move right, too. 
 
 ```javascript
-function e_move_cursor_right() {
+function f_move_cursor_right() {
 
     _cursor_buffer_pos += 1;
 
@@ -779,12 +797,12 @@ and stop at the beginning of the file.
 
 
 
-<h3 id="c-8"> ☑️ Step 8.  f_move_cursor_up() </h3>
+<h3 id="c-8"> ☑️ Step 8.  g_move_cursor_up() </h3>
 
 Moving the cursor up will be a bit more difficult.
 
 ```javascript
-function f_move_cursor_up() {
+function g_move_cursor_up() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
     var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
@@ -812,12 +830,12 @@ function f_move_cursor_up() {
 
 
 
-<h3 id="c-9"> ☑️ Step 9.  g_move_cursor_down() </h3>
+<h3 id="c-9"> ☑️ Step 9.  h_move_cursor_down() </h3>
 
 Now let’s write an algorithm to move down a line. 
 
 ```javascript
-function g_move_cursor_down() {
+function h_move_cursor_down() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
     var current_line_length = 0;         /**   To find the length of *this* line.                      **/
@@ -947,9 +965,9 @@ In this section, we’ll add some more events we outlined, including typing char
 <br/><br/><br/><br/>
 
 
+
 <h3 id="d-1">  ☑️ Step 1:  Edit map_events() </h3>
 We’ll want to uncomment some functions in our event map, as we’re about to implement them.
-For now, 
 
 ```javascript
 ////  SECTION 4:  EVENTS 
@@ -959,46 +977,42 @@ function map_events() { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
+    "QUIT": function() {
+        b_quit();
+    },
 
     "LEFT":   function() {
-        d_move_cursor_left();
+        e_move_cursor_left();
     },
     "RIGHT":  function() {
-        e_move_cursor_right();
+        f_move_cursor_right();
     },
-
     "UP":     function() {
-        f_move_cursor_up();
+        g_move_cursor_up();
     },
     "DOWN":   function() {
-        g_move_cursor_down();
+        h_move_cursor_down();
     },
 
     "TEXT":   function(key) {
-	h_add_to_buffer(key);
+	i_add_to_buffer(key);
     },
     "ENTER":  function() {
-        h_add_to_buffer("\n");
+        i_add_to_buffer("\n");
     },
     "BACKSPACE": function() {
-        i_delete_from_buffer();
+        j_delete_from_buffer();
+    },
+    
+    "SAVE": function() {
+        k_save_buffer_to_file();
     },
     
     "UNDO":  function() {
-        // j_undo()
+        // p_undo()
     },
     "REDO": function() {
-        // k_redo()
-    },
-
-    "SAVE": function() {
-        l_save_buffer_to_file();
-    },
-
-    "QUIT": function() {
-        // m_quit();
-	console.clear();
-        process.exit();
+        // q_redo()
     },
 
 }
@@ -1007,11 +1021,11 @@ var _events      = {
 
 
 
-<h3 id="d-2">  ☑️ Step 2:  h_add_to_buffer( new_text ) </h3>
+<h3 id="d-2">  ☑️ Step 2:  i_add_to_buffer( new_text ) </h3>
 This algorithm will insert text into the buffer at the cursor’s position.
 
 ```javascript
-function h_add_to_buffer(new_text) {
+function i_add_to_buffer(new_text) {
     var new_buffer = _buffer.slice(0, _cursor_buffer_pos);
     new_buffer    += new_text;
     new_buffer    += _buffer.slice(_cursor_buffer_pos, _buffer.length);
@@ -1028,7 +1042,7 @@ function h_add_to_buffer(new_text) {
 
 
 <h3 id="d-3">  ☑️ Step 3:  ☞  Test the code! </h3>
-Our `h_add_to_buffer( text )` function is used inserting text characters OR line breaks into the text buffer.  Try it out!
+Our `i_add_to_buffer( text )` function is used inserting text characters OR line breaks into the text buffer.  Try it out!
 
 Note that “backspace” will throw an error now, since we uncommented the function, 
 but haven’t yet implemented it. 
@@ -1041,7 +1055,7 @@ but haven’t yet implemented it.
 This function will implement the backspace.  *Thank goodness.*
 
 ```javascript
-function i_delete_from_buffer() {
+function j_delete_from_buffer() {
 
     if ( _cursor_buffer_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
@@ -1071,12 +1085,11 @@ Make sure that pressing “backspace” at the beginning of the file doesn’t c
 
 
 
-<h3 id="d-6">  ☑️ Step 6:  l_save_buffer_to_file() </h3>
+<h3 id="d-6">  ☑️ Step 6:  k_save_buffer_to_file() </h3>
 This algorithm will save the file, & update the `_modified` variable.
-*Note that the lowercase "l" looks like a 1 or a i sorta.  Sorry*
 
 ```javascript
-function l_save_buffer_to_file() {
+function k_save_buffer_to_file() {
     fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
     _modified = false;
     _feedback_bar = "saved :)";
@@ -1136,7 +1149,7 @@ And we'll add a variable that will store a *function*, which we'll call `_feedba
 ////  SECTION 2:  APP MEMORY
 
 //  Setting up app memory. 
-var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK"
+var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK-PROMPT"
 
 var _buffer            = "";      //  The text being edited. 
 var _filename          = "";      //  Filename - including extension.
@@ -1174,28 +1187,35 @@ function map_events() { ... }
 vvar _mode_events      = {
 
     "BUFFER-EDITOR": {
+        "QUIT": function() {
+            b_quit();
+	},
+	
         "LEFT":   function() {
-            d_move_cursor_left();
+            e_move_cursor_left();
         },
         "RIGHT":  function() {
-            e_move_cursor_right();
+            f_move_cursor_right();
         },
-
         "UP":     function() {
-            f_move_cursor_up();
+            g_move_cursor_up();
         },
         "DOWN":   function() {
-            g_move_cursor_down();
+            h_move_cursor_down();
         },
 
         "TEXT":   function(key) {
-            h_add_to_buffer(key);
+            i_add_to_buffer(key);
         },
         "ENTER":  function() {
-            h_add_to_buffer("\n");
+            i_add_to_buffer("\n");
         },
         "BACKSPACE": function() {
-            i_delete_from_buffer();
+            j_delete_from_buffer();
+        },
+	
+	"SAVE": function() {
+            k_save_buffer_to_file();
         },
 
         "UNDO":  function() {
@@ -1204,42 +1224,30 @@ vvar _mode_events      = {
         "REDO": function() {
             // k_redo()                                                                                                                                
         },
-
-        "SAVE": function() {
-            l_save_buffer_to_file();
-        },
-
-        "QUIT": function() {
-            // m_quit();                                                                                                                               
-            console.clear();
-            process.exit();
-	}
     },
 
-    "FEEDBACK": {
+    "FEEDBACK-PROMPT": {
+        "QUIT": function() {
+            b_quit();
+	}
+	
         "TEXT":   function(key) {
-            o_add_to_feedback_input(key);   //  Add text to the feedback input. 
+            l_add_to_feedback_input(key);   //  Add text to the feedback input. 
         },
         "BACKSPACE": function() {
-            p_delete_from_feedback_input();          //  Remove text from the feedback input. 
+            m_delete_from_feedback_input();          //  Remove text from the feedback input. 
         },
 	
 	"LEFT":   function() {
-            q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
+            n_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
         },
         "RIGHT":  function() {
-            r_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
+            o_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
         },
 	
 	"ENTER":  function() {
             _feedback_event(_feedback_input);    //  Running the feedback event. 
         },
-	
-	"QUIT": function() {
-            // m_quit();                                                                                                                               
-            console.clear();
-            process.exit();
-	}
     }
 }
 ```
@@ -1310,7 +1318,7 @@ function position_cursor() {  ...  }
 
 //  Drawing the feedback bar.                                                                                                                          
 function draw_feedback_bar() {
-    if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, draw it cyan.     **/
+    if (_mode == "FEEDBACK-PROMPT") {                          /**  If we're in feedback mode, draw it cyan.     **/
         process.stdout.write("\x1b[36m"); 
     } else {                                                   /**  If it's buffer mode feedback, dim.           **/
         process.stdout.write("\x1b[2m"); 
@@ -1320,7 +1328,7 @@ function draw_feedback_bar() {
     process.stdout.write(_feedback_bar);                       /**  Write the text.                              **/
     process.stdout.write("\x1b[0m");                           /**  Back to undim text.                          **/
         
-    if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, write the input too.   **/
+    if (_mode == "FEEDBACK-PROMPT") {                          /**  If we're in feedback mode, write the input too.   **/
         process.stdout.write(_feedback_input); 
     } else {
         _feedback_bar = "";
@@ -1345,7 +1353,7 @@ If ktty is opened with a blank `filepath`, ask the user if they want to create a
 function a_load_file_to_buffer() {
     _filename = process.argv[2];
     if ( _filename == undefined ) {
-        _mode         = "FEEDBACK";
+        _mode         = "FEEDBACK-PROMPT";
 	_feedback_bar = "Enter a file name to create a new file: ";
 	_feedback_event = function(response) {
 	    _filename = response;
@@ -1402,9 +1410,9 @@ function draw_status_bar() {  ...  }
 //  Move the cursor to its position in the buffer. 
 function position_cursor() {
     if (_mode == "BUFFER-EDITOR") {
-        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.  
+        var cursor_position = d_get_cursor_pos();      //  d_get_cursor_pos is an algorithm.  
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
-    } else if (_mode == "FEEDBACK") {
+    } else if (_mode == "FEEDBACK-PROMPT") {
         var x_pos = _feedback_bar.length + 1 + _feedback_cursor;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
@@ -1424,12 +1432,12 @@ Let's run the code again to make sure the cursor gets positioned correctly.
 
 
 
-<h3 id="e-9">  ☑️ Step 9:  o_add_to_feedback_input(new_text) </h3>
+<h3 id="e-9">  ☑️ Step 9:  l_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
 ```javascript
-function o_add_to_feedback_input(new_text) {
+function l_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
     new_fb_input      += new_text;
     new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
@@ -1441,12 +1449,12 @@ function o_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-10">  ☑️ Step 10:  p_delete_from_feedback_input() </h3>
+<h3 id="e-10">  ☑️ Step 10:  m_delete_from_feedback_input() </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
 ```javascript
-function p_delete_from_feedback_input() {
+function m_delete_from_feedback_input() {
     if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
@@ -1480,12 +1488,12 @@ In your command  line, run `ls` to see if your new file was created!
 
 
 
-<h3 id="e-12">  ☑️ Step 12:  q_move_feedback_cursor_left() </h3>
+<h3 id="e-12">  ☑️ Step 12:  n_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
 ```javascript
-function q_move_feedback_cursor_left() {
+function n_move_feedback_cursor_left() {
     _feedback_cursor--;
     if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
     	_feedback_cursor++;
@@ -1496,12 +1504,12 @@ function q_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-13">  ☑️ Step 13:  r_move_feedback_cursor_right() </h3>
+<h3 id="e-13">  ☑️ Step 13:  o_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
 ```javascript
-function r_move_feedback_cursor_right() {
+function o_move_feedback_cursor_right() {
     _feedback_cursor++;
     if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
         _feedback_cursor--;
@@ -1521,12 +1529,12 @@ This time, when you enter a filename, you should be able to use the arrow keys t
 <br/><br/><br/><br/>
 
 
-<h3 id="e-15">  ☑️ Step 15:  m_quit() </h3>
+<h3 id="e-15">  ☑️ Step 15:  Editing b_quit() </h3>
 
 We'll also use the feedback bar when the user tries to quit a file with a modified buffer.  
 
 ```javascript
-function m_quit() {
+function b_quit() {
 
     if (_modified) {            /**  If the file has been modified, start the prompts!    **/
         mode = "FEEDBACK";
@@ -1570,9 +1578,25 @@ function m_quit() {
 
 
 
-<h2 id="part-f" align="center">  Part E:   Scroll & Resize </h2>
+<h2 id="part-f" align="center">  Part F:   Scroll & Resize </h2>
 
 <br/><br/><br/><br/>
+
+
+<h3 id="f-?">  ☑️ Step ?:  ❖  Part F review. </h3>
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
+<h2 id="part-g" align="center">  Part G:   Undo & Redo </h2>
+
+<br/><br/><br/><br/>
+
+
+<h3 id="g-?">  ☑️ Step ?:  ❖  Part G review. </h3>
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
 
 
 
