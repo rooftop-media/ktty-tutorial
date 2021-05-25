@@ -736,7 +736,7 @@ function map_events() {
 	
 	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
 	    _events[event_name]();
-	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
 	    _events["TEXT"](key);
 	}
 
@@ -1298,7 +1298,7 @@ function map_events() {
 
         if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
             events[event_name]();
-        } else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
             events["TEXT"](key);
         }
 
@@ -1544,7 +1544,7 @@ We'll also use the feedback bar when the user tries to quit a file with a modifi
 function b_quit() {
 
     if (_modified) {            /**  If the file has been modified, start the prompts!    **/
-        mode = "FEEDBACK";
+        _mode = "FEEDBACK-PROMPT";
 	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
 	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
 	    if (response.toLowerCase() == "y") {
