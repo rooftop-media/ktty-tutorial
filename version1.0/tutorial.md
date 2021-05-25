@@ -609,7 +609,7 @@ In our events section, we'll make a dictionary to rename such codes...
 ////  SECTION 4:  EVENTS 
 
 //  A dictionary naming some special keys.
-var _key_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
+var _event_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
   "\u0003": "CTRL-C",
   "\u0013": "CTRL-S",
   "\u001b[A": "UP",
@@ -634,7 +634,7 @@ For now, we'll leave a lot of the event function calls commented out.
 ```javascript
 ////  SECTION 4:  EVENTS 
 
-var _key_names = { ... }
+var _event_names = { ... }
 function map_events() { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
