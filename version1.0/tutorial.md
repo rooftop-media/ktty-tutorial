@@ -20,8 +20,8 @@ Click a part title to jump down to it, in this file.
 | --------------------------- | ------------ | ------ |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. | Complete, tested. |
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. |
-| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Refactored, untested.  |
-| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested.  |
+| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  |
+| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested. |
 | [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | In progress. |
 | [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | Todo |
 | [Part G - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Adds history tracking, for undo & redo. | Todo |
@@ -616,7 +616,7 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
   "\u001b[B": "DOWN",
   "\u001b[C": "RIGHT",
   "\u001b[D": "LEFT",
-  "\u0008": "BACKSPACE",
+  "\u007f": "BACKSPACE",
   "\u000D": "ENTER"
 }
 ```
@@ -664,18 +664,18 @@ var _events      = {
         // i_delete_from_buffer();
     },
     
-    "UNDO":  function() {
+    "CTRL-Z":  function() {
         // j_undo()
     },
-    "REDO": function() {
+    "CTRL-R": function() {
         // k_redo()
     },
 
-    "SAVE": function() {
+    "CTRL-S": function() {
         // l_save_buffer_to_file();
     },
 
-    "QUIT": function() {
+    "CTRL-C": function() {
         // m_quit();
 	console.clear();
         process.exit();
@@ -1224,9 +1224,6 @@ vvar _mode_events      = {
             p_delete_from_feedback_input();          //  Remove text from the feedback input. 
         },
 	
-	"UP":     function() {  },
-        "DOWN":   function() {  },
-	
 	"LEFT":   function() {
             q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
         },
@@ -1249,6 +1246,7 @@ vvar _mode_events      = {
 Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
 
 Note that for FEEDBACK mode, some events, like UP and DOWN, won't trigger any reaction at all.  
+We'll just omit such names from our list.
 
 <br/><br/><br/><br/>
 
@@ -1279,40 +1277,19 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
     
-  	    var events = _mode_events[ _mode ];
+  	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
 
-            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q                                                                 
-                events["QUIT"]();
-            }
-            else if ( key === '\u0013' ) {       // ctrl-s                                                                                             
-                events["SAVE"]();
-            }
-            else if ( key === '\u001b[A' ) {     //  up                                                                                                
-                events["UP"]();
-            }
-            else if ( key === '\u001b[B' ) {     //  down                                                                                              
-                events["DOWN"]();
-            }
-            else if ( key === '\u001b[C' ) {     //  right                                                                                             
-                events["RIGHT"]();
-            }
-            else if ( key === '\u001b[D' ) {     //  left                                                                                              
-                events["LEFT"]();
-            }
-            else if ( key === '\u000D' ) {       //  enter                                                                                               
-                events["ENTER"]();
-            }
-            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete                                                                          
-                events["BACKSPACE"]();
-            }
+	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
 
-            else {
-                events["TEXT"](key);
-            }
+        if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+            events[event_name]();
+        } else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+            events["TEXT"](key);
+        }
 
-            draw();
+        draw();
 
-        });
+    });
 }
 ```
 <br/><br/><br/><br/>
@@ -1362,9 +1339,9 @@ The first place we'll use Feedback Mode is in the algorithm to open files, `a_lo
 If ktty is opened with a blank `filepath`, ask the user if they want to create a file.
 
 ```javascript
-////  SECTION 6:  Algorithms.                                                                                                                          
+////  SECTION 6:  Algorithms. 
 
-//  Getting the file's contents, put it in the "buffer".                                                                                               
+//  Getting the file's contents, put it in the "buffer". 
 function a_load_file_to_buffer() {
     _filename = process.argv[2];
     if ( _filename == undefined ) {
@@ -1422,10 +1399,10 @@ function draw() {  ...  }
 function draw_buffer() {  ...  }
 function draw_status_bar() {  ...  }
 
-//  Move the cursor to its position in the buffer.                                                                                                     
+//  Move the cursor to its position in the buffer. 
 function position_cursor() {
     if (_mode == "BUFFER-EDITOR") {
-        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
+        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.  
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
         var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
