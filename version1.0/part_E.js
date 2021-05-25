@@ -144,17 +144,17 @@ function map_events() {
     stdin.setEncoding("utf8");
     stdin.on("data", function(key) {
 
-	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".   **/
 
-	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
+	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.                             **/
 
-	if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc       **/
 	    events[event_name]();
-	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+	} else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
 	    events["TEXT"](key);
 	}
 	
-	draw();                                    /**  Redraw the whole screen on any keypress.                               **/
+	draw();                                    /**  Redraw the whole screen on any keypress.                                **/
     });
 
 }
@@ -257,8 +257,33 @@ function a_load_file_to_buffer() {       /**  Getting the file's contents, put i
 }
 
 function b_quit() {                      /**  Quit out of kTTY.                 **/
-    console.clear();
-    process.exit();
+    if (_modified) {            /**  If the file has been modified, start the prompts!    **/
+        _mode = "FEEDBACK-PROMPT";
+	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
+	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
+	    if (response.toLowerCase() == "y") {
+		k_save_buffer_to_file();
+		b_quit();
+	    } else if (response.toLowerCase() == "n") {
+		_feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
+		_feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
+		    if (response.toLowerCase() == "y") {
+			console.clear();
+			process.exit();
+		    } else {
+			mode = "BUFFER-EDITOR";
+			_feedback_bar = "";
+		    }
+		}
+	    } else {
+		_feedback_input = "";
+		_feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
+	    }
+	} 
+    } else {                 /**  If the file HASN'T been modified, since the last save just quit!     **/
+        console.clear();
+	process.exit();
+    }
 }
 
 function c_get_window_size() {           /**  Get the window size.              **/
@@ -432,4 +457,18 @@ function m_delete_from_feedback_input() {
     new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
     _feedback_input  = new_fb_input;
     _feedback_cursor--;
+}
+
+function n_move_feedback_cursor_left() {
+    _feedback_cursor--;
+    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
+	_feedback_cursor++;
+    }
+}
+
+function o_move_feedback_cursor_right() {
+    _feedback_cursor++;
+    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
+        _feedback_cursor--;
+    }
 }
