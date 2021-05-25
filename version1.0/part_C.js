@@ -12,8 +12,8 @@ var fs           = require("fs");
 ////  SECTION 2:  App memory. 
 
 //  Setting up app memory.
-var _buffer            = "";      //  The text being edited.
-var _filename          = "";      //  Filename - including extension.
+var _buffer            = "";      //  The text being edited. 
+var _filename          = "";      //  Filename - including extension. 
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
@@ -21,6 +21,7 @@ var _feedback_bar      = "";      //  The text to display in the feedback bar.
 
 var _window_h          = 0;       //  Window height (in text char's).
 var _window_w          = 0;       //  Window width (in text char's).
+
 
 
 ////  SECTION 3:  Boot stuff.
@@ -32,7 +33,7 @@ function boot() {
     a_load_file_to_buffer();
 
     /**  Load window height & width.      **/
-    b_get_window_size();
+    c_get_window_size();
 
     /**  Map the event listeners.         **/
     map_events();
@@ -49,80 +50,78 @@ boot();  //  Boot it!!
 
 //  A dictionary naming some special keys.
 var _event_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
-    "\u0003": "CTRL-C",
-    "\u0013": "CTRL-S",
     "\u001b[A": "UP",
     "\u001b[B": "DOWN",
     "\u001b[C": "RIGHT",
     "\u001b[D": "LEFT",
     "\u007f": "BACKSPACE",
-    "\u000D": "ENTER"
-}
+    "\u000D": "ENTER",
+    "\u0003": "CTRL-C",
+    "\u0013": "CTRL-S",
+};
 
-//  Map keyboard events.
+//  These functions fire in response to "events" like keyboard input. 
+var _events      = {
+    "CTRL-C": function() {
+	b_quit();
+    },
+    
+    "LEFT":   function() {
+	e_move_cursor_left();
+    },
+    "RIGHT":  function() {
+	f_move_cursor_right();
+    },
+    "UP":     function() {
+	g_move_cursor_up();
+    },
+    "DOWN":   function() {
+	h_move_cursor_down();
+    },
+    
+    "TEXT":   function(key) {
+	// i_add_to_buffer(key);
+    },
+    "ENTER":  function() {
+	// i_add_to_buffer("\n");
+    },
+    "BACKSPACE": function() {
+	// j_delete_from_buffer();
+    },
+    
+    "CTRL-S": function() {
+	// k_save_buffer_to_file();
+    },
+    
+    "CTRL-Z":  function() {
+	// p_undo()
+    },
+    "CTRL-R": function() {
+	// q_redo()
+    },
+    
+};
+
+//  Map keyboard input.
 function map_events() {
+
+    //  Map keyboard input 
     var stdin = process.stdin;
-    stdin.setRawMode( true );
+    stdin.setRawMode(true);
     stdin.resume();
-    stdin.setEncoding( 'utf8' );
-    stdin.on( 'data', function( key ){
+    stdin.setEncoding("utf8");
+    stdin.on("data", function(key) {
 
 	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
-	    
+	
 	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
 	    _events[event_name]();
 	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
 	    _events["TEXT"](key);
 	}
 	
-        draw();
-
+	draw();                                    /**  Redraw the whole screen on any keypress.                               **/
     });
-}
-
-//  These functions fire in response to "events" like keyboard input. 
-var _events      = {
-
-    "LEFT":   function() {
-        d_move_cursor_left();
-    },
-    "RIGHT":  function() {
-        e_move_cursor_right();
-    },
-
-    "UP":     function() {
-        f_move_cursor_up();
-    },
-    "DOWN":   function() {
-        g_move_cursor_down();
-    },
-
-    "TEXT":   function(key) {
-	// h_add_to_buffer(key);
-    },
-    "ENTER":  function() {
-        // h_add_to_buffer("\n");
-    },
-    "BACKSPACE": function() {
-        // i_delete_from_buffer();
-    },
-
-    "CTRL-Z":  function() {
-        // j_undo()
-    },
-    "CTRL-R": function() {
-        // k_redo()
-    },
-
-    "CTRL-S": function() {
-        // l_save_buffer_to_file();
-    },
-
-    "CTRL-C": function() {
-        //  m_quit();
-	console.clear();
-        process.exit();
-    },
 
 }
 
@@ -134,7 +133,7 @@ var _events      = {
 function draw() {
     draw_buffer();
     draw_status_bar();
-    draw_feedback_bar();
+    // draw_feedback_bar();
     position_cursor();
 }
 
@@ -157,7 +156,7 @@ function draw_status_bar() {
         status_bar_text += "               ";
     }
 
-    var cursor_position = c_get_cursor_pos();                  /**  Using our algorithm a_get_cursor_pos!   **/
+    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
     status_bar_text += "  cursor on line " + cursor_position[0];
     status_bar_text += ", row " + cursor_position[1];
 
@@ -171,27 +170,15 @@ function draw_status_bar() {
 
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
-    var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
+    var cursor_position = d_get_cursor_pos(); //  d_get_cursor_pos is an algorithm.
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
-
-//  Drawing the feedback bar.
-function draw_feedback_bar() {
-    process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
-    process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.         **/
-    process.stdout.write(_feedback_bar);
-    _feedback_bar = "";
-    process.stdout.write("\x1b[0m");                           /**  Back to undim text.               **/
-}
-
-
 
 
 
 ////  SECTION 6:  Algorithms.
 
-//  Getting the file's contents, put it in the "buffer".
-function a_load_file_to_buffer() {
+function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
         _buffer = "";
@@ -204,13 +191,17 @@ function a_load_file_to_buffer() {
     }
 }
 
-//  Get the window size. 
-function b_get_window_size() {
+function b_quit() {                      /**  Quit out of kTTY.                 **/
+    console.clear();
+    process.exit();
+}
+
+function c_get_window_size() {           /**  Get the window size.              **/
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
 }
 
-function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
+function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
 
     var cursor_position = [1,1];
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
@@ -227,7 +218,7 @@ function c_get_cursor_pos() {            //  Returns a 2 index array, [int line,
 
 }
 
-function d_move_cursor_left() {
+function e_move_cursor_left() {
 
     _cursor_buffer_pos -= 1;
     if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
@@ -238,7 +229,7 @@ function d_move_cursor_left() {
 
 }
 
-function e_move_cursor_right() {
+function f_move_cursor_right() {
 
     _cursor_buffer_pos += 1;
 
@@ -247,80 +238,6 @@ function e_move_cursor_right() {
         _cursor_buffer_pos--;
     } else {
         _feedback_bar = "Moved right.";
-    }
-
-}
-
-function f_move_cursor_up() {
-
-    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
-    var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
-    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
-        if (_buffer[i] == "\n") {
-            prev_line_length = current_x_pos;
-            current_x_pos = 1;
-        } else {
-            current_x_pos++;
-        }
-    }
-
-    if (prev_line_length > current_x_pos) {        /**   If we're going up **into** a line...        **/
-        _cursor_buffer_pos -= prev_line_length;
-    }
-    else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
-        _cursor_buffer_pos -= current_x_pos;
-    }
-
-    _feedback_bar = "Moved up.";
-
-}
-
-function g_move_cursor_down() {
-
-    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
-    var current_line_length = 0;         /**   To find the length of *this* line.                      **/
-    var next_line_length = 0;            /**   To find the length of the *next* line, to jump forward. **/
-    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
-        if (_buffer[i] == "\n") {
-            current_x_pos = 1;
-        } else {
-            current_x_pos++;
-        }
-    }
-
-    var j = _cursor_buffer_pos;          /**  Using a while loop to iterate further, to find the *next* line length.  **/
-    var found_line_start = false;
-    current_line_length = current_x_pos;
-    while (j < _buffer.length) {
-        if (!found_line_start && _buffer[j] == "\n") {
-            found_line_start = true;
-        }
-        else if (!found_line_start && _buffer[j] != "\n") {
-            current_line_length++;
-        }
-        else if (found_line_start && _buffer[j] != "\n") {
-            next_line_length++;
-        }
-        else if (found_line_start && _buffer[j] == "\n") {
-            break;
-        }
-        j++;
-    }
-
-    if (next_line_length > current_x_pos) {          /**   If we're going down **into** a line...        **/
-        _cursor_buffer_pos += current_line_length;
-    }
-    else if (next_line_length <= current_x_pos) {    /**   If we're going down **above** a line...       **/
-        _cursor_buffer_pos += current_line_length;
-        _cursor_buffer_pos -= current_x_pos;         /**     This should get us to the start of the next line...  **/
-        _cursor_buffer_pos += next_line_length + 1;  /**     ...and then we jump to the end.    **/
-    }
-
-    var buff_limit = _buffer.length;     /**   Don't let the cursor position exceed the buffer.   **/
-    if ( _cursor_buffer_pos > buff_limit ) {
-        _cursor_buffer_pos--;
-    } else {
-        _feedback_bar = "Moved down.";
     }
 
 }
