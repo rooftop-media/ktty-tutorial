@@ -1548,7 +1548,7 @@ function m_quit() {
 		}
 	    } else {
 	        _feedback_input = "";
-		_feedback_bar = "Modified buffer exists! Want to save? (Type "y" or "n") ";
+		_feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
 	    }
 	} 
     } else {                 /**  If the file HASN'T been modified, since the last save just quit!     **/
