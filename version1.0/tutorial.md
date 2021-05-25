@@ -1576,8 +1576,29 @@ function b_quit() {
 <br/><br/><br/><br/>
 
 
-<h3 id="e-16">  ☑️ Step 16:  ❖  Part E review. </h3>
+<h3 id="d-16">  ☑️ Step 16:  ☞ Test the code! </h3>
 
+We can now test the QUIT function!  
+Open ktty again, modify some file, and then press `ctrl-c` WITHOUT saving.  
+The feedback prompt should pop up, saying, `Modified buffer exists! Want to save? (y/n)`
+
+You'll need to test all 3 possible options in this menu:
+ - `y` to save and quit.
+ - `n`, then `y`, to quit without saving.
+ - `n`, then `n`, to continue editing without saving.
+
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="e-17">  ☑️ Step 17:  ❖  Part E review. </h3>
+
+At this point, we have our feedback prompt system working well!  
+The app now prompts us for a filename when we open it without one,  
+and prompts us to save when we quit without saving.
+
+Nice!
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
