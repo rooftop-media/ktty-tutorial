@@ -12,13 +12,14 @@ var fs           = require("fs");
 ////  SECTION 2:  App memory. 
 
 //  Setting up app memory.
-var _buffer            = "";      //  The text being edited.
-var _filename          = "";      //  Filename - including extension.
+var _buffer            = "";      //  The text being edited. 
+var _filename          = "";      //  Filename - including extension. 
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
 var _window_h          = 0;       //  Window height (in text char's).
 var _window_w          = 0;       //  Window width (in text char's).
+
 
 
 ////  SECTION 3:  Boot stuff.
@@ -30,7 +31,7 @@ function boot() {
     a_load_file_to_buffer();
 
     /**  Load window height & width.      **/
-    b_get_window_size();
+    c_get_window_size();
 
     /**  Map the event listeners.         **/
     map_events();
@@ -56,8 +57,7 @@ function map_events() {
     stdin.on("data", function(key) {
 	    //  Exit on ctrl-c
 	    if (key === "\u0003") {
-		console.clear();
-		process.exit();
+		b_quit();
 	    }
 	    process.stdout.write(key);
 	});
@@ -95,7 +95,7 @@ function draw_status_bar() {
         status_bar_text += "               ";
     }
 
-    var cursor_position = c_get_cursor_pos();                  /**  Using our algorithm a_get_cursor_pos!   **/
+    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
     status_bar_text += "  cursor on line " + cursor_position[0];
     status_bar_text += ", row " + cursor_position[1];
 
@@ -109,7 +109,7 @@ function draw_status_bar() {
 
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
-    var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
+    var cursor_position = d_get_cursor_pos(); //  d_get_cursor_pos is an algorithm.
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 
@@ -117,8 +117,7 @@ function position_cursor() {
 
 ////  SECTION 6:  Algorithms.
 
-//  Getting the file's contents, put it in the "buffer".
-function a_load_file_to_buffer() {
+function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
         _buffer = "";
@@ -131,13 +130,17 @@ function a_load_file_to_buffer() {
     }
 }
 
-//  Get the window size. 
-function b_get_window_size() {
+function b_quit() {                      /**  Quit out of kTTY.                 **/
+    console.clear();
+    process.exit();
+}
+
+function c_get_window_size() {           /**  Get the window size.              **/
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
 }
 
-function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
+function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
 
     var cursor_position = [1,1];
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
