@@ -416,6 +416,37 @@ function l_save_buffer_to_file() {
     _feedback_bar = "saved :)";
 }
 
+function m_quit() {
+
+    if (_modified) {            /**  If the file has been modified, start the prompts!    **/
+        mode = "FEEDBACK";
+	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
+	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
+	    if (response.toLowerCase() == "y") {
+		l_save_buffer_to_file();
+		m_quit();
+	    } else if (response.toLowerCase() == "n") {
+		_feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
+		_feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
+		    if (response.toLowerCase() == "y") {
+			console.clear();
+			process.exit();
+		    } else {
+			mode = "BUFFER-EDITOR";
+			_feedback_bar = "";
+		    }
+		}
+	    } else {
+		_feedback_input = "";
+		_feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
+	    }
+	}
+    } else {                 /**  If the file HASN'T been modified, since the last save just quit!     **/
+        console.clear();
+	process.exit();
+    }
+}
+
 
 function o_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
@@ -434,4 +465,19 @@ function p_delete_from_feedback_input() {
     new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
     _feedback_input  = new_fb_input;
     _feedback_cursor--;
+}
+
+
+function q_move_feedback_cursor_left() {
+    _feedback_cursor--;
+    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
+	_feedback_cursor++;
+    }
+}
+
+function r_move_feedback_cursor_right() {
+    _feedback_cursor++;
+    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
+        _feedback_cursor--;
+    }
 }

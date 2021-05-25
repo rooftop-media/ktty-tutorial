@@ -26,7 +26,7 @@ function boot() {
     a_load_file_to_buffer();
 
     /**  Load window height & width.      **/
-    // b_get_window_size();
+    // c_get_window_size();
 
     /**  Map the event listeners.         **/
     map_events();
@@ -52,8 +52,7 @@ function map_events() {
     stdin.on("data", function(key) {
 	    //  Exit on ctrl-c
 	    if (key === "\u0003") {
-		console.clear();
-		process.exit();
+		b_quit();
 	    }
 	    process.stdout.write(key);
 	});
@@ -82,8 +81,7 @@ function draw_buffer() {
 
 ////  SECTION 6:  Algorithms.
 
-//  Getting the file's contents, put it in the "buffer".
-function a_load_file_to_buffer() {
+function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
         _buffer = "";
@@ -96,5 +94,7 @@ function a_load_file_to_buffer() {
     }
 }
 
-
-
+function b_quit() {                      /**  Quit out of kTTY.   **/
+    console.clear();
+    process.exit();
+}
