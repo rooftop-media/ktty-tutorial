@@ -47,6 +47,18 @@ boot();  //  Boot it!!
 
 ////  SECTION 4:  Events.
 
+//  A dictionary naming some special keys.
+var _event_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
+    "\u0003": "CTRL-C",
+    "\u0013": "CTRL-S",
+    "\u001b[A": "UP",
+    "\u001b[B": "DOWN",
+    "\u001b[C": "RIGHT",
+    "\u001b[D": "LEFT",
+    "\u007f": "BACKSPACE",
+    "\u000D": "ENTER"
+}
+
 //  Map keyboard events.
 function map_events() {
     var stdin = process.stdin;
@@ -55,83 +67,63 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
 
-            if ( key === '\u0003' || key === '\u0018' ) {        //  ctrl-c and ctrl-q 
-                _events["QUIT"]();
-            }
-            else if ( key === '\u0013' ) {       // ctrl-s  
-                _events["SAVE"]();
-            }
-            else if ( key === '\u001b[A' ) {     //  up 
-                _events["UP"]();
-            }
-            else if ( key === '\u001b[B' ) {     //  down
-                _events["DOWN"]();
-            }
-            else if ( key === '\u001b[C' ) {     //  right 
-                _events["RIGHT"]();
-            }
-            else if ( key === '\u001b[D' ) {     //  left
-                _events["LEFT"]();
-            }
-            else if ( key === '\u000D' ) {     //  enter 
-                _events["ENTER"]();
-            }
-            else if ( key === '\u0008' || key === "\u007f" ) {     //  delete 
-                _events["BACKSPACE"]();
-            }
+	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+	    
+	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	    _events[event_name]();
+	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+	    _events["TEXT"](key);
+	}
+	
+        draw();
 
-            else {
-                _events["TEXT"](key);
-            }
-
-            draw();
-
-        });
+    });
 }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
-    
+
     "LEFT":   function() {
-	d_move_cursor_left();
+        d_move_cursor_left();
     },
     "RIGHT":  function() {
-	e_move_cursor_right();
+        e_move_cursor_right();
     },
-    
+
     "UP":     function() {
-	f_move_cursor_up();
+        f_move_cursor_up();
     },
     "DOWN":   function() {
-	g_move_cursor_down();
+        g_move_cursor_down();
     },
-    
+
     "TEXT":   function(key) {
 	h_add_to_buffer(key);
     },
     "ENTER":  function() {
-	h_add_to_buffer("\n");
+        h_add_to_buffer("\n");
     },
     "BACKSPACE": function() {
-	i_delete_from_buffer();
+        i_delete_from_buffer();
     },
-    
-    "UNDO":  function() {
-	// j_undo()
+
+    "CTRL-Z":  function() {
+        // j_undo()
     },
-    "REDO": function() {
-	// k_redo()
+    "CTRL-R": function() {
+        // k_redo()
     },
-    
-    "SAVE": function() {
-	l_save_buffer_to_file();
+
+    "CTRL-S": function() {
+        l_save_buffer_to_file();
     },
-    
-    "QUIT": function() {
-	// m_quit();
+
+    "CTRL-C": function() {
+        //  m_quit();
 	console.clear();
-	process.exit();
+        process.exit();
     },
+
 }
 
 
