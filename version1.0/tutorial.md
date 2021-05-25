@@ -664,18 +664,18 @@ var _events      = {
         // i_delete_from_buffer();
     },
     
-    "UNDO":  function() {
+    "CTRL-Z":  function() {
         // j_undo()
     },
-    "REDO": function() {
+    "CTRL-R": function() {
         // k_redo()
     },
 
-    "SAVE": function() {
+    "CTRL-S": function() {
         // l_save_buffer_to_file();
     },
 
-    "QUIT": function() {
+    "CTRL-C": function() {
         // m_quit();
 	console.clear();
         process.exit();
