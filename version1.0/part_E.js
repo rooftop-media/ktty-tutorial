@@ -12,10 +12,10 @@ var fs           = require("fs");
 ////  SECTION 2:  App memory. 
 
 //  Setting up app memory.
-var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK"
+var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK-PROMPT"
 
-var _buffer            = "";      //  The text being edited.
-var _filename          = "";      //  Filename - including extension.
+var _buffer            = "";      //  The text being edited. 
+var _filename          = "";      //  Filename - including extension. 
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
@@ -29,6 +29,7 @@ var _window_h          = 0;       //  Window height (in text char's).
 var _window_w          = 0;       //  Window width (in text char's).
 
 
+
 ////  SECTION 3:  Boot stuff.
 
 //  The boot sequence.
@@ -38,7 +39,7 @@ function boot() {
     a_load_file_to_buffer();
 
     /**  Load window height & width.      **/
-    b_get_window_size();
+    c_get_window_size();
 
     /**  Map the event listeners.         **/
     map_events();
@@ -55,110 +56,107 @@ boot();  //  Boot it!!
 
 //  A dictionary naming some special keys.
 var _event_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
-    "\u0003": "CTRL-C",
-    "\u0013": "CTRL-S",
     "\u001b[A": "UP",
     "\u001b[B": "DOWN",
     "\u001b[C": "RIGHT",
     "\u001b[D": "LEFT",
     "\u007f": "BACKSPACE",
-    "\u000D": "ENTER"
-}
-
-//  Map keyboard events.
-function map_events() {
-    var stdin = process.stdin;
-    stdin.setRawMode( true );
-    stdin.resume();
-    stdin.setEncoding( 'utf8' );
-    stdin.on( 'data', function( key ){
-
-	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
-
-	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
-    
-	if (typeof event_name == "string" && typeof events[event_name] == "function") {        /**  "CTRL-C", "ENTER", etc     **/
-	    events[event_name]();
-	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
-	    events["TEXT"](key);
-	}
-	
-        draw();
-
-    });
-}
+    "\u000D": "ENTER",
+    "\u0003": "CTRL-C",
+    "\u0013": "CTRL-S",
+};
 
 //  These functions fire in response to "events" like keyboard input. 
 var _mode_events      = {
 
     "BUFFER-EDITOR": {
-	"LEFT":   function() {
-	    d_move_cursor_left();
-	},
-	"RIGHT":  function() {
-	    e_move_cursor_right();
+        "CTRL-C": function() {
+            b_quit();
 	},
 	
-	"UP":     function() {
-	    f_move_cursor_up();
-	},
-	"DOWN":   function() {
-	    g_move_cursor_down();
-	},
-	
-	"TEXT":   function(key) {
-	    h_add_to_buffer(key);
-	},
-	"ENTER":  function() {
-	    h_add_to_buffer("\n");
-	},
-	"BACKSPACE": function() {
-	    i_delete_from_buffer();
-	},
-	
-	"CTRL-Z":  function() {
-	    // j_undo()
-	},
-	"CTRL-R": function() {
-	    // k_redo()
-	},
-	
-	"CTRL-S": function() {
-	    l_save_buffer_to_file();
-	},
-	
-	"CTRL-C": function() {
-	    //  m_quit();
-	    console.clear();
-	    process.exit();
-	},
-    },
-
-    "FEEDBACK": {
-	"TEXT":   function(key) {
-            o_add_to_feedback_input(key);   //  Add text to the feedback input. 
-        },
-        "BACKSPACE": function() {
-            p_delete_from_feedback_input();          //  Remove text from the feedback input. 
-        },
-	
-	"LEFT":   function() {
-            q_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
+        "LEFT":   function() {
+            e_move_cursor_left();
         },
         "RIGHT":  function() {
-            r_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
+            f_move_cursor_right();
+        },
+        "UP":     function() {
+            g_move_cursor_up();
+        },
+        "DOWN":   function() {
+            h_move_cursor_down();
+        },
+
+        "TEXT":   function(key) {
+            i_add_to_buffer(key);
+        },
+        "ENTER":  function() {
+            i_add_to_buffer("\n");
+        },
+        "BACKSPACE": function() {
+            j_delete_from_buffer();
+        },
+	
+	"CTRL-S": function() {
+            k_save_buffer_to_file();
+        },
+
+        "CTRL-Z":  function() {
+            // j_undo()                                                                                                                                
+        },
+        "CTRL-R": function() {
+            // k_redo()                                                                                                                                
+        },
+    },
+
+    "FEEDBACK-PROMPT": {
+        "CTRL-C": function() {
+            b_quit();
+	},
+	
+        "TEXT":   function(key) {
+            l_add_to_feedback_input(key);   //  Add text to the feedback input. 
+        },
+        "BACKSPACE": function() {
+            m_delete_from_feedback_input();          //  Remove text from the feedback input. 
+        },
+	
+	"LEFT":   function() {
+            n_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
+        },
+        "RIGHT":  function() {
+            o_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
         },
 	
 	"ENTER":  function() {
             _feedback_event(_feedback_input);    //  Running the feedback event. 
         },
-	
-	"QUIT": function() {
-            // m_quit();                                                                                                                               
-            console.clear();
-            process.exit();
-	}
     }
+};
+
+//  Map keyboard input.
+function map_events() {
+
+    //  Map keyboard input 
+    var stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+    stdin.on("data", function(key) {
+
+	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+
+	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
+
+	if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	    events[event_name]();
+	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
+	    events["TEXT"](key);
+	}
+	
+	draw();                                    /**  Redraw the whole screen on any keypress.                               **/
+    });
+
 }
 
 
@@ -192,7 +190,7 @@ function draw_status_bar() {
         status_bar_text += "               ";
     }
 
-    var cursor_position = c_get_cursor_pos();                  /**  Using our algorithm a_get_cursor_pos!   **/
+    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
     status_bar_text += "  cursor on line " + cursor_position[0];
     status_bar_text += ", row " + cursor_position[1];
 
@@ -207,9 +205,9 @@ function draw_status_bar() {
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
     if (_mode == "BUFFER-EDITOR") {
-        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.  
+        var cursor_position = d_get_cursor_pos();      //  d_get_cursor_pos is an algorithm.  
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
-    } else if (_mode == "FEEDBACK") {
+    } else if (_mode == "FEEDBACK-PROMPT") {
         var x_pos = _feedback_bar.length + 1 + _feedback_cursor;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
@@ -217,7 +215,7 @@ function position_cursor() {
 
 //  Drawing the feedback bar.
 function draw_feedback_bar() {
-    if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, draw it cyan.     **/
+    if (_mode == "FEEDBACK-PROMPT") {                          /**  If we're in feedback mode, draw it cyan.     **/
         process.stdout.write("\x1b[36m"); 
     } else {                                                   /**  If it's buffer mode feedback, dim.           **/
         process.stdout.write("\x1b[2m"); 
@@ -227,7 +225,7 @@ function draw_feedback_bar() {
     process.stdout.write(_feedback_bar);                       /**  Write the text.                              **/
     process.stdout.write("\x1b[0m");                           /**  Back to undim text.                          **/
         
-    if (_mode == "FEEDBACK") {                                 /**  If we're in feedback mode, write the input too.   **/
+    if (_mode == "FEEDBACK-PROMPT") {                          /**  If we're in feedback mode, write the input too.   **/
         process.stdout.write(_feedback_input); 
     } else {
         _feedback_bar = "";
@@ -236,15 +234,12 @@ function draw_feedback_bar() {
 
 
 
-
-
 ////  SECTION 6:  Algorithms.
 
-//  Getting the file's contents, put it in the "buffer". 
-function a_load_file_to_buffer() {
+function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2];
     if ( _filename == undefined ) {
-        _mode         = "FEEDBACK";
+        _mode         = "FEEDBACK-PROMPT";
 	_feedback_bar = "Enter a file name to create a new file: ";
 	_feedback_event = function(response) {
 	    _filename = response;
@@ -261,13 +256,17 @@ function a_load_file_to_buffer() {
     }
 }
 
-//  Get the window size. 
-function b_get_window_size() {
+function b_quit() {                      /**  Quit out of kTTY.                 **/
+    console.clear();
+    process.exit();
+}
+
+function c_get_window_size() {           /**  Get the window size.              **/
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
 }
 
-function c_get_cursor_pos() {            //  Returns a 2 index array, [int line, int char]
+function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
 
     var cursor_position = [1,1];
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
@@ -284,7 +283,7 @@ function c_get_cursor_pos() {            //  Returns a 2 index array, [int line,
 
 }
 
-function d_move_cursor_left() {
+function e_move_cursor_left() {
 
     _cursor_buffer_pos -= 1;
     if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
@@ -295,7 +294,7 @@ function d_move_cursor_left() {
 
 }
 
-function e_move_cursor_right() {
+function f_move_cursor_right() {
 
     _cursor_buffer_pos += 1;
 
@@ -308,7 +307,7 @@ function e_move_cursor_right() {
 
 }
 
-function f_move_cursor_up() {
+function g_move_cursor_up() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
     var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
@@ -332,7 +331,7 @@ function f_move_cursor_up() {
 
 }
 
-function g_move_cursor_down() {
+function h_move_cursor_down() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
     var current_line_length = 0;         /**   To find the length of *this* line.                      **/
@@ -382,7 +381,7 @@ function g_move_cursor_down() {
 
 }
 
-function h_add_to_buffer(new_text) {
+function i_add_to_buffer(new_text) {
     var new_buffer = _buffer.slice(0, _cursor_buffer_pos);
     new_buffer    += new_text;
     new_buffer    += _buffer.slice(_cursor_buffer_pos, _buffer.length);
@@ -394,7 +393,7 @@ function h_add_to_buffer(new_text) {
     }
 }
 
-function i_delete_from_buffer() {
+function j_delete_from_buffer() {
 
     if ( _cursor_buffer_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
@@ -410,45 +409,13 @@ function i_delete_from_buffer() {
     }
 }
 
-function l_save_buffer_to_file() {
+function k_save_buffer_to_file() {
     fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
     _modified = false;
     _feedback_bar = "saved :)";
 }
 
-function m_quit() {
-
-    if (_modified) {            /**  If the file has been modified, start the prompts!    **/
-        mode = "FEEDBACK";
-	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
-	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
-	    if (response.toLowerCase() == "y") {
-		l_save_buffer_to_file();
-		m_quit();
-	    } else if (response.toLowerCase() == "n") {
-		_feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
-		_feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
-		    if (response.toLowerCase() == "y") {
-			console.clear();
-			process.exit();
-		    } else {
-			mode = "BUFFER-EDITOR";
-			_feedback_bar = "";
-		    }
-		}
-	    } else {
-		_feedback_input = "";
-		_feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
-	    }
-	}
-    } else {                 /**  If the file HASN'T been modified, since the last save just quit!     **/
-        console.clear();
-	process.exit();
-    }
-}
-
-
-function o_add_to_feedback_input(new_text) {
+function l_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
     new_fb_input      += new_text;
     new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
@@ -456,7 +423,7 @@ function o_add_to_feedback_input(new_text) {
     _feedback_cursor++;
 }
 
-function p_delete_from_feedback_input() {
+function m_delete_from_feedback_input() {
     if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
@@ -465,19 +432,4 @@ function p_delete_from_feedback_input() {
     new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
     _feedback_input  = new_fb_input;
     _feedback_cursor--;
-}
-
-
-function q_move_feedback_cursor_left() {
-    _feedback_cursor--;
-    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
-	_feedback_cursor++;
-    }
-}
-
-function r_move_feedback_cursor_right() {
-    _feedback_cursor++;
-    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
-        _feedback_cursor--;
-    }
 }
