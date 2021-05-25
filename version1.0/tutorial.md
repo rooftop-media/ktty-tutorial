@@ -1191,7 +1191,7 @@ To do this, we'll *add another layer* to our "event dictionary", and rename it t
 var _event_names = { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
-vvar _mode_events      = {
+var _mode_events      = {
 
     "BUFFER-EDITOR": {
         "CTRL-C": function() {
@@ -1258,7 +1258,7 @@ vvar _mode_events      = {
     }
 };
 
-function map_events()
+function map_events() { ... }
 ```
 Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
 
