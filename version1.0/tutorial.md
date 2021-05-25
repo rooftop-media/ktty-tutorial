@@ -984,7 +984,7 @@ var _event_names = { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
-    "QUIT": function() {
+    "CTRL-C": function() {
         b_quit();
     },
 
@@ -1011,14 +1011,14 @@ var _events      = {
         j_delete_from_buffer();
     },
     
-    "SAVE": function() {
+    "CTRL-S": function() {
         k_save_buffer_to_file();
     },
     
-    "UNDO":  function() {
+    "CTRL-Z":  function() {
         // p_undo()
     },
-    "REDO": function() {
+    "CTRL-R": function() {
         // q_redo()
     },
 };
@@ -1194,7 +1194,7 @@ var _event_names = { ... }
 vvar _mode_events      = {
 
     "BUFFER-EDITOR": {
-        "QUIT": function() {
+        "CTRL-C": function() {
             b_quit();
 	},
 	
@@ -1221,20 +1221,20 @@ vvar _mode_events      = {
             j_delete_from_buffer();
         },
 	
-	"SAVE": function() {
+	"CTRL-S": function() {
             k_save_buffer_to_file();
         },
 
-        "UNDO":  function() {
+        "CTRL-Z":  function() {
             // j_undo()                                                                                                                                
         },
-        "REDO": function() {
+        "CTRL-R": function() {
             // k_redo()                                                                                                                                
         },
     },
 
     "FEEDBACK-PROMPT": {
-        "QUIT": function() {
+        "CTRL-C": function() {
             b_quit();
 	}
 	
