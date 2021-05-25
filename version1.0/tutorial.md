@@ -159,7 +159,7 @@ function boot() {
     a_load_file_to_buffer();
 
     /**  Load window height & width.      **/
-    // b_get_window_size();
+    // c_get_window_size();
 
     /**  Map the event listeners.         **/
     map_events();
