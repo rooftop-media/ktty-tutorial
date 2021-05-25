@@ -1339,9 +1339,9 @@ The first place we'll use Feedback Mode is in the algorithm to open files, `a_lo
 If ktty is opened with a blank `filepath`, ask the user if they want to create a file.
 
 ```javascript
-////  SECTION 6:  Algorithms.                                                                                                                          
+////  SECTION 6:  Algorithms. 
 
-//  Getting the file's contents, put it in the "buffer".                                                                                               
+//  Getting the file's contents, put it in the "buffer". 
 function a_load_file_to_buffer() {
     _filename = process.argv[2];
     if ( _filename == undefined ) {
@@ -1399,10 +1399,10 @@ function draw() {  ...  }
 function draw_buffer() {  ...  }
 function draw_status_bar() {  ...  }
 
-//  Move the cursor to its position in the buffer.                                                                                                     
+//  Move the cursor to its position in the buffer. 
 function position_cursor() {
     if (_mode == "BUFFER-EDITOR") {
-        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.                                                                    
+        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.  
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
         var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
