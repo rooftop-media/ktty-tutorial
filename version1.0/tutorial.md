@@ -1296,7 +1296,7 @@ function map_events() {
 
 	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
 
-        if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+        if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
             events[event_name]();
         } else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
             events["TEXT"](key);
