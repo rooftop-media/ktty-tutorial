@@ -77,7 +77,7 @@ function map_events() {
 
 	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
     
-	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	if (typeof event_name == "string" && typeof events[event_name] == "function") {        /**  "CTRL-C", "ENTER", etc     **/
 	    events[event_name]();
 	} else {                                   /**  Most keys, like letters, should just pass thru to the "TEXT" event.    **/
 	    events["TEXT"](key);
@@ -206,8 +206,13 @@ function draw_status_bar() {
 
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
-    var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.
-    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+    if (_mode == "BUFFER-EDITOR") {
+        var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.  
+        process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+    } else if (_mode == "FEEDBACK") {
+        var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
+        process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
+    }
 }
 
 //  Drawing the feedback bar.
