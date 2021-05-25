@@ -210,7 +210,7 @@ function position_cursor() {
         var cursor_position = c_get_cursor_pos(); //  c_get_cursor_pos is an algorithm.  
         process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
     } else if (_mode == "FEEDBACK") {
-        var x_pos = _feedback_bar.length + 2 + _feedback_cursor;
+        var x_pos = _feedback_bar.length + 1 + _feedback_cursor;
         process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
     }
 }
@@ -414,4 +414,24 @@ function l_save_buffer_to_file() {
     fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
     _modified = false;
     _feedback_bar = "saved :)";
+}
+
+
+function o_add_to_feedback_input(new_text) {
+    var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
+    new_fb_input      += new_text;
+    new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
+    _feedback_input = new_fb_input;
+    _feedback_cursor++;
+}
+
+function p_delete_from_feedback_input() {
+    if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+
+    var new_fb_input = _feedback_input.slice(0, _feedback_cursor - 1);
+    new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
+    _feedback_input  = new_fb_input;
+    _feedback_cursor--;
 }
