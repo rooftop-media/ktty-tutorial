@@ -352,9 +352,3 @@ function j_delete_from_buffer() {
         _modified = true;
     }
 }
-
-function k_save_buffer_to_file() {
-    fs.writeFileSync(_filename, _buffer, { encoding: 'utf8' } );
-    _modified = false;
-    _feedback_bar = "saved :)";
-}
