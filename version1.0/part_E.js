@@ -245,6 +245,7 @@ function a_load_file_to_buffer() {       /**  Getting the file's contents, put i
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
 	    _feedback_bar = "";
+	    _feedback_input = "";
 	}
         _buffer = "";
     } else {
@@ -256,23 +257,29 @@ function a_load_file_to_buffer() {       /**  Getting the file's contents, put i
     }
 }
 
-function b_quit() {                      /**  Quit out of kTTY.                 **/
+function b_quit() { 
     if (_modified) {            /**  If the file has been modified, start the prompts!    **/
         _mode = "FEEDBACK-PROMPT";
+	_feedback_cursor = 0;
 	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
 	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
 	    if (response.toLowerCase() == "y") {
 		k_save_buffer_to_file();
 		b_quit();
 	    } else if (response.toLowerCase() == "n") {
+		_feedback_input = "";
+		_feedback_cursor = 0;
 		_feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
+                draw();
 		_feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
 		    if (response.toLowerCase() == "y") {
 			console.clear();
 			process.exit();
 		    } else {
-			mode = "BUFFER-EDITOR";
+			_feedback_input = "";
+			_mode = "BUFFER-EDITOR";
 			_feedback_bar = "";
+			draw(); 
 		    }
 		}
 	    } else {
