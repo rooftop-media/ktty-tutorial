@@ -1576,10 +1576,38 @@ We'll also handle window resize & scroll.
 For this section we need one more variable -- an integer named `_scroll`.
 
 ```javascript
+////  SECTION 2:  APP MEMORY
 
+//  Setting up app memory. 
+var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK-PROMPT"
+
+var _buffer            = "";      //  The text being edited. 
+var _filename          = "";      //  Filename - including extension.
+var _modified          = false;   //  Has the buffer been modified?
+var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
+var _scroll            = 0;
+
+var _feedback_bar      = "";      //  The text to display in the feedback bar.
+
+var _feedback_input    = "";      //  What has the user typed? 
+var _feedback_cursor   = 0;       //  Where is the feedback input cursor? 
+var _feedback_event    = function (response) {}; 
+
+var _window_h          = 0;       //  Window height (in text char's). 
+var _window_w          = 0;       //  Window width (in text char's).
 ```
 
-<br/><br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-2">  ☑️ Step 2:  Editing sample.txt </h3>
+
+We're gonna need sample.txt to exceed the _width_ of the window, in one place,
+and we're going to need to add enough lines that it exceeds the _height_ of the window. 
+
+<br/><br/><br/><br/>
+
 
 
 
