@@ -1248,7 +1248,7 @@ Up next, we'll make a function to switch to Feedback Prompt Mode.
 This algorithm is used to switch to Feedback Prompt Mode.
 
 ```javascript
-l_feedback_prompt(prompt_text) {
+function l_feedback_prompt(prompt_text) {
     _mode = "FEEDBACK-PROMPT";
     _feedback_cursor = 0;
     _feedback_input = "";
