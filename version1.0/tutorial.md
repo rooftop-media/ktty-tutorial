@@ -1563,9 +1563,11 @@ Nice!
 
 <h2 id="part-f" align="center">  Part F:   Scroll & Resize </h2>
 
-In this section, we'll handle files that exceed the window's height or width.  
-
-We'll also handle window resize & scroll.
+In this section...
+ - Make a text line wrap if it exceeds the window _length_. 
+ - Indicate wrapped lines with a \.
+ - Make files scrollable if text lines exceed window _height_.
+ - Update appropriately on window resize.
 
 <br/><br/><br/><br/>
 
@@ -1601,13 +1603,22 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="f-2">  ☑️ Step 2:  Editing sample.txt </h3>
+<h3 id="f-2">  ☑️ Step 2:  Adding long.txt </h3>
 
-We're gonna need sample.txt to exceed the _width_ of the window, in one place,
-and we're going to need to add enough lines that it exceeds the _height_ of the window. 
+We're gonna need another sample text file, with a line that exceeds the _width_ of the window, in one place,
+and we're going to need to add enough lines that it exceeds the _height_ of the window.  
+
+You can find the sample file I used [here]().
 
 <br/><br/><br/><br/>
 
+
+
+<h3 id="f-3">  ☑️ Step 3:  Wrapping lines that overflow. </h3>
+
+
+
+<br/><br/><br/><br/>
 
 
 
