@@ -62,44 +62,21 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
-    "CTRL-C": function() {
-	b_quit();
-    },
-    
-    "LEFT":   function() {
-	e_move_cursor_left();
-    },
-    "RIGHT":  function() {
-	f_move_cursor_right();
-    },
-    "UP":     function() {
-	g_move_cursor_up();
-    },
-    "DOWN":   function() {
-	h_move_cursor_down();
-    },
-    
-    "TEXT":   function(key) {
-	i_add_to_buffer(key);
-    },
-    "ENTER":  function() {
-	i_add_to_buffer("\n");
-    },
-    "BACKSPACE": function() {
-	j_delete_from_buffer();
-    },
-    
-    "CTRL-S": function() {
-	k_save_buffer_to_file();
-    },
-    
-    "CTRL-Z":  function() {
-	// p_undo()
-    },
-    "CTRL-R": function() {
-	// q_redo()
-    },
-    
+    "CTRL-C":     b_quit,
+
+    "LEFT":       e_move_cursor_left,
+    "RIGHT":      f_move_cursor_right,
+    "UP":         g_move_cursor_up,
+    "DOWN":       h_move_cursor_down,
+
+    "TEXT":       function(key) {  i_add_to_buffer(key);   },
+    "ENTER":      function()    {  i_add_to_buffer("\n");  }, 
+    "BACKSPACE":  j_delete_from_buffer,
+
+    "CTRL-S":     k_save_buffer_to_file,                                                                                                            
+
+    // "CTRL-Z":     p_undo,
+    // "CTRL-R":     q_redo,    
 };
 
 //  Map keyboard input.
