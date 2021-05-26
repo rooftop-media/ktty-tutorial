@@ -20,6 +20,7 @@ var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
 var _feedback_bar      = "";      //  The text to display in the feedback bar.
+
 var _feedback_input    = "";      //  What has the user typed? 
 var _feedback_cursor   = 0;       //  Where is the feedback input cursor? 
 var _feedback_event    = function (response) {}; 
@@ -67,6 +68,7 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
 
 //  These functions fire in response to "events" like keyboard input. 
 var _mode_events      = {
+
     "BUFFER-EDITOR": {
 	"CTRL-C":     b_quit,
 
@@ -79,20 +81,20 @@ var _mode_events      = {
 	"ENTER":      function()    {  i_add_to_buffer("\n");  }, 
 	"BACKSPACE":  j_delete_from_buffer,
 
-	"CTRL-S":     k_save_buffer_to_file,
+	"CTRL-S":     k_save_buffer_to_file,                                                                                                            
 
 	// "CTRL-Z":     p_undo,
 	// "CTRL-R":     q_redo,
     },
 
     "FEEDBACK-PROMPT": {
-	"CTRL-C":     b_quit,
+        "CTRL-C":     b_quit,
 	
-        "TEXT":       function(key) {  m_add_to_feedback_input(key);   },
-        "BACKSPACE":  function()    {  n_delete_from_feedback_input(); },
+        "TEXT":       function(key) {  l_add_to_feedback_input(key);   },
+        "BACKSPACE":  function()    {  m_delete_from_feedback_input(); },
 	
-	"LEFT":       function()     { o_move_feedback_cursor_left();  },
-        "RIGHT":      function()     { p_move_feedback_cursor_right(); },
+	"LEFT":       n_move_feedback_cursor_left,
+        "RIGHT":      o_move_feedback_cursor_right,
 	
 	"ENTER":      function() {  _feedback_event(_feedback_input);  },
     }
@@ -108,17 +110,17 @@ function map_events() {
     stdin.setEncoding("utf8");
     stdin.on("data", function(key) {
 
-	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".   **/
 
-	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
+	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.                             **/
 
-	if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc       **/
 	    events[event_name]();
-        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
+	} else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
 	    events["TEXT"](key);
 	}
 	
-	draw();                                    /**  Redraw the whole screen on any keypress.                               **/
+	draw();                                    /**  Redraw the whole screen on any keypress.                                **/
     });
 
 }
@@ -203,11 +205,13 @@ function draw_feedback_bar() {
 function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2];
     if ( _filename == undefined ) {
-        l_feedback_prompt("Enter a file name to create a new file: ");
+        _mode         = "FEEDBACK-PROMPT";
+	_feedback_bar = "Enter a file name to create a new file: ";
 	_feedback_event = function(response) {
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
 	    _feedback_bar = "";
+	    _feedback_input = "";
 	}
         _buffer = "";
     } else {
@@ -219,35 +223,39 @@ function a_load_file_to_buffer() {       /**  Getting the file's contents, put i
     }
 }
 
-function b_quit() {                      /**  Quit out of kTTY.                 **/
+function b_quit() { 
     if (_modified) {            /**  If the file has been modified, start the prompts!    **/
-        l_feedback_prompt( "Modified buffer exists! Want to save? (y/n)" );
-        _feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
-            if (response.toLowerCase() == "y") {
-                k_save_buffer_to_file();
-                b_quit();
-            } else if (response.toLowerCase() == "n") {
-                l_feedback_prompt("Quit without saving? Your changes will be lost! (y/n) ");
+        _mode = "FEEDBACK-PROMPT";
+	_feedback_cursor = 0;
+	_feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
+	_feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
+	    if (response.toLowerCase() == "y") {
+		k_save_buffer_to_file();
+		b_quit();
+	    } else if (response.toLowerCase() == "n") {
+		_feedback_input = "";
+		_feedback_cursor = 0;
+		_feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
                 draw();
-                _feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
-                    if (response.toLowerCase() == "y") {
-                        console.clear();
-                        process.exit();
-                    } else {
-                        _feedback_input = "";
-                        _mode = "BUFFER-EDITOR";
-                        _feedback_bar = "";
-                        draw();
-                    }
-                }
-            } else {
-                _feedback_input = "";
-                _feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
-            }
-        }
+		_feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
+		    if (response.toLowerCase() == "y") {
+			console.clear();
+			process.exit();
+		    } else {
+			_feedback_input = "";
+			_mode = "BUFFER-EDITOR";
+			_feedback_bar = "";
+			draw(); 
+		    }
+		}
+	    } else {
+		_feedback_input = "";
+		_feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
+	    }
+	} 
     } else {                 /**  If the file HASN'T been modified, since the last save just quit!     **/
         console.clear();
-        process.exit();
+	process.exit();
     }
 }
 
@@ -405,14 +413,7 @@ function k_save_buffer_to_file() {
     _feedback_bar = "saved :)";
 }
 
-function l_feedback_prompt(prompt_text) {
-    _mode = "FEEDBACK-PROMPT";
-    _feedback_cursor = 0;
-    _feedback_input = "";
-    _feedback_bar = prompt_text;
-}
-
-function m_add_to_feedback_input(new_text) {
+function l_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
     new_fb_input      += new_text;
     new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
@@ -420,7 +421,7 @@ function m_add_to_feedback_input(new_text) {
     _feedback_cursor++;
 }
 
-function n_delete_from_feedback_input() {
+function m_delete_from_feedback_input() {
     if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
@@ -431,14 +432,14 @@ function n_delete_from_feedback_input() {
     _feedback_cursor--;
 }
 
-function o_move_feedback_cursor_left() {
+function n_move_feedback_cursor_left() {
     _feedback_cursor--;
     if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
 	_feedback_cursor++;
     }
 }
 
-function p_move_feedback_cursor_right() {
+function o_move_feedback_cursor_right() {
     _feedback_cursor++;
     if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
         _feedback_cursor--;
