@@ -1608,15 +1608,25 @@ var _window_w          = 0;       //  Window width (in text char's).
 We're gonna need another sample text file, with a line that exceeds the _width_ of the window, in one place,
 and we're going to need to add enough lines that it exceeds the _height_ of the window.  
 
-You can find the sample file I used [here]().
+You can find the long sample file I used [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/long.txt).
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="f-3">  ☑️ Step 3:  Wrapping lines that overflow. </h3>
+<h3 id="f-3">  ☑️ Step 3:  Fixing some issues. </h3>
+
+Opening that file now has issues:
+ - The final lines are displayed, not the top of the text.
+ - The buffer display doesn't correspond with the cursor. 
+
+Terminal.app wraps the long line, but we'll need to redo it manually anyway, to add the "\".
+
+<br/><br/><br/><br/>
 
 
+
+<h3 id="f-4">  ☑️ Step 4:  Wrapping lines that overflow. </h3>
 
 <br/><br/><br/><br/>
 
