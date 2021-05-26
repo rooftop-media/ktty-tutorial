@@ -663,44 +663,21 @@ var _event_names = { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
-    "CTRL-C": function() {
-        b_quit();
-    },
-    
-    "LEFT":   function() {
-        e_move_cursor_left();
-    },
-    "RIGHT":  function() {
-        f_move_cursor_right();
-    },
-    "UP":     function() {
-        g_move_cursor_up();
-    },
-    "DOWN":   function() {
-        h_move_cursor_down();
-    },
+    "CTRL-C":     b_quit,
 
-    "TEXT":   function(key) {
-	// i_add_to_buffer(key);
-    },
-    "ENTER":  function() {
-        // i_add_to_buffer("\n");
-    },
-    "BACKSPACE": function() {
-        // j_delete_from_buffer();
-    },
+    "LEFT":       e_move_cursor_left,
+    "RIGHT":      f_move_cursor_right,
+    "UP":         g_move_cursor_up,
+    "DOWN":       h_move_cursor_down,
 
-    "CTRL-S": function() {
-        // k_save_buffer_to_file();
-    },
-    
-    "CTRL-Z":  function() {
-        // p_undo()
-    },
-    "CTRL-R": function() {
-        // q_redo()
-    },
+    // "TEXT":       function(key) {  i_add_to_buffer(key);   },
+    // "ENTER":      function()    {  i_add_to_buffer("\n");  },
+    // "BACKSPACE":  j_delete_from_buffer,  
 
+    // "CTRL-S":     k_save_buffer_to_file, 
+
+    // "CTRL-Z":     p_undo, 
+    // "CTRL-R":     q_redo,   
 };
 
 function map_events() { ... }
@@ -984,43 +961,21 @@ var _event_names = { ... }
 
 //  These functions fire in response to "events" like keyboard input. 
 var _events      = {
-    "CTRL-C": function() {
-        b_quit();
-    },
+    "CTRL-C":     b_quit,
 
-    "LEFT":   function() {
-        e_move_cursor_left();
-    },
-    "RIGHT":  function() {
-        f_move_cursor_right();
-    },
-    "UP":     function() {
-        g_move_cursor_up();
-    },
-    "DOWN":   function() {
-        h_move_cursor_down();
-    },
+    "LEFT":       e_move_cursor_left,
+    "RIGHT":      f_move_cursor_right,
+    "UP":         g_move_cursor_up,
+    "DOWN":       h_move_cursor_down,
 
-    "TEXT":   function(key) {
-	i_add_to_buffer(key);
-    },
-    "ENTER":  function() {
-        i_add_to_buffer("\n");
-    },
-    "BACKSPACE": function() {
-        j_delete_from_buffer();
-    },
-    
-    "CTRL-S": function() {
-        k_save_buffer_to_file();
-    },
-    
-    "CTRL-Z":  function() {
-        // p_undo()
-    },
-    "CTRL-R": function() {
-        // q_redo()
-    },
+    "TEXT":       function(key) {  i_add_to_buffer(key);   },
+    "ENTER":      function()    {  i_add_to_buffer("\n");  }, 
+    "BACKSPACE":  j_delete_from_buffer,
+
+    "CTRL-S":     k_save_buffer_to_file,                                                                                                            
+
+    // "CTRL-Z":     p_undo,
+    // "CTRL-R":     q_redo,
 };
 
 function map_events() { ... }
@@ -1194,67 +1149,33 @@ var _event_names = { ... }
 var _mode_events      = {
 
     "BUFFER-EDITOR": {
-        "CTRL-C": function() {
-            b_quit();
-	},
-	
-        "LEFT":   function() {
-            e_move_cursor_left();
-        },
-        "RIGHT":  function() {
-            f_move_cursor_right();
-        },
-        "UP":     function() {
-            g_move_cursor_up();
-        },
-        "DOWN":   function() {
-            h_move_cursor_down();
-        },
+         "CTRL-C":     b_quit,
 
-        "TEXT":   function(key) {
-            i_add_to_buffer(key);
-        },
-        "ENTER":  function() {
-            i_add_to_buffer("\n");
-        },
-        "BACKSPACE": function() {
-            j_delete_from_buffer();
-        },
-	
-	"CTRL-S": function() {
-            k_save_buffer_to_file();
-        },
+    	"LEFT":       e_move_cursor_left,
+    	"RIGHT":      f_move_cursor_right,
+    	"UP":         g_move_cursor_up,
+    	"DOWN":       h_move_cursor_down,
 
-        "CTRL-Z":  function() {
-            // j_undo()                                                                                                                                
-        },
-        "CTRL-R": function() {
-            // k_redo()                                                                                                                                
-        },
+    	"TEXT":       function(key) {  i_add_to_buffer(key);   },
+   	"ENTER":      function()    {  i_add_to_buffer("\n");  }, 
+    	"BACKSPACE":  j_delete_from_buffer,
+
+    	"CTRL-S":     k_save_buffer_to_file,                                                                                                            
+
+    	// "CTRL-Z":     p_undo,
+    	// "CTRL-R":     q_redo,
     },
 
     "FEEDBACK-PROMPT": {
-        "CTRL-C": function() {
-            b_quit();
-	},
+        "CTRL-C":     b_quit,
 	
-        "TEXT":   function(key) {
-            l_add_to_feedback_input(key);   //  Add text to the feedback input. 
-        },
-        "BACKSPACE": function() {
-            m_delete_from_feedback_input();          //  Remove text from the feedback input. 
-        },
+        "TEXT":       function(key) {  l_add_to_feedback_input(key);   },
+        "BACKSPACE":  function()    {  m_delete_from_feedback_input(); },
 	
-	"LEFT":   function() {
-            n_move_feedback_cursor_left();   //  Move the feedback cursor right one space.
-        },
-        "RIGHT":  function() {
-            o_move_feedback_cursor_right();  //  Move the feedback cursor right one space.
-        },
+	"LEFT":       n_move_feedback_cursor_left,
+        "RIGHT":      o_move_feedback_cursor_right,
 	
-	"ENTER":  function() {
-            _feedback_event(_feedback_input);    //  Running the feedback event. 
-        },
+	"ENTER":      function() {  _feedback_event(_feedback_input);  },
     }
 };
 
