@@ -1319,6 +1319,7 @@ function a_load_file_to_buffer() {
 	_feedback_event = function(response) {
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
+	    _feedback_bar = "";
 	}
         _buffer = "";
     } else {
