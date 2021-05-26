@@ -1169,11 +1169,11 @@ var _mode_events      = {
     "FEEDBACK-PROMPT": {
         "CTRL-C":     b_quit,
 	
-        "TEXT":       function(key) {  l_add_to_feedback_input(key);   },
-        "BACKSPACE":  function()    {  m_delete_from_feedback_input(); },
+        "TEXT":       function(key) {  m_add_to_feedback_input(key);   },
+        "BACKSPACE":  function()    {  n_delete_from_feedback_input(); },
 	
-	"LEFT":       n_move_feedback_cursor_left,
-        "RIGHT":      o_move_feedback_cursor_right,
+	"LEFT":       function()     { o_move_feedback_cursor_left();  },
+        "RIGHT":      function()     { p_move_feedback_cursor_right(); },
 	
 	"ENTER":      function() {  _feedback_event(_feedback_input);  },
     }
