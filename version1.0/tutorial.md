@@ -1132,7 +1132,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="e-2">  ☑️ Step 2:  Change _events to _mode_events  </h3>
+<h3 id="e-2">  ☑️ Step 2:  Change <code>_events</code> to <code>_mode_events</code>  </h3>
 
 Up until now, we stored all the events in an event dictionary, called `_events`.  
 *(We originally defined that variable in [part C, step 2](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-2) if you're curious.)*
@@ -1190,7 +1190,7 @@ We'll just omit such names from our list.
 
 
 
-<h3 id="e-3">  ☑️ Step 3:  Editing map_events() </h3>
+<h3 id="e-3">  ☑️ Step 3:  Editing <code>map_events()</code> </h3>
 
 We'll need to modify the `map_events()` function, to map key events to the event appropriate for the current mode.
 When we originally wrote `map_events()` (back in [part c, step 3](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-3)), we referenced the event dictionary, which was called `_events`.
@@ -1302,7 +1302,7 @@ function draw_feedback_bar() {
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  Edit a_load_file_to_buffer(filepath) </h3>
+<h3 id="e-7">  ☑️ Step 7:  Edit <code>a_load_file_to_buffer(filepath)</code> </h3>
 
 The first place we'll use Feedback Mode is in the algorithm to open files, `a_load_file_to_buffer()`.  
 
@@ -1357,7 +1357,7 @@ At this point, typing will throw an error.  You can quit error-less by pressing 
 
 
 
-<h3 id="e-9">  ☑️ Step 9:  Edit position_cursor() </h3>
+<h3 id="e-9">  ☑️ Step 9:  Edit <code>position_cursor()</code> </h3>
 
 While in feedback mode, we need to position the cursor differently.
 
@@ -1393,7 +1393,7 @@ Let's run the code again to make sure the cursor gets positioned correctly.
 
 
 
-<h3 id="e-11">  ☑️ Step 11:  m_add_to_feedback_input(new_text) </h3>
+<h3 id="e-11">  ☑️ Step 11:  <code>m_add_to_feedback_input(new_text)</code> </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
@@ -1410,7 +1410,7 @@ function m_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-12">  ☑️ Step 12:  n_delete_from_feedback_input() </h3>
+<h3 id="e-12">  ☑️ Step 12:  <code>n_delete_from_feedback_input()</code> </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
@@ -1449,7 +1449,7 @@ In your command  line, run `ls` to see if your new file was created!
 
 
 
-<h3 id="e-14">  ☑️ Step 14:  o_move_feedback_cursor_left() </h3>
+<h3 id="e-14">  ☑️ Step 14:  <code>o_move_feedback_cursor_left()</code> </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1465,7 +1465,7 @@ function o_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-15">  ☑️ Step 15:  p_move_feedback_cursor_right() </h3>
+<h3 id="e-15">  ☑️ Step 15:  <code>p_move_feedback_cursor_right()</code> </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1490,7 +1490,7 @@ This time, when you enter a filename, you should be able to use the arrow keys t
 <br/><br/><br/><br/>
 
 
-<h3 id="e-17">  ☑️ Step 17:  Editing b_quit() </h3>
+<h3 id="e-17">  ☑️ Step 17:  Editing <code>b_quit()</code> </h3>
 
 We'll also use the feedback bar when the user tries to quit a file with a modified buffer.  
 
@@ -1614,19 +1614,32 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 
 
-<h3 id="f-3">  ☑️ Step 3:  Fixing some issues. </h3>
+<h3 id="f-3">  ☑️ Step 3:  Editing <code>draw_buffer()</code>. </h3>
 
-Opening that file now has issues:
- - The final lines are displayed, not the top of the text.
- - The buffer display doesn't correspond with the cursor. 
+We'll need to draw the buffer line by line, to measure when lines & text go off screen. 
 
-Terminal.app wraps the long line, but we'll need to redo it manually anyway, to add the "\".
+```javascript
+//  Drawing the buffer.                                                                                                                                
+function draw_buffer() {
+    console.clear();
+    var buff_lines = _buffer.split("\n");
+    for (var i = 0; i < buff_lines.length; i++) {
+	var line = buff_lines[i];
+	if (i > _scroll && i < _window_h - 1) {
+	    console.log(line);
+	}
+    }
+    // console.log(_buffer);
+}
+```
 
 <br/><br/><br/><br/>
 
 
 
 <h3 id="f-4">  ☑️ Step 4:  Wrapping lines that overflow. </h3>
+
+Terminal.app wraps the long line, but we'll need to redo it manually anyway, to add the "\".
 
 <br/><br/><br/><br/>
 
@@ -1641,6 +1654,7 @@ Terminal.app wraps the long line, but we'll need to redo it manually anyway, to 
 <h2 id="part-g" align="center">  Part G:   Undo & Redo </h2>
 
 <br/><br/><br/><br/>
+
 
 
 <h3 id="g-?">  ☑️ Step ?:  ❖  Part G review. </h3>
