@@ -1563,7 +1563,24 @@ Nice!
 
 <h2 id="part-f" align="center">  Part F:   Scroll & Resize </h2>
 
+In this section, we'll handle files that exceed the window's height or width.  
+
+We'll also handle window resize & scroll.
+
 <br/><br/><br/><br/>
+
+
+
+<h3 id="f-1">  ☑️ Step 1:  Adding variables. </h3>
+
+For this section we need one more variable -- an integer named `_scroll`.
+
+```javascript
+
+```
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
 
 
 <h3 id="f-?">  ☑️ Step ?:  ❖  Part F review. </h3>
