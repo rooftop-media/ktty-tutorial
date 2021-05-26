@@ -1232,7 +1232,41 @@ function map_events() {
 
 
 
-<h3 id="e-4">  ☑️ Step 4:  Editing draw_feedback_bar() </h3>
+<h3 id="e-4">  ☑️ Step 4:  ☞ Test the code!  </h3>
+
+We just updated the event system quite a bit!  
+No new features have been added, but you may want to test the code here anyway, to make sure key events still work.  
+
+Up next, we'll make a function to switch to Feedback Prompt Mode. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-5">  ☑️ Step 5:  <code>l_feedback_prompt(prompt_text)</code> </h3>
+
+This algorithm is used to switch to Feedback Prompt Mode.
+
+```javascript
+l_feedback_prompt(prompt_text) {
+    _mode = "FEEDBACK-PROMPT";
+    _feedback_cursor = 0;
+    _feedback_input = "";
+    _feedback_bar = prompt_text;
+}
+```
+
+To switch back to buffer mode, only 2 lines are used...
+```javascript
+_mode = "FEEDBACK-PROMPT";
+_feedback_buffer = "";
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-6">  ☑️ Step 6:  Editing <code>draw_feedback_bar()</code> </h3>
 
 We'll also edit `draw_feedback_bar()` to draw the feedback bar text in a different color, in feedback mode.
 
@@ -1268,7 +1302,7 @@ function draw_feedback_bar() {
 
 
 
-<h3 id="e-5">  ☑️ Step 5:  Edit a_load_file_to_buffer(filepath) </h3>
+<h3 id="e-7">  ☑️ Step 7:  Edit a_load_file_to_buffer(filepath) </h3>
 
 The first place we'll use Feedback Mode is in the algorithm to open files, `a_load_file_to_buffer()`.  
 
@@ -1281,13 +1315,10 @@ If ktty is opened with a blank `filepath`, ask the user if they want to create a
 function a_load_file_to_buffer() {
     _filename = process.argv[2];
     if ( _filename == undefined ) {
-        _mode         = "FEEDBACK-PROMPT";
-	_feedback_bar = "Enter a file name to create a new file: ";
+        l_feedback_prompt("Enter a file name to create a new file: ");
 	_feedback_event = function(response) {
 	    _filename = response;
 	    _mode     = "BUFFER-EDITOR";
-	    _feedback_bar = "";
-	    _feedback_input = "";
 	}
         _buffer = "";
     } else {
@@ -1304,7 +1335,7 @@ function a_load_file_to_buffer() {
 
 
 
-<h3 id="e-6">  ☑️ Step 6:  ☞ Test the code!  </h3>
+<h3 id="e-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
 
 We can now test the code!  This time, open ktty without a filepath for an argument:
 
@@ -1325,7 +1356,7 @@ At this point, typing will throw an error.  You can quit error-less by pressing 
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  Edit position_cursor() </h3>
+<h3 id="e-9">  ☑️ Step 9:  Edit position_cursor() </h3>
 
 While in feedback mode, we need to position the cursor differently.
 
@@ -1353,7 +1384,7 @@ function position_cursor() {
 
 
 
-<h3 id="e-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
+<h3 id="e-10">  ☑️ Step 10:  ☞ Test the code!  </h3>
 
 Let's run the code again to make sure the cursor gets positioned correctly.
 
@@ -1361,12 +1392,12 @@ Let's run the code again to make sure the cursor gets positioned correctly.
 
 
 
-<h3 id="e-9">  ☑️ Step 9:  l_add_to_feedback_input(new_text) </h3>
+<h3 id="e-11">  ☑️ Step 11:  m_add_to_feedback_input(new_text) </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
 ```javascript
-function l_add_to_feedback_input(new_text) {
+function m_add_to_feedback_input(new_text) {
     var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
     new_fb_input      += new_text;
     new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
@@ -1378,12 +1409,12 @@ function l_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-10">  ☑️ Step 10:  m_delete_from_feedback_input() </h3>
+<h3 id="e-12">  ☑️ Step 12:  n_delete_from_feedback_input() </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
 ```javascript
-function m_delete_from_feedback_input() {
+function n_delete_from_feedback_input() {
     if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
@@ -1399,7 +1430,7 @@ function m_delete_from_feedback_input() {
 
 
 
-<h3 id="e-11">  ☑️ Step 11:  ☞ Test the code!  </h3>
+<h3 id="e-13">  ☑️ Step 13:  ☞ Test the code!  </h3>
 
 At this point, running the code with no argument should prompt the user for a filename.  
 And this time, typing a filename should work!
@@ -1417,12 +1448,12 @@ In your command  line, run `ls` to see if your new file was created!
 
 
 
-<h3 id="e-12">  ☑️ Step 12:  n_move_feedback_cursor_left() </h3>
+<h3 id="e-14">  ☑️ Step 14:  o_move_feedback_cursor_left() </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
 ```javascript
-function n_move_feedback_cursor_left() {
+function o_move_feedback_cursor_left() {
     _feedback_cursor--;
     if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
     	_feedback_cursor++;
@@ -1433,12 +1464,12 @@ function n_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-13">  ☑️ Step 13:  o_move_feedback_cursor_right() </h3>
+<h3 id="e-15">  ☑️ Step 15:  p_move_feedback_cursor_right() </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
 ```javascript
-function o_move_feedback_cursor_right() {
+function p_move_feedback_cursor_right() {
     _feedback_cursor++;
     if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
         _feedback_cursor--;
@@ -1449,7 +1480,7 @@ function o_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-14">  ☑️ Step 14:  ☞ Test the code!  </h3>
+<h3 id="e-16">  ☑️ Step 16:  ☞ Test the code!  </h3>
 
 Test the code again, without a filename.  
 This time, when you enter a filename, you should be able to use the arrow keys to move the feedback cursor.  
@@ -1458,24 +1489,20 @@ This time, when you enter a filename, you should be able to use the arrow keys t
 <br/><br/><br/><br/>
 
 
-<h3 id="e-15">  ☑️ Step 15:  Editing b_quit() </h3>
+<h3 id="e-17">  ☑️ Step 17:  Editing b_quit() </h3>
 
 We'll also use the feedback bar when the user tries to quit a file with a modified buffer.  
 
 ```javascript
 function b_quit() {
     if (_modified) {            /**  If the file has been modified, start the prompts!    **/
-        _mode = "FEEDBACK-PROMPT";
-        _feedback_cursor = 0;
-        _feedback_bar = "Modified buffer exists! Want to save? (y/n) ";
+        l_feedback_prompt( "Modified buffer exists! Want to save? (y/n)" );
         _feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
             if (response.toLowerCase() == "y") {
                 k_save_buffer_to_file();
                 b_quit();
             } else if (response.toLowerCase() == "n") {
-                _feedback_input = "";
-                _feedback_cursor = 0;
-                _feedback_bar = "Quit without saving? Your changes will be lost! (y/n) ";
+                l_feedback_prompt("Quit without saving? Your changes will be lost! (y/n) ");
                 draw();
                 _feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
                     if (response.toLowerCase() == "y") {
@@ -1503,7 +1530,7 @@ function b_quit() {
 <br/><br/><br/><br/>
 
 
-<h3 id="d-16">  ☑️ Step 16:  ☞ Test the code! </h3>
+<h3 id="d-18">  ☑️ Step 18:  ☞ Test the code! </h3>
 
 We can now test the QUIT function!  
 Open ktty again, modify some file, and then press `ctrl-c` WITHOUT saving.  
@@ -1519,7 +1546,7 @@ You'll need to test all 3 possible options in this menu:
 
 
 
-<h3 id="e-17">  ☑️ Step 17:  ❖  Part E review. </h3>
+<h3 id="e-19">  ☑️ Step 19:  ❖  Part E review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
