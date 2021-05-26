@@ -1629,7 +1629,6 @@ function draw_buffer() {
 	    console.log(line);
 	}
     }
-    // console.log(_buffer);
 }
 ```
 
