@@ -1674,7 +1674,7 @@ function draw_buffer() {
 
 
 
-<h3 id="f-4">  ☑️ Step 18:  ☞ Test the code! </h3>
+<h3 id="f-4">  ☑️ Step 4:  ☞ Test the code! </h3>
 
 Test the code by using ktty to open long.txt.  
 
@@ -1703,11 +1703,47 @@ The error described in the previous test can be fixed in `d_get_cursor_pos()`.
 This algorithm translates a single buffer position int to a 2d coordinate -- 
 but we need to adjust it to account for such overflow lines!
 
-```javascript
+Fortunately, we just need to tweak the inside of that IF statement.
 
+```javascript
+function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
+
+    var cursor_position = [1,1];                    //  line, char coord of cursor                                                                     
+    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's                                                          
+
+        var current = _buffer[i];
+        if (current == "\n" || cursor_position[1] >= _window_w - 1) {
+            cursor_position[0]++;        /**  Advance a line.        **/
+            cursor_position[1] = 1;      /**  Reset character pos.   **/
+        } else {
+            cursor_position[1]++;        /**  Advance a character.   **/
+        }
+    }
+    return cursor_position;
+
+}
 ```
 
 <br/><br/><br/><br/>
+
+
+
+<h3 id="f-6">  ☑️ Step 6:  ☞ Test the code! </h3>
+
+Open the same long.txt.  
+Move down past the overflow line by pressing DOWN, and make sure editing is still synced with the cursor.  
+Move back ONTO an overflowing line by pressing LEFT, and make sure the cursor jumps to the END of the overflow line.  
+
+If it all works, we've handled the overflow wrap!  Let's move on to vertical scrolling!
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-7">  ☑️ Step 7:  Scrolling </h3>
+
+<br/><br/><br/><br/>
+
 
 
 
