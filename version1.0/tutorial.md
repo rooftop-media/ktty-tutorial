@@ -67,7 +67,7 @@ Our goal will be to open & edit this file with ktty.
 
 
 
-<h3 id="a-2">  ☑️ Step 2. Outlining ktty.js  </h3>
+<h3 id="a-2">  ☑️ Step 2. Outlining <code>ktty.js</code>  </h3>
 
 Let’s go into ktty.js and add some comments to plan our architecture.  
 
@@ -137,7 +137,7 @@ var _filename          = "";      //  Filename - including extension.
 
 
 
-<h3 id="a-5"> ☑️ Step 5. Outline boot() </h3>
+<h3 id="a-5"> ☑️ Step 5. Outline <code>boot()</code> </h3>
 
 Now, in section 3 of the code, we’ll outline the boot function.
 
@@ -175,7 +175,7 @@ boot();  //  Boot it!!
 
 
 
-<h3 id="a-6"> ☑️ Step 6. a_load_file_to_buffer() </h3>
+<h3 id="a-6"> ☑️ Step 6. <code>a_load_file_to_buffer()</code> </h3>
 
 This is an algorithm we called in the `boot()` function.  
 We’ll implement it in section 6, with the algorithms.
@@ -201,7 +201,7 @@ function a_load_file_to_buffer() {
 
 
 
-<h3 id="a-7"> ☑️ Step 7. Outline draw() </h3>
+<h3 id="a-7"> ☑️ Step 7. Outline <code>draw()</code> </h3>
 
 
 Now, in the code’s 5th section, we’ll outline the draw() function.
@@ -225,7 +225,7 @@ function draw() {
 
 
 
-<h3 id="a-8"> ☑️ Step 8. draw_buffer() </h3>
+<h3 id="a-8"> ☑️ Step 8. <code>draw_buffer()</code> </h3>
 
 Now let’s implement `draw_buffer()`, which we'll put right below our `draw()` function.
 
@@ -246,7 +246,7 @@ function draw_buffer() {
 
 
 
-<h3 id="a-9"> ☑️ Step 9. map_events() </h3>
+<h3 id="a-9"> ☑️ Step 9. <code>map_events()</code> </h3>
 
 Back in the Events section of the code, add this to the end of the main function:
 
@@ -282,7 +282,7 @@ For now, we’ll be able to move the cursor anywhere on the page.*
 
 
 
-<h3 id="a-10"> ☑️ Step 10. b_quit() </h3>
+<h3 id="a-10"> ☑️ Step 10. <code>b_quit()</code> </h3>
 
 The quit function is important -- without it, we'll have a hard time quitting ktty.
 For now, we'll keep the quitting process simple -- clear the screen, then exit.
@@ -357,7 +357,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 <br/><br/><br/><br/>
 
 
-<h3 id="b-2"> ☑️ Step 2. Edit boot() </h3>
+<h3 id="b-2"> ☑️ Step 2. Edit <code>boot()</code> </h3>
 
 It's time to edit `boot()`, to uncomment the `c_get_window_size()` function call.
 
@@ -386,7 +386,7 @@ function boot() {
 
 
 
-<h3 id="b-3"> ☑️ Step 3. c_get_window_size() </h3>
+<h3 id="b-3"> ☑️ Step 3. <code>c_get_window_size()</code> </h3>
 
 We'll get the window height and width with this algorithm.
 *We’ll need the window height to accurately position the status bar. *
@@ -407,7 +407,7 @@ function c_get_window_size() {
 
 
 
-<h3 id="b-4"> ☑️ Step 4.  Editing draw() </h3>
+<h3 id="b-4"> ☑️ Step 4.  Editing <code>draw()</code> </h3>
 We also need to uncomment the function call to `draw_status_bar()` ,
 which is inside the `draw()` function.
 
@@ -426,7 +426,7 @@ function draw() {
 
 
 
-<h3 id="b-5"> ☑️ Step 5. draw_status_bar() </h3>
+<h3 id="b-5"> ☑️ Step 5. <code>draw_status_bar()</code> </h3>
 
 In this step, we’re going to draw the status bar at the bottom of the window.  
 The status bar will be reverse-video, drawn 2 spaces from the BOTTOM of the screen.
@@ -477,7 +477,7 @@ Notice that we used an algorithm `d_get_cursor_pos()`.  We'll define that next!
 
 
 
-<h3 id="b-6"> ☑️ Step 6. d_get_cursor_pos() </h3>
+<h3 id="b-6"> ☑️ Step 6. <code>d_get_cursor_pos()</code> </h3>
 
 In that last function, we called the algorithm `d_get_cursor_pos()` . 
 
@@ -526,7 +526,7 @@ at the end of the status bar.  We’ll fix that in the next step.
 <br/><br/><br/><br/>
 
 
-<h3 id="b-8"> ☑️ Step 8.  Editing draw() again </h3>
+<h3 id="b-8"> ☑️ Step 8.  Editing <code>draw()</code> again </h3>
 
 Let’s go back into our draw function and make sure we’re calling that position_cursor() function.
 
@@ -546,7 +546,7 @@ function draw() {
 
 
 
-<h3 id="b-9"> ☑️ Step 9.  position_cursor() </h3>
+<h3 id="b-9"> ☑️ Step 9.  <code>position_cursor()</code> </h3>
 
 This function will move the cursor to the correct part of the screen, using an ANSI code.
 
@@ -690,7 +690,7 @@ function map_events() { ... }
 
 
 
-<h3 id="c-4"> ☑️ Step 4.  Edit map_events() </h3>
+<h3 id="c-4"> ☑️ Step 4.  Edit <code>map_events()</code> </h3>
 
 We’ll also add to the `map_events()` function (which is called in boot(). )
 
@@ -729,7 +729,7 @@ function map_events() {
 
 
 
-<h3 id="c-5"> ☑️ Step 5.  e_move_cursor_left() </h3>
+<h3 id="c-5"> ☑️ Step 5.  <code>e_move_cursor_left()</code> </h3>
 
 This is an algorithm we’ll use to move the cursor left on the buffer.
 
@@ -749,7 +749,7 @@ function e_move_cursor_left() {
 
 
 
-<h3 id="c-6"> ☑️ Step 6.  f_move_cursor_right() </h3>
+<h3 id="c-6"> ☑️ Step 6.  <code>f_move_cursor_right()</code> </h3>
 
 And we’ll need an algorithm to move right, too. 
 
@@ -785,7 +785,7 @@ and stop at the beginning of the file.
 
 
 
-<h3 id="c-8"> ☑️ Step 8.  g_move_cursor_up() </h3>
+<h3 id="c-8"> ☑️ Step 8.  <code>g_move_cursor_up()</code> </h3>
 
 Moving the cursor UP/DOWN is less intuitive than moving LEFT/RIGHT.  
 
@@ -827,7 +827,7 @@ function g_move_cursor_up() {
 
 
 
-<h3 id="c-9"> ☑️ Step 9.  h_move_cursor_down() </h3>
+<h3 id="c-9"> ☑️ Step 9.  <code>h_move_cursor_down()</code> </h3>
 
 Now let’s write an algorithm to move DOWN into a line. 
 
@@ -874,7 +874,6 @@ function h_move_cursor_down() {
 	}
     }
     
-
     if (next_line_length >= current_x_pos) {          /**   If we're going down **into** a line...        **/
         _cursor_buffer_pos += current_line_length;
     }
@@ -904,7 +903,7 @@ The UP and DOWN arrow key events should now work!
 
 
 
-<h3 id="c-11"> ☑️ Step 11.  Edit draw() </h3>
+<h3 id="c-11"> ☑️ Step 11.  Edit <code>draw()</code> </h3>
 
 Next we’ll uncomment the call to `draw_feedback_bar()` in the `draw()` function.
 After we implement it, we’ll be done with the draw section for this version!
@@ -924,7 +923,7 @@ function draw() {
 
 
 
-<h3 id="c-12"> ☑️ Step 12.  draw_feedback_bar() </h3>
+<h3 id="c-12"> ☑️ Step 12.  <code>draw_feedback_bar()</code> </h3>
 
 This function will draw the feedback bar every time the screen is refreshed.
 Basically, it displays info for the event that caused the last draw() call.
@@ -974,7 +973,7 @@ In this section, we’ll add some more events we outlined, including typing char
 
 
 
-<h3 id="d-1">  ☑️ Step 1:  Edit map_events() </h3>
+<h3 id="d-1">  ☑️ Step 1:  Edit <code>map_events()</code> </h3>
 We’ll want to uncomment some functions in our event map, as we’re about to implement them.
 
 ```javascript
@@ -1007,7 +1006,7 @@ function map_events() { ... }
 
 
 
-<h3 id="d-2">  ☑️ Step 2:  i_add_to_buffer( new_text ) </h3>
+<h3 id="d-2">  ☑️ Step 2:  <code>i_add_to_buffer( new_text )</code> </h3>
 This algorithm will insert text into the buffer at the cursor’s position.
 
 ```javascript
@@ -1037,7 +1036,7 @@ but haven’t yet implemented it.
 
 
 
-<h3 id="d-4">  ☑️ Step 4:  i_delete_from_buffer() </h3>
+<h3 id="d-4">  ☑️ Step 4:  <code>i_delete_from_buffer()</code> </h3>
 This function will implement the backspace.  *Thank goodness.*
 
 ```javascript
@@ -1071,7 +1070,7 @@ Make sure that pressing “backspace” at the beginning of the file doesn’t c
 
 
 
-<h3 id="d-6">  ☑️ Step 6:  k_save_buffer_to_file() </h3>
+<h3 id="d-6">  ☑️ Step 6:  <code>k_save_buffer_to_file()</code> </h3>
 This algorithm will save the file, & update the `_modified` variable.
 
 ```javascript
@@ -1639,18 +1638,34 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 <h3 id="f-3">  ☑️ Step 3:  Editing <code>draw_buffer()</code>. </h3>
 
+We need to edit `draw_buffer()` to draw line by line.
+
+That way, we can ensure three things:
+ 1. Start drawing lines at wherever `_scroll` points to.
+ 2. If we're drawing a line with a width greater than the window width, wrap it appropriately.
+ 3. If we draw lines to the window's height, stop.
+
 We'll need to draw the buffer line by line, to measure when lines & text go off screen. 
 
 ```javascript
 //  Drawing the buffer.                                                                                                                                
 function draw_buffer() {
+
     console.clear();
     var buff_lines = _buffer.split("\n");
+    var overflow   = 1;
+
     for (var i = 0; i < buff_lines.length; i++) {
-	var line = buff_lines[i];
-	if (i > _scroll && i < _window_h - 1) {
-	    console.log(line);
-	}
+        var line = buff_lines[i];
+        if (i > _scroll && i < _window_h - 1 - _scroll - overflow) {   /**  This "if" is where we accomplish 1. and 3.  **/
+            while (line.length > _window_w) {                          /**  This while loop is where we accomplish 2.   **/
+                overflow++;
+                var line_part = line.slice(0, _window_w - 1);
+                console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
+                line = line.slice(_window_w - 1, line.length);
+            }
+            console.log(line);
+        }
     }
 }
 ```
@@ -1659,9 +1674,38 @@ function draw_buffer() {
 
 
 
-<h3 id="f-4">  ☑️ Step 4:  Wrapping lines that overflow. </h3>
+<h3 id="f-4">  ☑️ Step 18:  ☞ Test the code! </h3>
 
-Terminal.app wraps the long line, but we'll need to redo it manually anyway, to add the "\".
+Test the code by using ktty to open long.txt.  
+
+Make sure that:
+ - When the file opens, the very first line is visible. 
+ - The lines that overflow wrap, with a dim "\" indicating a wrapping line.
+ - The lines DON'T draw below the buffer area. 
+ 
+While testing, we can also notice the bug we'll need to fix next:
+ - Put your cursor on the FIRST LINE of an OVERFLOWING LINE.  
+ - Type, and notice that the text enters correctly. 
+ - Press DOWN.  The cursor jumps to the SECOND PART of the SAME OVERFLOWING LINE.
+ - Type, and notice that the EDIT is displaced on the NEXT LINE.
+
+We'll fix this by making the cursor jump to the NEXT line, rather than the second part of the overflowing line.
+ 
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="f-5">  ☑️ Step 5:  Editing <code>d_get_cursor_pos()</code>. </h3>
+
+The error described in the previous test can be fixed in `d_get_cursor_pos()`.  
+
+This algorithm translates a single buffer position int to a 2d coordinate -- 
+but we need to adjust it to account for such overflow lines!
+
+```javascript
+
+```
 
 <br/><br/><br/><br/>
 
