@@ -139,7 +139,13 @@ function draw() {
 //  Drawing the buffer.  
 function draw_buffer() {
     console.clear();
-    console.log(_buffer);
+    var buff_lines = _buffer.split("\n");
+    for (var i = 0; i < buff_lines.length; i++) {
+	var line = buff_lines[i];
+	if (i > _scroll && i < _window_h - 1) {
+	    console.log(line);  /**  console.log will write a line break after outputting each line    */
+	}
+    }
 }
 
 //  Drawing the file's status bar -- filename, modified status, and cursor position. 
@@ -324,40 +330,42 @@ function g_move_cursor_up() {
 
 function h_move_cursor_down() {
 
-    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
-    var current_line_length = 0;         /**   To find the length of *this* line.                      **/
-    var next_line_length = 0;            /**   To find the length of the *next* line, to jump forward. **/
-    for (var i = 0; i < _cursor_buffer_pos; i++ ) {
-        if (_buffer[i] == "\n") {
-            current_x_pos = 1;
-        } else {
-            current_x_pos++;
-        }
+    var current_x_pos = 1;    
+    var current_line_length = 0;  
+    var found_line_start = false;            /**    We'll use this flag to find the NEXT line start.   **/
+    var next_line_length = 0;            
+    
+    for (var i = 0; i < _buffer.length; i++ ) {
+    
+	if ( i < _cursor_buffer_pos ) {      /**    1. Get current_x_pos           **/
+            if (_buffer[i] == "\n") {
+                current_x_pos = 1;
+            } else {
+                current_x_pos++;
+            }
+	        
+	} else if ( !found_line_start ) {    /**    2. Get current_line_length     **/
+	    if (_buffer[i] == "\n") {
+		current_line_length += current_x_pos;
+		found_line_start = true;
+	    }
+	    else {
+		current_line_length++;
+	    }
+	        
+	} else if ( found_line_start ) {     /**    3. Get next_line_length        **/
+	    if (_buffer[i] == "\n") {
+		break;   // Exit for loop early 
+	    } else {
+		next_line_length++;
+	    }
+	}
     }
-
-    var j = _cursor_buffer_pos;          /**  Using a while loop to iterate further, to find the *next* line length.  **/
-    var found_line_start = false;
-    current_line_length = current_x_pos;
-    while (j < _buffer.length) {
-        if (!found_line_start && _buffer[j] == "\n") {
-            found_line_start = true;
-        }
-        else if (!found_line_start && _buffer[j] != "\n") {
-            current_line_length++;
-        }
-        else if (found_line_start && _buffer[j] != "\n") {
-            next_line_length++;
-        }
-        else if (found_line_start && _buffer[j] == "\n") {
-            break;
-        }
-        j++;
-    }
-
-    if (next_line_length > current_x_pos) {          /**   If we're going down **into** a line...        **/
+    
+    if (next_line_length >= current_x_pos) {          /**   If we're going down **into** a line...        **/
         _cursor_buffer_pos += current_line_length;
     }
-    else if (next_line_length <= current_x_pos) {    /**   If we're going down **above** a line...       **/
+    else if (next_line_length < current_x_pos) {    /**   If we're going down **above** a line...       **/
         _cursor_buffer_pos += current_line_length;
         _cursor_buffer_pos -= current_x_pos;         /**     This should get us to the start of the next line...  **/
         _cursor_buffer_pos += next_line_length + 1;  /**     ...and then we jump to the end.    **/
