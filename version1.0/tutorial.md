@@ -37,7 +37,7 @@ Click a part title to jump down to it, in this file.
 
 The steps in this part will culminate in us displaying the text file on the screen, along with controls to move and type.  
 
-Along the way, we’ll break the code into 6 code sections with comments, and add code to 5 of 6 sections.  
+Along the way, we’ll break the code into 6 code sections with comments, and add some code to each section.  
 <br/><br/><br/><br/>
 
 
@@ -116,13 +116,13 @@ var fs           = require("fs");
 
 <h3 id="a-4"> ☑️ Step 4. App data </h3>
 
-We’ll declare our variables in section 2.  For now, let’s keep it to two variables.  
+We’ll declare our variables in section 2.  For now, we'll make two variables:
 *(Note that I name global variables starting with an underscore, like `_buffer`.  )*
 
 We’ll save the contents to a variable called `_buffer`.  The buffer can be modified without modifying the file it’s pulled from.   
-*(That’s why it’s called the buffer – it’s buffered, aka separate, from the final saved version!)*
+*(That’s why it’s called the buffer – it’s buffered, aka separate, from the final saved file!)*
 
-We’ll also record the `_filename` being edited.
+We’ll also record another string of text, the `_filename` being edited.
 
 ```javascript
 ////  SECTION 2:  APP MEMORY
@@ -147,7 +147,7 @@ Ultimately, we'll have *four function calls in boot()*:
  - Then, start capturing keyboard events.
  - Finally, draw the screen for the first time.
 
-We'll leave `get_window_size()` commented out for now.
+We'll leave `get_window_size()` commented out for now, and use it in Part B. 
 
 ```javascript
 ////  SECTION 3:  Boot stuff.
@@ -177,7 +177,7 @@ boot();  //  Boot it!!
 
 <h3 id="a-6"> ☑️ Step 6. a_load_file_to_buffer() </h3>
 
-This is a we called in the `boot()` function.  
+This is an algorithm we called in the `boot()` function.  
 We’ll implement it in section 6, with the algorithms.
 
 ```javascript
@@ -579,10 +579,13 @@ but now the cursor should reposition in the upper left corner of the screen afte
 
 
 <h3 id="b-11"> ☑️ Step 11.  ❖  Part B review. </h3>
-The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_B.js) .
 
+In this part, we drew the status bar below the buffer!  We'll implement features to our status bar as we go on. 
+
+The complete code for Part B is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_B.js) .
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
+
 
 
 
@@ -594,7 +597,7 @@ For example, if the cursor is at the end of a text line, and the RIGHT key is pr
 the cursor should jump to the beginning of the next line.  
 And typing should insert a character into the buffer, rather than replacing a character.
 
-We’ll also log key events to the feedback bar, completing the Draw function.
+We’ll also log key events to the *feedback bar* in this part. 
 <br/><br/><br/><br/>
 
 
@@ -691,8 +694,8 @@ function map_events() { ... }
 
 We’ll also add to the `map_events()` function (which is called in boot(). )
 
-Before, we were logging every keypress straight to stdout, indiscriminately. 
-Now, we’ll capture the arrow key inputs & call functions to move only within the buffer.
+Before, we were logging every keypress straight to stdout, indiscriminately.  
+Now, we’ll capture the arrow key inputs & call functions to move only within the buffer.  
 *Notice that the functions we’re calling correspond to our event map/dictionary!*
 
 ```javascript
@@ -784,7 +787,16 @@ and stop at the beginning of the file.
 
 <h3 id="c-8"> ☑️ Step 8.  g_move_cursor_up() </h3>
 
-Moving the cursor up will be a bit more difficult.
+Moving the cursor UP/DOWN is less intuitive than moving LEFT/RIGHT.  
+
+To move UP, we need to do the following:
+ 1. Get the `current_x_position` of the cursor, on the current line.
+ 2. Get the length of the PREVIOUS line. 
+ 3. Branch depending on if the `current_x_position` exceeds the `prev_line_length`.
+ 4. &nbsp; IF the current position is greater, move to the end of the previous line.
+ 5. &nbsp; IF the previous line is greater, move to the current x pos, but up one line.
+    
+Here's the code:
 
 ```javascript
 function g_move_cursor_up() {
@@ -817,14 +829,20 @@ function g_move_cursor_up() {
 
 <h3 id="c-9"> ☑️ Step 9.  h_move_cursor_down() </h3>
 
-Now let’s write an algorithm to move down a line. 
+Now let’s write an algorithm to move DOWN into a line. 
+
+To move DOWN, we'll need to do the following: 
+ 1. Get the `current_x_position` of this line.
+ 2. Get the `current_line_length`, to move forward correctly.
+ 3. Get the `next_line_length`.
+ 4. Branch depending on if the `current_x_position` exceeds the `next_line_length`.
+ 5. &nbsp; IF `current_x_position` is bigger, go to the END of the next line.
+ 6. &nbsp; IF `next_line_length` is bigger, go to the current X position on that line. 
 
 ```javascript
 function h_move_cursor_down() {
 
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.     **/
-    var current_line_length = 0;         /**   To find the length of *this* line.                      **/
-    var next_line_length = 0;            /**   To find the length of the *next* line, to jump forward. **/
     for (var i = 0; i < _cursor_buffer_pos; i++ ) {
         if (_buffer[i] == "\n") {
             current_x_pos = 1;
@@ -833,6 +851,9 @@ function h_move_cursor_down() {
         }
     }
 
+    var current_line_length = 0;         /**   To find the length of *this* line.                      **/
+    var next_line_length = 0;            /**   To find the length of the *next* line, to jump forward. **/
+    
     var j = _cursor_buffer_pos;          /**  Using a while loop to iterate further, to find the *next* line length.  **/
     var found_line_start = false;
     current_line_length = current_x_pos;
