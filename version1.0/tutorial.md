@@ -1700,22 +1700,25 @@ We'll fix this by making the cursor jump to the NEXT line, rather than the secon
 
 The error described in the previous test can be fixed in `d_get_cursor_pos()`.  
 
-This algorithm translates a single buffer position int to a 2d coordinate -- 
-but we need to adjust it to account for such overflow lines!
+We need to tweak the inside of that IF statement to account for lines longer than `_window_w - 1`.
 
-Fortunately, we just need to tweak the inside of that IF statement.
+We'll also add another IF to adjust the scroll, if we're over the scroll limit.
 
 ```javascript
 function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
 
-    var cursor_position = [1,1];                    //  line, char coord of cursor                                                                     
-    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's                                                          
+    var cursor_position = [1,1];                    //  line, char coord of cursor
+    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's  
 
         var current = _buffer[i];
         if (current == "\n" || cursor_position[1] >= _window_w - 1) {
-            cursor_position[0]++;        /**  Advance a line.        **/
-            cursor_position[1] = 1;      /**  Reset character pos.   **/
-        } else {
+	    if (cursor_position[0] > _window_h - 1) {
+	        _scroll++;
+	    } else {
+                cursor_position[0]++;    /**  Advance a line.        **/
+            }
+	    cursor_position[1] = 1;      /**  Reset character pos.   **/
+	} else {
             cursor_position[1]++;        /**  Advance a character.   **/
         }
     }
