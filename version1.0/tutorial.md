@@ -1700,8 +1700,6 @@ The error described in the previous test can be fixed in `d_get_cursor_pos()`.
 
 We need to tweak the inside of that IF statement to account for lines longer than `_window_w - 1`.
 
-We'll also add another IF to adjust the scroll, if we're over the scroll limit.
-
 ```javascript
 function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
 
@@ -1710,11 +1708,7 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
 
         var current = _buffer[i];
         if (current == "\n" || cursor_position[1] >= _window_w - 1) {
-	    if (cursor_position[0] > _window_h - 1) {
-	        _scroll++;
-	    } else {
-                cursor_position[0]++;    /**  Advance a line.        **/
-            }
+            cursor_position[0]++;        /**  Advance a line.        **/
 	    cursor_position[1] = 1;      /**  Reset character pos.   **/
 	} else {
             cursor_position[1]++;        /**  Advance a character.   **/
