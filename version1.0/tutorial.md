@@ -20,10 +20,10 @@ Click a part title to jump down to it, in this file.
 | --------------------------- | ------------ | ------ | ---------- |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. | Complete, tested. | 12 |
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. | 11 |
-| [Part C - The Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  | 14 |
+| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested. | 8 |
-| [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | Complete, sorta tested. | 17 |
-| [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | Todo | ? |
+| [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | Complete, tested. | 19 |
+| [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | In progress | 6 |
 | [Part G - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Adds history tracking, for undo & redo. | Todo | ? |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | With v1.0 complete, you can move to v2.0. | Todo | ? |
 
@@ -1638,8 +1638,8 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 <h3 id="f-3">  ☑️ Step 3:  Editing <code>draw_buffer()</code>. </h3>
 
-We need to edit `draw_buffer()` to draw line by line.  
- - The first line to display should be the line matching the value of `_scroll`, where 0 is the first line. 
+We need to edit `draw_buffer()` to draw line by line, for these reasons:
+ - We DON'T want to draw lines before the value of `_scroll`.  If `_scroll == 2`, we should START at the 3rd line. 
  - Lines that overflow the `_screen_w` should be _wrapped_.  As we do this, keep track of the "true line count" (which is the `\n` marked line count + extra `overflow` lines.)
  - Stop drawing if the "true line count" gets to `screen_h + _scroll`. 
 
@@ -1653,8 +1653,10 @@ function draw_buffer() {
 
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
-        if (i > _scroll && i < (_window_h + _scroll) ) {   
-            while (line.length > _window_w) {                          
+	
+        if (i > _scroll && i < (_window_h + _scroll) ) {               /**  This IF statement ensures we draw the correct amount of lines!   **/
+	
+            while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
                 overflow++;
                 var line_part = line.slice(0, _window_w - 1);
                 console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
