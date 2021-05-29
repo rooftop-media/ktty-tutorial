@@ -1735,13 +1735,50 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 
 
 
-<h3 id="f-7">  ☑️ Step 7:  Scrolling </h3>
+<h3 id="f-7">  ☑️ Step 7:  Editing <code>draw_buffer()</code> again</h3>
 
-Scrolling can be triggered from any of the cursor movement directions.  
+Scrolling can be triggered from any of the cursor movement direction algorithms, via changes to `_cursor_buffer_pos`.
 
-UP or DOWN
+We'll add `s_handle_scroll()` to the start of `draw_buffer` to check if scrolling is necessary.
+
+```javascript
+//  Drawing the buffer.                                                                                                                                
+function draw_buffer() {
+
+    s_handle_scroll();
+
+    console.clear();
+    var buff_lines = _buffer.split("\n");
+    var overflow   = 1;
+    for (var i = 0; i < buff_lines.length; i++) {
+        var line = buff_lines[i];
+	
+        if (i >= _scroll && i < (_window_h + _scroll - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
+	
+            while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
+                overflow++;
+                var line_part = line.slice(0, _window_w - 1);
+                console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
+                line = line.slice(_window_w - 1, line.length);
+            }
+            console.log(line);
+        }
+    }
+}
+```
 
 <br/><br/><br/><br/>
+
+
+
+<h3 id="f-8">  ☑️ Step 8:  <code>s_handle_scroll()</code> </h3>
+
+This algorithm needs to:
+ - Find the true line height, accounting for overflows.
+ - Find the true cursor line position, probably via `d_get_cursor_pos()`
+ - If 
+<br/><br/><br/><br/>
+
 
 
 
