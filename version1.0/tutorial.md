@@ -1654,7 +1654,7 @@ function draw_buffer() {
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
 	
-        if (i > _scroll && i < (_window_h + _scroll) ) {               /**  This IF statement ensures we draw the correct amount of lines!   **/
+        if (i > _scroll && i < (_window_h + _scroll - overflow) ) {    /**  This IF statement ensures we draw the correct amount of lines!   **/
 	
             while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
                 overflow++;
