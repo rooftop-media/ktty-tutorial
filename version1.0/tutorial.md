@@ -23,7 +23,7 @@ Click a part title to jump down to it, in this file.
 | [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested. | 8 |
 | [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | Complete, tested. | 19 |
-| [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | In progress | 6 |
+| [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | In progress | 9 |
 | [Part G - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Adds history tracking, for undo & redo. | Todo | ? |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | With v1.0 complete, you can move to v2.0. | Todo | ? |
 
@@ -1654,7 +1654,7 @@ function draw_buffer() {
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
 	
-        if (i > _scroll && i < (_window_h + _scroll - overflow) ) {    /**  This IF statement ensures we draw the correct amount of lines!   **/
+        if (i >= _scroll && i < (_window_h + _scroll - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
 	
             while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
                 overflow++;
@@ -1736,6 +1736,10 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 
 
 <h3 id="f-7">  ☑️ Step 7:  Scrolling </h3>
+
+Scrolling can be triggered from any of the cursor movement directions.  
+
+UP or DOWN
 
 <br/><br/><br/><br/>
 
