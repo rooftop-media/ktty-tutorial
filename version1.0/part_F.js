@@ -136,27 +136,27 @@ function draw() {
     position_cursor();
 }
 
-//  Drawing the buffer.                  
+//  Drawing the buffer.  
 function draw_buffer() {
-
     console.clear();
     var buff_lines = _buffer.split("\n");
     var overflow   = 1;
-    
+
     for (var i = 0; i < buff_lines.length; i++) {
-	var line = buff_lines[i];
-	if (i >= _scroll && i < _window_h - _scroll - overflow - 1) {  /**  This "if" is where we accomplish 1. and 3.  **/
-	    while (line.length > _window_w) {                          /**  This while loop is where we accomplish 2.   **/
-		overflow++;
-		var line_part = line.slice(0, _window_w - 1);
-		console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
-		line = line.slice(_window_w - 1, line.length);
-	    }
-	    console.log(line);
-	}
+        var line = buff_lines[i];
+	
+        if (i >= _scroll && i < (_window_h + _scroll - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
+	    
+            while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
+                overflow++;
+                var line_part = line.slice(0, _window_w - 1);
+                console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
+                line = line.slice(_window_w - 1, line.length);
+            }
+            console.log(line);
+        }
     }
 }
-
 
 //  Drawing the file's status bar -- filename, modified status, and cursor position. 
 function draw_status_bar() {
@@ -275,7 +275,7 @@ function c_get_window_size() {           /**  Get the window size.              
 
 function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
 
-    var cursor_position = [1,1];                    //  line, char coord of cursor
+    var cursor_position = [1,1];
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
 
 	var current = _buffer[i];
