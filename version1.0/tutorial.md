@@ -1735,17 +1735,51 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 
 
 
-<h3 id="f-7">  ☑️ Step 7:  Editing <code>draw_buffer()</code> again</h3>
+<h3 id="f-7">  ☑️ Step 7:  Editing <code>d_get_cursor_pos()</code> again.</h3>
+
+The `d_get_cursor_pos` algorithm is used to position the cursor on the buffer.  
+We need to edit it again to account for the scroll -- a single line addition.
+
+```javascript
+function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
+
+    var cursor_position = [1,1];                    //  line, char coord of cursor
+    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's  
+
+        var current = _buffer[i];
+        if (current == "\n" || cursor_position[1] >= _window_w - 1) {
+            cursor_position[0]++;        /**  Advance a line.        **/
+	    cursor_position[1] = 1;      /**  Reset character pos.   **/
+	} else {
+            cursor_position[1]++;        /**  Advance a character.   **/
+        }
+    }
+    
+    position[0] -= _scroll;
+    
+    return cursor_position;
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-8">  ☑️ Step 8:  Editing <code>draw_buffer()</code> </h3>
 
 Scrolling can be triggered from any of the cursor movement direction algorithms, via changes to `_cursor_buffer_pos`.
 
-We'll add `s_handle_scroll()` to the start of `draw_buffer` to check if scrolling is necessary.
+We'll add two IF statements to the start and end of `draw_buffer` to check if scrolling is necessary.
+The one at the end accounts for overflow, and must rerun `draw_buffer` if it triggers a scroll.
 
 ```javascript
 //  Drawing the buffer.                                                                                                                                
 function draw_buffer() {
 
-    s_handle_scroll();
+    var cursor_position = d_get_cursor_pos();
+    if (cursor_position[0] == 0) {
+    	_scroll--;
+    }
 
     console.clear();
     var buff_lines = _buffer.split("\n");
@@ -1764,6 +1798,11 @@ function draw_buffer() {
             console.log(line);
         }
     }
+    
+    if (cursor_position[0] > _window_h - overflow + 1) {
+    	_scroll++;
+	draw_buffer();
+    }
 }
 ```
 
@@ -1771,19 +1810,53 @@ function draw_buffer() {
 
 
 
-<h3 id="f-8">  ☑️ Step 8:  <code>s_handle_scroll()</code> </h3>
+<h3 id="f-9">  ☑️ Step 9:  ☞ Test the code!  </h3>
 
-This algorithm needs to:
- - Find the true line height, accounting for overflows.
- - Find the true cursor line position, probably via `d_get_cursor_pos()`
- - If 
+Using the cursor, navigate to the end of the file.  The text should scroll down!  
+Type to make sure the cursor stays in sync. 
+
+Then, move back up to test scrolling up!
+
 <br/><br/><br/><br/>
 
 
 
+<h3 id="f-10">  ☑️ Step 10:  Edit <code>draw_status_bar</code>  </h3>
+
+We can add a single line to `draw_status_bar` to output the current page scroll. 
+
+```javascript
+//  Drawing the file's status bar -- filename, modified status, and cursor position.                                                                   
+function draw_status_bar() {
+
+    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
+
+    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
+    if (_modified) {                                           /**  Add the [modified] indicator.     **/
+        status_bar_text += "     [modified]";
+    } else {
+        status_bar_text += "               ";
+    }
+
+    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
+    status_bar_text += "  cursor on line " + cursor_position[0];
+    status_bar_text += ", row " + cursor_position[1];
+
+    status_bar_text += "   Scroll: " + _scroll;
+
+    while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
+        status_bar_text += " ";
+    }
+
+    process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+}
+```
 
 
-<h3 id="f-?">  ☑️ Step ?:  ❖  Part F review. </h3>
+
+<h3 id="f-11">  ☑️ Step 11:  ❖  Part F review. </h3>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
