@@ -1638,14 +1638,10 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 <h3 id="f-3">  ☑️ Step 3:  Editing <code>draw_buffer()</code>. </h3>
 
-We need to edit `draw_buffer()` to draw line by line.
-
-That way, we can ensure three things:
- 1. Start drawing lines at wherever `_scroll` points to.
- 2. If we're drawing a line with a width greater than the window width, wrap it appropriately.
- 3. If we draw lines to the window's height, stop.
-
-We'll need to draw the buffer line by line, to measure when lines & text go off screen. 
+We need to edit `draw_buffer()` to draw line by line.  
+ - The first line to display should be the line matching the value of `_scroll`, where 0 is the first line. 
+ - Lines that overflow the `_screen_w` should be _wrapped_.  As we do this, keep track of the "true line count" (which is the `\n` marked line count + extra `overflow` lines.)
+ - Stop drawing if the "true line count" gets to `screen_h + _scroll`. 
 
 ```javascript
 //  Drawing the buffer.                                                                                                                                
@@ -1657,8 +1653,8 @@ function draw_buffer() {
 
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
-        if (i > _scroll && i < _window_h - 1 - _scroll - overflow) {   /**  This "if" is where we accomplish 1. and 3.  **/
-            while (line.length > _window_w) {                          /**  This while loop is where we accomplish 2.   **/
+        if (i > _scroll && i < (_window_h + _scroll) ) {   
+            while (line.length > _window_w) {                          
                 overflow++;
                 var line_part = line.slice(0, _window_w - 1);
                 console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
