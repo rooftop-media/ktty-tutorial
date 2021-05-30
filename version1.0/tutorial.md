@@ -1644,7 +1644,7 @@ We need to edit `draw_buffer()` to draw line by line, for these reasons:
  - Stop drawing if the "true line count" gets to `screen_h + _scroll`. 
 
 ```javascript
-//  Drawing the buffer.                                                                                                                                
+//  Drawing the buffer. 
 function draw_buffer() {
 
     console.clear();
