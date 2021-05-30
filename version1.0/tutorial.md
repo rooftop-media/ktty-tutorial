@@ -1738,7 +1738,11 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 <h3 id="f-7">  ☑️ Step 7:  Editing <code>d_get_cursor_pos()</code> again.</h3>
 
 The `d_get_cursor_pos` algorithm is used to position the cursor on the buffer.  
-We need to edit it again to account for the scroll -- a single line addition.
+We need to edit it again to account for the scroll -- adding `position[0] -= _scroll;` will work.   
+
+The resulting line position may be negative, OR above the window height.  
+We'll check for those cases using an IF statement, and change `_scroll` if needed. 
+This function returns an array, so once we change `_scroll`, we can return the new calculation with `return d_get_cursor_pos();`!
 
 ```javascript
 function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
@@ -1756,8 +1760,16 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
     }
     
     position[0] -= _scroll;
+    if (position[0] == 0) {
+        _scroll--;
+	return d_get_cursor_pos();
+    } else if (position[0] > _window_h - 3) {
+        _scroll++;
+	return d_get_cursor_pos();
+    } else {
+    	return cursor_position;
+    }
     
-    return cursor_position;
 }
 ```
 
@@ -1765,52 +1777,7 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
 
 
 
-<h3 id="f-8">  ☑️ Step 8:  Editing <code>draw_buffer()</code> </h3>
-
-Scrolling can be triggered from any of the cursor movement direction algorithms, via changes to `_cursor_buffer_pos`.
-
-We'll add two IF statements to the start and end of `draw_buffer` to check if scrolling is necessary.
-The one at the end accounts for overflow, and must rerun `draw_buffer` if it triggers a scroll.
-
-```javascript
-//  Drawing the buffer.                                                                                                                                
-function draw_buffer() {
-
-    var cursor_position = d_get_cursor_pos();
-    if (cursor_position[0] == 0) {
-    	_scroll--;
-    }
-
-    console.clear();
-    var buff_lines = _buffer.split("\n");
-    var overflow   = 1;
-    for (var i = 0; i < buff_lines.length; i++) {
-        var line = buff_lines[i];
-	
-        if (i >= _scroll && i < (_window_h + _scroll - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
-	
-            while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
-                overflow++;
-                var line_part = line.slice(0, _window_w - 1);
-                console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
-                line = line.slice(_window_w - 1, line.length);
-            }
-            console.log(line);
-        }
-    }
-    
-    if (cursor_position[0] > _window_h - overflow + 1) {
-    	_scroll++;
-	draw_buffer();
-    }
-}
-```
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="f-9">  ☑️ Step 9:  ☞ Test the code!  </h3>
+<h3 id="f-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
 
 Using the cursor, navigate to the end of the file.  The text should scroll down!  
 Type to make sure the cursor stays in sync. 
@@ -1818,6 +1785,8 @@ Type to make sure the cursor stays in sync.
 Then, move back up to test scrolling up!
 
 <br/><br/><br/><br/>
+
+
 
 
 
