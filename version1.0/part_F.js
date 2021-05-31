@@ -140,22 +140,25 @@ function draw() {
 function draw_buffer() {
     console.clear();
     var buff_lines = _buffer.split("\n");
-    var overflow   = 1;
+    var overflow   = 0;
 
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
-	
-        if (i >= _scroll && i < (_window_h + _scroll - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
+	var in_frame = ( i >= _scroll && i < (_window_h + _scroll - overflow - 2) );
 	    
-            while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
-                overflow++;
-                var line_part = line.slice(0, _window_w - 1);
-                console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
-                line = line.slice(_window_w - 1, line.length);
-            }
-            console.log(line);
-        }
+	while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
+	    overflow++;
+	    var line_part = line.slice(0, _window_w - 1);
+	    if (in_frame) {
+		console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
+	    }
+	    line = line.slice(_window_w - 1, line.length);
+	}
+	if (in_frame) {
+	    console.log(line);
+	}
     }
+
 }
 
 //  Drawing the file's status bar -- filename, modified status, and cursor position. 
@@ -286,7 +289,17 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
             cursor_position[1]++;        /**  Advance a character.   **/
         }
     }
-    return cursor_position;
+
+    cursor_position[0] -= _scroll;
+    if (cursor_position[0] == 0) {
+        _scroll--;
+	return d_get_cursor_pos();
+    } else if (cursor_position[0] > _window_h - 2) {
+        _scroll++;
+	return d_get_cursor_pos();
+    } else {
+	return cursor_position;
+    }
 
 }
 
