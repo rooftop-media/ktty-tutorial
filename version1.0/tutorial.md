@@ -973,7 +973,7 @@ In this section, we’ll add some more events we outlined, including typing char
 
 
 
-<h3 id="d-1">  ☑️ Step 1:  Edit <code>map_events()</code> </h3>
+<h3 id="d-1">  ☑️ Step 1.  Edit <code>map_events()</code> </h3>
 We’ll want to uncomment some functions in our event map, as we’re about to implement them.
 
 ```javascript
@@ -1006,7 +1006,7 @@ function map_events() { ... }
 
 
 
-<h3 id="d-2">  ☑️ Step 2:  <code>i_add_to_buffer( new_text )</code> </h3>
+<h3 id="d-2">  ☑️ Step 2.  <code>i_add_to_buffer( new_text )</code> </h3>
 This algorithm will insert text into the buffer at the cursor’s position.
 
 ```javascript
@@ -1026,7 +1026,7 @@ function i_add_to_buffer(new_text) {
 
 
 
-<h3 id="d-3">  ☑️ Step 3:  ☞  Test the code! </h3>
+<h3 id="d-3">  ☑️ Step 3.  ☞  Test the code! </h3>
 Our `i_add_to_buffer( text )` function is used inserting text characters OR line breaks into the text buffer.  Try it out!
 
 Note that “backspace” will throw an error now, since we uncommented the function, 
@@ -1036,7 +1036,7 @@ but haven’t yet implemented it.
 
 
 
-<h3 id="d-4">  ☑️ Step 4:  <code>i_delete_from_buffer()</code> </h3>
+<h3 id="d-4">  ☑️ Step 4.  <code>i_delete_from_buffer()</code> </h3>
 This function will implement the backspace.  *Thank goodness.*
 
 ```javascript
@@ -1061,7 +1061,7 @@ function j_delete_from_buffer() {
 
 
 
-<h3 id="d-5">  ☑️ Step 5:  ☞ Test the code! </h3>
+<h3 id="d-5">  ☑️ Step 5.  ☞ Test the code! </h3>
 At this point, you should be able to type text, & then delete it!
 
 Make sure that pressing “backspace” at the beginning of the file doesn’t cause any errors. 
@@ -1070,7 +1070,7 @@ Make sure that pressing “backspace” at the beginning of the file doesn’t c
 
 
 
-<h3 id="d-6">  ☑️ Step 6:  <code>k_save_buffer_to_file()</code> </h3>
+<h3 id="d-6">  ☑️ Step 6.  <code>k_save_buffer_to_file()</code> </h3>
 This algorithm will save the file, & update the `_modified` variable.
 
 ```javascript
@@ -1085,7 +1085,7 @@ function k_save_buffer_to_file() {
 
 
 
-<h3 id="d-7">  ☑️ Step 7:  ☞ Test the code! </h3>
+<h3 id="d-7">  ☑️ Step 7.  ☞ Test the code! </h3>
 
 Try typing some text into the buffer, and deleting some text.  
 Then, save with ctrl-s, and quit.  Then open the file back up -- your changes should be saved!
@@ -1094,7 +1094,7 @@ Then, save with ctrl-s, and quit.  Then open the file back up -- your changes sh
 
 
 
-<h3 id="d-8">  ☑️ Step 8:  ❖ Part D review. </h3> 
+<h3 id="d-8">  ☑️ Step 8.  ❖ Part D review. </h3> 
 
 In this part, we added some basic editing controls. 
 
@@ -1121,7 +1121,7 @@ We’ll be using Feedback Mode in two ways, in this version:
 <br/><br/><br/><br/>
 
 
-<h3 id="e-1">  ☑️ Step 1:  Adding variables </h3>
+<h3 id="e-1">  ☑️ Step 1.  Adding variables </h3>
 We're adding four variables, all related to the feedback bar's prompt function.  
 
 At the top, we'll add a string `_mode`, which we'll use to store a string naming the current mode.
@@ -1154,7 +1154,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="e-2">  ☑️ Step 2:  Change <code>_events</code> to <code>_mode_events</code>  </h3>
+<h3 id="e-2">  ☑️ Step 2.  Change <code>_events</code> to <code>_mode_events</code>  </h3>
 
 Up until now, we stored all the events in an event dictionary, called `_events`.  
 *(We originally defined that variable in [part C, step 2](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-2) if you're curious.)*
@@ -1212,7 +1212,7 @@ We'll just omit such names from our list.
 
 
 
-<h3 id="e-3">  ☑️ Step 3:  Editing <code>map_events()</code> </h3>
+<h3 id="e-3">  ☑️ Step 3.  Editing <code>map_events()</code> </h3>
 
 We'll need to modify the `map_events()` function, to map key events to the event appropriate for the current mode.
 When we originally wrote `map_events()` (back in [part c, step 3](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-3)), we referenced the event dictionary, which was called `_events`.
@@ -1254,7 +1254,7 @@ function map_events() {
 
 
 
-<h3 id="e-4">  ☑️ Step 4:  ☞ Test the code!  </h3>
+<h3 id="e-4">  ☑️ Step 4.  ☞ Test the code!  </h3>
 
 We just updated the event system quite a bit!  
 No new features have been added, but you may want to test the code here anyway, to make sure key events still work.  
@@ -1265,7 +1265,7 @@ Up next, we'll make a function to switch to Feedback Prompt Mode.
 
 
 
-<h3 id="e-5">  ☑️ Step 5:  <code>l_feedback_prompt(prompt_text)</code> </h3>
+<h3 id="e-5">  ☑️ Step 5.  <code>l_feedback_prompt(prompt_text)</code> </h3>
 
 This algorithm is used to switch to Feedback Prompt Mode.
 
@@ -1288,7 +1288,7 @@ _feedback_buffer = "";
 
 
 
-<h3 id="e-6">  ☑️ Step 6:  Editing <code>draw_feedback_bar()</code> </h3>
+<h3 id="e-6">  ☑️ Step 6.  Editing <code>draw_feedback_bar()</code> </h3>
 
 We'll also edit `draw_feedback_bar()` to draw the feedback bar text in a different color, in feedback mode.
 
@@ -1324,7 +1324,7 @@ function draw_feedback_bar() {
 
 
 
-<h3 id="e-7">  ☑️ Step 7:  Edit <code>a_load_file_to_buffer(filepath)</code> </h3>
+<h3 id="e-7">  ☑️ Step 7.  Edit <code>a_load_file_to_buffer(filepath)</code> </h3>
 
 The first place we'll use Feedback Mode is in the algorithm to open files, `a_load_file_to_buffer()`.  
 
@@ -1358,7 +1358,7 @@ function a_load_file_to_buffer() {
 
 
 
-<h3 id="e-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
+<h3 id="e-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
 
 We can now test the code!  This time, open ktty without a filepath for an argument:
 
@@ -1379,7 +1379,7 @@ At this point, typing will throw an error.  You can quit error-less by pressing 
 
 
 
-<h3 id="e-9">  ☑️ Step 9:  Edit <code>position_cursor()</code> </h3>
+<h3 id="e-9">  ☑️ Step 9.  Edit <code>position_cursor()</code> </h3>
 
 While in feedback mode, we need to position the cursor differently.
 
@@ -1407,7 +1407,7 @@ function position_cursor() {
 
 
 
-<h3 id="e-10">  ☑️ Step 10:  ☞ Test the code!  </h3>
+<h3 id="e-10">  ☑️ Step 10.  ☞ Test the code!  </h3>
 
 Let's run the code again to make sure the cursor gets positioned correctly.
 
@@ -1415,7 +1415,7 @@ Let's run the code again to make sure the cursor gets positioned correctly.
 
 
 
-<h3 id="e-11">  ☑️ Step 11:  <code>m_add_to_feedback_input(new_text)</code> </h3>
+<h3 id="e-11">  ☑️ Step 11.  <code>m_add_to_feedback_input(new_text)</code> </h3>
 
 This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
 
@@ -1432,7 +1432,7 @@ function m_add_to_feedback_input(new_text) {
 
 
 
-<h3 id="e-12">  ☑️ Step 12:  <code>n_delete_from_feedback_input()</code> </h3>
+<h3 id="e-12">  ☑️ Step 12.  <code>n_delete_from_feedback_input()</code> </h3>
 
 This algorithm will delete text from `_feedback_input`.
 
@@ -1453,7 +1453,7 @@ function n_delete_from_feedback_input() {
 
 
 
-<h3 id="e-13">  ☑️ Step 13:  ☞ Test the code!  </h3>
+<h3 id="e-13">  ☑️ Step 13.  ☞ Test the code!  </h3>
 
 At this point, running the code with no argument should prompt the user for a filename.  
 And this time, typing a filename should work!
@@ -1471,7 +1471,7 @@ In your command  line, run `ls` to see if your new file was created!
 
 
 
-<h3 id="e-14">  ☑️ Step 14:  <code>o_move_feedback_cursor_left()</code> </h3>
+<h3 id="e-14">  ☑️ Step 14.  <code>o_move_feedback_cursor_left()</code> </h3>
 
 A function to move the feedback input cursor left one, if possible. 
 
@@ -1487,7 +1487,7 @@ function o_move_feedback_cursor_left() {
 
 
 
-<h3 id="e-15">  ☑️ Step 15:  <code>p_move_feedback_cursor_right()</code> </h3>
+<h3 id="e-15">  ☑️ Step 15.  <code>p_move_feedback_cursor_right()</code> </h3>
 
 This time we're going right, unless we're at the end of `_feedback_input`.
 
@@ -1503,7 +1503,7 @@ function p_move_feedback_cursor_right() {
 
 
 
-<h3 id="e-16">  ☑️ Step 16:  ☞ Test the code!  </h3>
+<h3 id="e-16">  ☑️ Step 16.  ☞ Test the code!  </h3>
 
 Test the code again, without a filename.  
 This time, when you enter a filename, you should be able to use the arrow keys to move the feedback cursor.  
@@ -1512,7 +1512,7 @@ This time, when you enter a filename, you should be able to use the arrow keys t
 <br/><br/><br/><br/>
 
 
-<h3 id="e-17">  ☑️ Step 17:  Editing <code>b_quit()</code> </h3>
+<h3 id="e-17">  ☑️ Step 17.  Editing <code>b_quit()</code> </h3>
 
 We'll also use the feedback bar when the user tries to quit a file with a modified buffer.  
 
@@ -1553,7 +1553,7 @@ function b_quit() {
 <br/><br/><br/><br/>
 
 
-<h3 id="d-18">  ☑️ Step 18:  ☞ Test the code! </h3>
+<h3 id="d-18">  ☑️ Step 18.  ☞ Test the code! </h3>
 
 We can now test the QUIT function!  
 Open ktty again, modify some file, and then press `ctrl-c` WITHOUT saving.  
@@ -1569,7 +1569,7 @@ You'll need to test all 3 possible options in this menu:
 
 
 
-<h3 id="e-19">  ☑️ Step 19:  ❖  Part E review. </h3>
+<h3 id="e-19">  ☑️ Step 19.  ❖  Part E review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
@@ -1587,15 +1587,15 @@ Nice!
 
 In this section...
  - Make a text line wrap if it exceeds the window _length_. 
- - Indicate wrapped lines with a \.
- - Make files scrollable if text lines exceed window _height_.
- - Update appropriately on window resize.
+ - Indicate wrapped lines with a backslash "\\".
+ - Make files scrollable if text lines exceed window _height_, both up and down.
+ - Update file wrap on window resize.
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="f-1">  ☑️ Step 1:  Adding variables. </h3>
+<h3 id="f-1">  ☑️ Step 1.  Adding variables. </h3>
 
 For this section we need one more variable -- an integer named `_scroll`.
 
@@ -1625,7 +1625,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="f-2">  ☑️ Step 2:  Adding long.txt </h3>
+<h3 id="f-2">  ☑️ Step 2.  Adding long.txt </h3>
 
 We're gonna need another sample text file, with a line that exceeds the _width_ of the window, in one place,
 and we're going to need to add enough lines that it exceeds the _height_ of the window.  
@@ -1636,7 +1636,7 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 
 
-<h3 id="f-3">  ☑️ Step 3:  Editing <code>draw_buffer()</code>. </h3>
+<h3 id="f-3">  ☑️ Step 3.  Editing <code>draw_buffer()</code>. </h3>
 
 We need to edit `draw_buffer()` to draw line by line, for these reasons:
  - We DON'T want to draw lines before the value of `_scroll`.  If `_scroll == 2`, we should START at the 3rd line. 
@@ -1672,7 +1672,7 @@ function draw_buffer() {
 
 
 
-<h3 id="f-4">  ☑️ Step 4:  ☞ Test the code! </h3>
+<h3 id="f-4">  ☑️ Step 4.  ☞ Test the code! </h3>
 
 Test the code by using ktty to open long.txt.  
 
@@ -1694,7 +1694,7 @@ We'll fix this by making the cursor jump to the NEXT line, rather than the secon
 
 
 
-<h3 id="f-5">  ☑️ Step 5:  Editing <code>d_get_cursor_pos()</code>. </h3>
+<h3 id="f-5">  ☑️ Step 5.  Editing <code>d_get_cursor_pos()</code>. </h3>
 
 The error described in the previous test can be fixed in `d_get_cursor_pos()`.  
 
@@ -1723,7 +1723,7 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
 
 
 
-<h3 id="f-6">  ☑️ Step 6:  ☞ Test the code! </h3>
+<h3 id="f-6">  ☑️ Step 6.  ☞ Test the code! </h3>
 
 Open the same long.txt.  
 Move down past the overflow line by pressing DOWN, and make sure editing is still synced with the cursor.  
@@ -1735,7 +1735,7 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 
 
 
-<h3 id="f-7">  ☑️ Step 7:  Editing <code>d_get_cursor_pos()</code> again.</h3>
+<h3 id="f-7">  ☑️ Step 7.  Editing <code>d_get_cursor_pos()</code> again.</h3>
 
 The `d_get_cursor_pos` algorithm is used to position the cursor on the buffer.  
 We need to edit it again to account for the scroll -- adding `position[0] -= _scroll;` will work.   
@@ -1777,7 +1777,7 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
 
 
 
-<h3 id="f-8">  ☑️ Step 8:  ☞ Test the code!  </h3>
+<h3 id="f-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
 
 Using the cursor, navigate to the end of the file.  The text should scroll down!  
 Type to make sure the cursor stays in sync. 
@@ -1790,7 +1790,7 @@ Then, move back up to test scrolling up!
 
 
 
-<h3 id="f-10">  ☑️ Step 10:  Edit <code>draw_status_bar</code>  </h3>
+<h3 id="f-9">  ☑️ Step 9.  Edit <code>draw_status_bar</code>  </h3>
 
 We can add a single line to `draw_status_bar` to output the current page scroll. 
 
@@ -1825,7 +1825,7 @@ function draw_status_bar() {
 
 
 
-<h3 id="f-11">  ☑️ Step 11:  ❖  Part F review. </h3>
+<h3 id="f-11">  ☑️ Step 10.  ❖  Part F review. </h3>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
