@@ -1585,7 +1585,9 @@ Nice!
 
 <h2 id="part-f" align="center">  Part F:   Scroll & Resize </h2>
 
-In this section...
+In this section, we'll make edits to display the `_buffer` even if it's bigger than our screen.
+
+Features in this section include:
  - Make a text line wrap if it exceeds the window _length_. 
  - Indicate wrapped lines with a backslash "\\".
  - Make files scrollable if text lines exceed window _height_, both up and down.
