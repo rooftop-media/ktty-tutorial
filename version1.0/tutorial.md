@@ -1759,11 +1759,11 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
         }
     }
     
-    position[0] -= _scroll;
-    if (position[0] == 0) {
+    cursor_position[0] -= _scroll;
+    if (cursor_position[0] == 0) {
         _scroll--;
 	return d_get_cursor_pos();
-    } else if (position[0] > _window_h - 3) {
+    } else if (cursor_position[0] > _window_h - 3) {
         _scroll++;
 	return d_get_cursor_pos();
     } else {
