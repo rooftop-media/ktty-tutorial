@@ -1593,13 +1593,19 @@ Features in this section include:
  - Make files scrollable if text lines exceed window _height_, both up and down.
  - Update file wrap on window resize.
 
+We need to react differently to edits to the buffer, vs. edits to the cursor's buffer position:
+ - Buffer edits react in re-wrapping the buffer's text.
+ - Cursor movement reacts in a scroll check. 
+
 <br/><br/><br/><br/>
 
 
 
 <h3 id="f-1">  ☑️ Step 1.  Adding variables. </h3>
 
-For this section we need one more variable -- an integer named `_scroll`.
+For this section we need two more variable:
+ - an integer named `_scroll`.
+ - a string named `_wrapped_buffer`.
 
 ```javascript
 ////  SECTION 2:  APP MEMORY
@@ -1612,6 +1618,7 @@ var _filename          = "";      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 var _scroll            = 0;
+var _wrapped_buffer    = "";
 
 var _feedback_bar      = "";      //  The text to display in the feedback bar.
 
@@ -1638,7 +1645,19 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 
 
-<h3 id="f-3">  ☑️ Step 3.  Editing <code>draw_buffer()</code>. </h3>
+<h3 id="f-3">  ☑️ Step 3.  <code>q_wrap_buffer()</code>. </h3>
+
+This function will make a version of `_buffer` with text lines that will fit in the screen's width.  
+
+```javascript
+function q_wrap_buffer() {
+    
+}
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-4">  ☑️ Step 4.  Editing <code>draw_buffer()</code>. </h3>
 
 We need to edit `draw_buffer()` to draw line by line, for these reasons:
  - We DON'T want to draw lines before the value of `_scroll`.  If `_scroll == 2`, we should START at the 3rd line. 
