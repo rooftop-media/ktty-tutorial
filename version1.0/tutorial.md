@@ -1196,6 +1196,7 @@ The data `Buffer.text` takes the place of `_buffer`.
 The function for `Buffer.load_file()` is from `a_load_file_to_buffer`.
 The function for `Buffer.get_cursor_coords()` is from `d_get_cursor_pos`.
 The function for `Buffer.draw()` is from `draw_buffer()`.
+The function for `Buffer.position_cursor()` is from `position_cursor()`.
 
 ```javascript
 //  SECTION 2:  Objects
@@ -1233,19 +1234,133 @@ var Buffer = {
         }
     }
     return cursor_position;
-  }
+  },
   
   draw:    function() {
     console.clear();
     console.log(this.text);
+  },
+  
+  position_cursor() {
+    var cursor_position = d_get_cursor_pos();                                                                     
+    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
   }
   
 }
 ```
-
 <br/><br/><br/><br/>
 
 
+
+<h3 id="e-4">  ☑️ Step 4.  Add the <code>StatusBar</code>. </h3> 
+
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = { ... }
+var StatusBar = { 
+  draw:   function() {
+    process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write("\x1b[7m");                               /**  Reverse video.                    **/
+
+    var status_bar_text = "  " + Window.filename;                  /**  Add the filename                  **/
+    if (Buffer.modified) {                                         /**  Add the [modified] indicator.     **/
+        status_bar_text += "     [modified]";
+    } else {
+        status_bar_text += "               ";
+    }
+
+    var cursor_position = Buffer.get_cursor_coords(); 
+    status_bar_text += "  cursor on line " + cursor_position[0];
+    status_bar_text += ", row " + cursor_position[1];
+
+    while (status_bar_text.length < Window.width) {                   /**  Padding it with whitespace.       **/
+        status_bar_text += " ";
+    }
+
+    process.stdout.write(status_bar_text);                         /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                               /**  No more reverse video.            **/
+  }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-5">  ☑️ Step 5.  Add the <code>FeedbackBar</code>. </h3> 
+
+We'll make an object for the Feedback Bar. 
+
+Snag `FeedbackBar.draw()` from `draw_feedback_bar()` in the previous version.
+
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = { ... }
+var StatusBar = { ... }
+var FeedbackBar = { 
+  text:    "",
+  
+  draw:    function() {
+    process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
+    process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
+    process.stdout.write(this.text);
+    _feedback_bar = "";
+    process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
+  }
+}
+
+
+```
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="e-6">  ☑️ Step 6.  Add the <code>Window</code>. </h3> 
+
+We'll have an object to represent the Window, too. 
+This is kind of a special object, that "aggregates" the other objects for drawing & such. 
+
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = { ... }
+var StatusBar = { ... }
+var FeedbackBar = { ... }
+
+var Window {
+  height:    100,
+  width:     100,
+  
+  get_size:  function() {
+    _window_h = process.stdout.rows;
+    _window_w = process.stdout.columns;
+  },
+  
+  draw:      function() {
+    Buffer.draw();
+    StatusBar.draw();
+    FeedbackBar.draw();
+  }
+}
+```
+<br/><br/><br/><br/>
+
+
+<h3 id="e-5">  ☑️ Step 7.  Add the <code>Keyboard</code>. </h3> 
+
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = { ... }
+var StatusBar = { ... }
+var FeedbackBar = { ... }
+var Window { ... }
+
+
+```
+<br/><br/><br/><br/>
 
 
 
