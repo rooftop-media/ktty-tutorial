@@ -1105,7 +1105,15 @@ In this part, we added some basic editing controls.
 
 <h2 id="part-e" align="center">  Part E:   Object Oriented Refactor </h2>
 
-Before we implement a feedback prompt system, let's refactor our code a bit, to organize it more neatly.
+Before we implement a feedback prompt system, we're going to do a *refactor*, 
+from *functional* programming into *object oriented* programming. 
+
+This refactoring will be a bit tedious.  You may find yourself asking, 
+"Why are we doing this? This seems like *more* work."
+
+It *is* more work, you're right.  It will be even more work to think about.
+But in return for that investment, we'll have a clear, interconnected web  
+of discrete, well-understood parts. 
 
 === Here's what we'll keep:
 
@@ -1130,13 +1138,114 @@ implement the different features in different ways.
 There won't be a single "draw" function, for example, but  
 the objects for the Buffer, StatusBar, & FeedbackBar will all have a `draw()` method. 
 
+The key to refactoring is having a well understood plan.  
+I have a nice OO data diagram, which I'll upload here soon. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-1">  ☑️ Step 1.  Editing <code>boot()</code> </h3>
+
+We'll edit the boot function to use our new object-oriented syntax!
+
+```javascript
+////  SECTION 3:  Boot stuff.                                                                                                                          
+
+//  The boot sequence.                                                                                                                                 
+function boot() {
+
+    /**  Load a file to the buffer.       **/
+    Buffer.load_file();
+
+    /**  Load window height & width.      **/
+    Window.get_size();
+
+    /**  Map the event listeners.         **/
+    Keyboard.map_events();
+
+    /**  Update the screen.               **/
+    Window.draw();
+
+}
+boot();  //  Boot it!! 
+```
 <br/><br/><br/><br/>
 
 
 
-<h3 id="e-1">  ☑️ Step 1.  Adding variables </h3>
+<h3 id="e-2">  ☑️ Step 2.  Rename Section 2 </h3> 
+
+Section 2 will *no longer* be our app data!  It's now our *objects!*
+
+You can delete all our variables, too.  We'll replace them in our objects. 
+
+```javascript
+//  SECTION 2:  Objects
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-3">  ☑️ Step 3.  Add the <code>Buffer</code>. </h3> 
+
+We'll now make the Buffer object.
+
+The data `Buffer.text` takes the place of `_buffer`.
+
+The function for `Buffer.load_file()` is from `a_load_file_to_buffer`.
+The function for `Buffer.get_cursor_coords()` is from `d_get_cursor_pos`.
+The function for `Buffer.draw()` is from `draw_buffer()`.
+
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = {
+  text:        "",
+  filename:    "",
+  modified:    "",
+  cursor_pos:  0,
+  scroll:      0,
+  
+  load_file:   function() {
+    this.filename = process.argv[2];
+    if ( this.filename == undefined ) {
+        this.text = "";
+    } else {
+        try {
+            this.text = fs.readFileSync( this.filename, {encoding: 'utf8'} );
+        } catch (err) {
+            this.text = "Unable to find a file at '" + this.filepath + "'";
+        }
+    }
+  },
+  
+  get_cursor_coords: function() {
+    var cursor_coords = [1,1];
+    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's                                                          
+
+        var current = this.text[i];
+        if (current == "\n") {
+            cursor_coords[0]++;        /**  Advance a line.        **/
+            cursor_coords[1] = 1;      /**  Reset character pos.   **/
+        } else {
+            cursor_coords[1]++;        /**  Advance a character.   **/
+        }
+    }
+    return cursor_position;
+  }
+  
+  draw:    function() {
+    console.clear();
+    console.log(this.text);
+  }
+  
+}
+```
 
 <br/><br/><br/><br/>
+
+
 
 
 
