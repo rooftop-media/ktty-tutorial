@@ -1246,7 +1246,7 @@ var Buffer = {
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
   }
   
-}
+};
 ```
 <br/><br/><br/><br/>
 
@@ -1257,7 +1257,7 @@ var Buffer = {
 ```javascript
 //  SECTION 2:  Objects
 
-var Buffer = { ... }
+var Buffer = { ... };
 var StatusBar = { 
   draw:   function() {
     process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
@@ -1281,7 +1281,7 @@ var StatusBar = {
     process.stdout.write(status_bar_text);                         /**  Output the status bar string.     **/
     process.stdout.write("\x1b[0m");                               /**  No more reverse video.            **/
   }
-}
+};
 ```
 <br/><br/><br/><br/>
 
@@ -1296,8 +1296,8 @@ Snag `FeedbackBar.draw()` from `draw_feedback_bar()` in the previous version.
 ```javascript
 //  SECTION 2:  Objects
 
-var Buffer = { ... }
-var StatusBar = { ... }
+var Buffer = { ... };
+var StatusBar = { ... };
 var FeedbackBar = { 
   text:    "",
   
@@ -1308,8 +1308,7 @@ var FeedbackBar = {
     _feedback_bar = "";
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
   }
-}
-
+};
 
 ```
 <br/><br/><br/><br/>
@@ -1325,9 +1324,9 @@ This is kind of a special object, that "aggregates" the other objects for drawin
 ```javascript
 //  SECTION 2:  Objects
 
-var Buffer = { ... }
-var StatusBar = { ... }
-var FeedbackBar = { ... }
+var Buffer = { ... };
+var StatusBar = { ... };
+var FeedbackBar = { ... };
 
 var Window {
   height:    100,
@@ -1343,7 +1342,7 @@ var Window {
     StatusBar.draw();
     FeedbackBar.draw();
   }
-}
+};
 ```
 <br/><br/><br/><br/>
 
@@ -1353,10 +1352,10 @@ var Window {
 ```javascript
 //  SECTION 2:  Objects
 
-var Buffer = { ... }
-var StatusBar = { ... }
-var FeedbackBar = { ... }
-var Window { ... }
+var Buffer = { ... };
+var StatusBar = { ... };
+var FeedbackBar = { ... };
+var Window { ... };
 
 
 ```
