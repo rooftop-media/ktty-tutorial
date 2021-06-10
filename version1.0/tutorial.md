@@ -1105,16 +1105,38 @@ In this part, we added some basic editing controls.
 
 <h2 id="part-e" align="center">  Part E:   Object Oriented Refactor </h2>
 
-Before we implement a feedback prompt system, let's refactor our code a bit.
+Before we implement a feedback prompt system, let's refactor our code a bit, to organize it more neatly.
 
-It'll be easier if we refactor to an object-oriented system.  
-Up until now, we've been using a procedural event loop system. 
+=== Here's what we'll keep:
+
+We'll still use the same essential *event loop* model.  
+In an event loop, the program listens for events, and reacts to those events with functions.
+
+We're also redrawing the screen after each event, based on the relevant data.
+
+This is considered Model-View-Controller architecture, or MVC architecture:
+ - Our Events are the "Controller"
+ - The functions that events trigger affect global data, which is the "Model"
+ - The data is used to draw the screen, which is the "View"
+
+=== Here's what we'll change:
+
+The big thing we need to do is sort our data & algorithms by object,  
+instead of having two big separate piles.  
+
+Our MVC architecture will still be there, but different elements will 
+implement the different features in different ways. 
+
+There won't be a single "draw" function, for example, but  
+the objects for the Buffer, StatusBar, & FeedbackBar will all have a `draw()` method. 
 
 <br/><br/><br/><br/>
 
 
 
 <h3 id="e-1">  ☑️ Step 1.  Adding variables </h3>
+
+<br/><br/><br/><br/>
 
 
 
