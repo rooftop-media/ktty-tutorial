@@ -16,16 +16,17 @@ This tutorial requires that you've completed the [initial set up steps](https://
 
 Click a part title to jump down to it, in this file.
 
-| Tutorial Parts              | Description  | Status | # of Steps |
-| --------------------------- | ------------ | ------ | ---------- |
+| Tutorial Parts              | Status | # of Steps |
+| --------------------------- | ------ | ---------- |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Draw the buffer to the screen, map very basic keyboard controls. | Complete, tested. | 12 |
-| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Draw a status bar at the bottom of the screen, with file info. | Complete, tested. | 11 |
-| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Map arrow keys, display feedback when they're pressed. | Complete, tested.  | 14 |
-| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Add and delete text from the text buffer accurately. | Complete, tested. | 8 |
-| [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | For ex, prompt before quitting with a modified buffer. | Complete, tested. | 19 |
-| [Part F - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Handle text overflow, scroll, & resize. | In progress | 9 |
-| [Part G - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Adds history tracking, for undo & redo. | Todo | ? |
-| [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | With v1.0 complete, you can move to v2.0. | Todo | ? |
+| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Complete, tested. | 11 |
+| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Complete, tested.  | 14 |
+| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Complete, tested. | 8 |
+| [Part E - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Complete, tested. | 19 |
+| [Part F - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | In progress | 9 |
+| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | In progress | 9 |
+| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-h) | Todo | ? |
+| [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | Todo | ? |
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -1036,7 +1037,7 @@ but haven’t yet implemented it.
 
 
 
-<h3 id="d-4">  ☑️ Step 4.  <code>i_delete_from_buffer()</code> </h3>
+<h3 id="d-4">  ☑️ Step 4.  <code>j_delete_from_buffer()</code> </h3>
 This function will implement the backspace.  *Thank goodness.*
 
 ```javascript
@@ -1102,8 +1103,30 @@ In this part, we added some basic editing controls.
 
 
 
+<h2 id="part-e" align="center">  Part E:   Object Oriented Refactor </h2>
 
-<h2 id="part-e" align="center">  Part E:   Feedback Mode </h2>
+Before we implement a feedback prompt system, let's refactor our code a bit.
+
+It'll be easier if we refactor to an object-oriented system.  
+Up until now, we've been using a procedural event loop system. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-1">  ☑️ Step 1.  Adding variables </h3>
+
+
+
+<h3 id="e-?">  ☑️ Step 8.  ❖ Part E review. </h3> 
+
+In this part, we added some basic editing controls. 
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
+<h2 id="part-f" align="center">  Part F:   Feedback Prompt </h2>
 
 KTTY will be able to run in different **modes**, which affect what the keyboard events do.   
 
@@ -1121,455 +1144,13 @@ We’ll be using Feedback Mode in two ways, in this version:
 <br/><br/><br/><br/>
 
 
-<h3 id="e-1">  ☑️ Step 1.  Adding variables </h3>
-We're adding four variables, all related to the feedback bar's prompt function.  
 
-At the top, we'll add a string `_mode`, which we'll use to store a string naming the current mode.
 
-We'll also add a string, `_feedback_input`, which is where we'll store the feedback text.
-We'll add a integer, `_feedback_cursor`, which tracks the cursor's position in the feedback input.
-And we'll add a variable that will store a *function*, which we'll call `_feedback_event`.
 
-```javascript
-////  SECTION 2:  APP MEMORY
 
-//  Setting up app memory. 
-var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK-PROMPT"
 
-var _buffer            = "";      //  The text being edited. 
-var _filename          = "";      //  Filename - including extension.
-var _modified          = false;   //  Has the buffer been modified?
-var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
-var _feedback_bar      = "";      //  The text to display in the feedback bar.
-
-var _feedback_input    = "";      //  What has the user typed? 
-var _feedback_cursor   = 0;       //  Where is the feedback input cursor? 
-var _feedback_event    = function (response) {}; 
-
-var _window_h          = 0;       //  Window height (in text char's). 
-var _window_w          = 0;       //  Window width (in text char's).
-```
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-2">  ☑️ Step 2.  Change <code>_events</code> to <code>_mode_events</code>  </h3>
-
-Up until now, we stored all the events in an event dictionary, called `_events`.  
-*(We originally defined that variable in [part C, step 2](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-2) if you're curious.)*
-
-In Feedback Mode, we'll want to capture the *same* events, but react with *different* functions.  
-To do this, we'll *add another layer* to our "event dictionary", and rename it to `_mode_events` like so:
-
-```javascript
-////  SECTION 4:  EVENTS 
-
-var _event_names = { ... }
-
-//  These functions fire in response to "events" like keyboard input. 
-var _mode_events      = {
-
-    "BUFFER-EDITOR": {
-         "CTRL-C":     b_quit,
-
-    	"LEFT":       e_move_cursor_left,
-    	"RIGHT":      f_move_cursor_right,
-    	"UP":         g_move_cursor_up,
-    	"DOWN":       h_move_cursor_down,
-
-    	"TEXT":       function(key) {  i_add_to_buffer(key);   },
-   	"ENTER":      function()    {  i_add_to_buffer("\n");  }, 
-    	"BACKSPACE":  j_delete_from_buffer,
-
-    	"CTRL-S":     k_save_buffer_to_file,                                                                                                            
-
-    	// "CTRL-Z":     p_undo,
-    	// "CTRL-R":     q_redo,
-    },
-
-    "FEEDBACK-PROMPT": {
-        "CTRL-C":     b_quit,
-	
-        "TEXT":       function(key) {  m_add_to_feedback_input(key);   },
-        "BACKSPACE":  function()    {  n_delete_from_feedback_input(); },
-	
-	"LEFT":       function()     { o_move_feedback_cursor_left();  },
-        "RIGHT":      function()     { p_move_feedback_cursor_right(); },
-	
-	"ENTER":      function() {  _feedback_event(_feedback_input);  },
-    }
-};
-
-function map_events() { ... }
-```
-Our event dictionary now can have 2 different reactions to the same input, depending on the mode!
-
-Note that for FEEDBACK mode, some events, like UP and DOWN, won't trigger any reaction at all.  
-We'll just omit such names from our list.
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-3">  ☑️ Step 3.  Editing <code>map_events()</code> </h3>
-
-We'll need to modify the `map_events()` function, to map key events to the event appropriate for the current mode.
-When we originally wrote `map_events()` (back in [part c, step 3](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#c-3)), we referenced the event dictionary, which was called `_events`.
-
-That dictionary doesn't exist anymore, but we can get the equivilant dictionary with a single line.
-Note that, since our new `event` variable is calculated locally, I've removed the `_` from its name.  
-The `map_events()` code now looks like this, accounting for that name change:
-
-```javascript
-////  SECTION 4:  Events. 
-
-var _event_names = { ... }
-var _events      = { ... }
-
-//  Map keyboard events.  
-function map_events() {
-    var stdin = process.stdin;
-    stdin.setRawMode( true );
-    stdin.resume();
-    stdin.setEncoding( 'utf8' );
-    stdin.on( 'data', function( key ){
-    
-  	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
-
-	var events = _mode_events[ _mode ];        /**  Getting the proper event map for this mode.             **/
-
-        if (typeof event_name == "string" && typeof events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
-            events[event_name]();
-        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
-            events["TEXT"](key);
-        }
-
-        draw();
-
-    });
-}
-```
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-4">  ☑️ Step 4.  ☞ Test the code!  </h3>
-
-We just updated the event system quite a bit!  
-No new features have been added, but you may want to test the code here anyway, to make sure key events still work.  
-
-Up next, we'll make a function to switch to Feedback Prompt Mode. 
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-5">  ☑️ Step 5.  <code>l_feedback_prompt(prompt_text)</code> </h3>
-
-This algorithm is used to switch to Feedback Prompt Mode.
-
-```javascript
-function l_feedback_prompt(prompt_text) {
-    _mode = "FEEDBACK-PROMPT";
-    _feedback_cursor = 0;
-    _feedback_input = "";
-    _feedback_bar = prompt_text;
-}
-```
-
-To switch back to buffer mode, only 2 lines are used...
-```javascript
-_mode = "FEEDBACK-PROMPT";
-_feedback_buffer = "";
-```
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-6">  ☑️ Step 6.  Editing <code>draw_feedback_bar()</code> </h3>
-
-We'll also edit `draw_feedback_bar()` to draw the feedback bar text in a different color, in feedback mode.
-
-```javascript
-////  SECTION 5:  Draw functions. 
-
-function draw() {  ...  }
-function draw_buffer() {  ...  }
-function draw_status_bar() {  ...  }
-function position_cursor() {  ...  }
-
-//  Drawing the feedback bar.                                                                                                                          
-function draw_feedback_bar() {
-    if (_mode == "FEEDBACK-PROMPT") {                          /**  If we're in feedback mode, draw it cyan.     **/
-        process.stdout.write("\x1b[36m"); 
-    } else {                                                   /**  If it's buffer mode feedback, dim.           **/
-        process.stdout.write("\x1b[2m"); 
-    }
-    
-    process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.                    **/
-    process.stdout.write(_feedback_bar);                       /**  Write the text.                              **/
-    process.stdout.write("\x1b[0m");                           /**  Back to undim text.                          **/
-        
-    if (_mode == "FEEDBACK-PROMPT") {                          /**  If we're in feedback mode, write the input too.   **/
-        process.stdout.write(_feedback_input); 
-    } else {
-        _feedback_bar = "";
-    }
-}
-```
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-7">  ☑️ Step 7.  Edit <code>a_load_file_to_buffer(filepath)</code> </h3>
-
-The first place we'll use Feedback Mode is in the algorithm to open files, `a_load_file_to_buffer()`.  
-
-If ktty is opened with a blank `filepath`, ask the user if they want to create a file.
-
-```javascript
-////  SECTION 6:  Algorithms. 
-
-//  Getting the file's contents, put it in the "buffer". 
-function a_load_file_to_buffer() {
-    _filename = process.argv[2];
-    if ( _filename == undefined ) {
-        l_feedback_prompt("Enter a file name to create a new file: ");
-	_feedback_event = function(response) {
-	    _filename = response;
-	    _mode     = "BUFFER-EDITOR";
-	    _feedback_bar = "";
-	}
-        _buffer = "";
-    } else {
-        try {
-            _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
-        } catch (err) {
-            _buffer = "Unable to find a file at '" + _filepath + "'";
-        }
-    }
-}
-```
-<br/><br/><br/><br/>
-
-
-
-
-<h3 id="e-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
-
-We can now test the code!  This time, open ktty without a filepath for an argument:
-
-```bash
-$ ktty
-```
-Or, without the shortcut...
-```bash
-$ node ./ktty.js
-```
-
-Running this code should present the `Enter a file name to create a new file:` message in the feedback bar.  
-
-At this point, typing will throw an error.  You can quit error-less by pressing `ctrl-c`.
-
-<br/><br/><br/><br/>
-
-
-
-
-<h3 id="e-9">  ☑️ Step 9.  Edit <code>position_cursor()</code> </h3>
-
-While in feedback mode, we need to position the cursor differently.
-
-```javascript
-////  SECTION 5:  Draw functions.
-
-function draw() {  ...  }
-function draw_buffer() {  ...  }
-function draw_status_bar() {  ...  }
-
-//  Move the cursor to its position in the buffer. 
-function position_cursor() {
-    if (_mode == "BUFFER-EDITOR") {
-        var cursor_position = d_get_cursor_pos();      //  d_get_cursor_pos is an algorithm.  
-        process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
-    } else if (_mode == "FEEDBACK-PROMPT") {
-        var x_pos = _feedback_bar.length + 1 + _feedback_cursor;
-        process.stdout.write("\x1b[" + (_window_h - 1) + ";" + x_pos + "f");
-    }
-}
-```
-
-<br/><br/><br/><br/>
-
-
-
-
-<h3 id="e-10">  ☑️ Step 10.  ☞ Test the code!  </h3>
-
-Let's run the code again to make sure the cursor gets positioned correctly.
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-11">  ☑️ Step 11.  <code>m_add_to_feedback_input(new_text)</code> </h3>
-
-This algorithm will insert text into the `_feedback_input` string, at the position of the `_feedback_cursor`.
-
-```javascript
-function m_add_to_feedback_input(new_text) {
-    var new_fb_input   = _feedback_input.slice(0, _feedback_cursor);
-    new_fb_input      += new_text;
-    new_fb_input      += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
-    _feedback_input = new_fb_input;
-    _feedback_cursor++;
-}
-```
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-12">  ☑️ Step 12.  <code>n_delete_from_feedback_input()</code> </h3>
-
-This algorithm will delete text from `_feedback_input`.
-
-```javascript
-function n_delete_from_feedback_input() {
-    if ( _feedback_cursor == 0 ) {      /**   Don't let the cursor position be negative.    **/
-        return;
-    }
-
-    var new_fb_input = _feedback_input.slice(0, _feedback_cursor - 1);
-    new_fb_input    += _feedback_input.slice(_feedback_cursor, _feedback_input.length);
-    _feedback_input  = new_fb_input;
-    _feedback_cursor--;
-}
-```
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-13">  ☑️ Step 13.  ☞ Test the code!  </h3>
-
-At this point, running the code with no argument should prompt the user for a filename.  
-And this time, typing a filename should work!
-
-Try creating a new file named `new_file.txt` this way.  Test the backspace, too.
-Press enter to create the file.   
-
-Then, type some contents to the file buffer, and save with `ctrl-s`. 
-Then quit with `ctrl-c`.
-
-In your command  line, run `ls` to see if your new file was created!
-
-<br/><br/><br/><br/>
-
-
-
-
-<h3 id="e-14">  ☑️ Step 14.  <code>o_move_feedback_cursor_left()</code> </h3>
-
-A function to move the feedback input cursor left one, if possible. 
-
-```javascript
-function o_move_feedback_cursor_left() {
-    _feedback_cursor--;
-    if (_feedback_cursor < 0) {     //  Don't let the feedback cursor go past the beginning.
-    	_feedback_cursor++;
-    }
-}
-```
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-15">  ☑️ Step 15.  <code>p_move_feedback_cursor_right()</code> </h3>
-
-This time we're going right, unless we're at the end of `_feedback_input`.
-
-```javascript
-function p_move_feedback_cursor_right() {
-    _feedback_cursor++;
-    if (_feedback_cursor > _feedback_input.length) {      // don't "surpass" the end of _feeback_input
-        _feedback_cursor--;
-    }
-}
-```
-<br/><br/><br/><br/>
-
-
-
-<h3 id="e-16">  ☑️ Step 16.  ☞ Test the code!  </h3>
-
-Test the code again, without a filename.  
-This time, when you enter a filename, you should be able to use the arrow keys to move the feedback cursor.  
-
-
-<br/><br/><br/><br/>
-
-
-<h3 id="e-17">  ☑️ Step 17.  Editing <code>b_quit()</code> </h3>
-
-We'll also use the feedback bar when the user tries to quit a file with a modified buffer.  
-
-```javascript
-function b_quit() {
-    if (_modified) {            /**  If the file has been modified, start the prompts!    **/
-        l_feedback_prompt( "Modified buffer exists! Want to save? (y/n)" );
-        _feedback_event = function(response) {               /**  Prompt 1:  Save before exiting?   **/
-            if (response.toLowerCase() == "y") {
-                k_save_buffer_to_file();
-                b_quit();
-            } else if (response.toLowerCase() == "n") {
-                l_feedback_prompt("Quit without saving? Your changes will be lost! (y/n) ");
-                draw();
-                _feedback_event = function(response) {       /**  Prompt 2:  Quit without saving??   **/
-                    if (response.toLowerCase() == "y") {
-                        console.clear();
-                        process.exit();
-                    } else {
-                        _feedback_input = "";
-                        _mode = "BUFFER-EDITOR";
-                        _feedback_bar = "";
-                        draw();
-                    }
-                }
-            } else {
-                _feedback_input = "";
-                _feedback_bar = "Modified buffer exists! Want to save? (Type 'y' or 'n') ";
-            }
-        }
-    } else {                 /**  If the file HASN'T been modified, since the last save just quit!     **/
-        console.clear();
-        process.exit();
-    }
-}
-```
-
-<br/><br/><br/><br/>
-
-
-<h3 id="d-18">  ☑️ Step 18.  ☞ Test the code! </h3>
-
-We can now test the QUIT function!  
-Open ktty again, modify some file, and then press `ctrl-c` WITHOUT saving.  
-The feedback prompt should pop up, saying, `Modified buffer exists! Want to save? (y/n)`
-
-You'll need to test all 3 possible options in this menu:
- - `y` to save and quit.
- - `n`, then `y`, to quit without saving.
- - `n`, then `n`, to continue editing without saving.
-
-<br/><br/><br/><br/>
-
-
-
-
-<h3 id="e-19">  ☑️ Step 19.  ❖  Part E review. </h3>
+<h3 id="e-19">  ☑️ Step 19.  ❖  Part F review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
@@ -1583,7 +1164,13 @@ Nice!
 
 
 
-<h2 id="part-f" align="center">  Part F:   Scroll & Resize </h2>
+
+
+
+
+
+
+<h2 id="part-g" align="center">  Part G:   Scroll & resize </h2>
 
 In this section, we'll make edits to display the `_buffer` even if it's bigger than our screen.
 
@@ -1601,7 +1188,7 @@ We need to react differently to edits to the buffer, vs. edits to the cursor's b
 
 
 
-<h3 id="f-1">  ☑️ Step 1.  Adding variables. </h3>
+<h3 id="g-1">  ☑️ Step 1.  Adding variables. </h3>
 
 For this section we need two more variable:
  - an integer named `_scroll`.
@@ -1634,7 +1221,7 @@ var _window_w          = 0;       //  Window width (in text char's).
 
 
 
-<h3 id="f-2">  ☑️ Step 2.  Adding long.txt </h3>
+<h3 id="g-2">  ☑️ Step 2.  Adding long.txt </h3>
 
 We're gonna need another sample text file, with a line that exceeds the _width_ of the window, in one place,
 and we're going to need to add enough lines that it exceeds the _height_ of the window.  
@@ -1645,7 +1232,7 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 
 
-<h3 id="f-3">  ☑️ Step 3.  <code>q_wrap_buffer()</code>. </h3>
+<h3 id="g-3">  ☑️ Step 3.  <code>q_wrap_buffer()</code>. </h3>
 
 This function will make a version of `_buffer` with text lines that will fit in the screen's width.  
 
@@ -1658,7 +1245,7 @@ function q_wrap_buffer() {
 
 
 
-<h3 id="f-4">  ☑️ Step 4.  Editing <code>draw_buffer()</code>. </h3>
+<h3 id="g-4">  ☑️ Step 4.  Editing <code>draw_buffer()</code>. </h3>
 
 We need to edit `draw_buffer()` to draw line by line, for these reasons:
  - We DON'T want to draw lines before the value of `_scroll`.  If `_scroll == 2`, we should START at the 3rd line. 
@@ -1847,19 +1434,19 @@ function draw_status_bar() {
 
 
 
-<h3 id="f-11">  ☑️ Step 10.  ❖  Part F review. </h3>
+<h3 id="g-11">  ☑️ Step 10.  ❖  Part G review. </h3>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
 
 
-<h2 id="part-g" align="center">  Part G:   Undo & Redo </h2>
+<h2 id="part-h" align="center">  Part H:   Undo & Redo </h2>
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="g-?">  ☑️ Step ?:  ❖  Part G review. </h3>
+<h3 id="h-?">  ☑️ Step ?:  ❖  Part H review. </h3>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
