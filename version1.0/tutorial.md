@@ -1278,8 +1278,8 @@ var StatusBar = {
         status_bar_text += " ";
     }
 
-    process.stdout.write(status_bar_text);                         /**  Output the status bar string.     **/
-    process.stdout.write("\x1b[0m");                               /**  No more reverse video.            **/
+    process.stdout.write(status_bar_text);                            /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                                  /**  No more reverse video.            **/
   }
 };
 ```
