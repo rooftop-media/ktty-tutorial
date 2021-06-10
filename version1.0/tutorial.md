@@ -1370,24 +1370,26 @@ var Keyboard = {
   },
   
   map_events: function() {
-    //  Map keyboard input                                                                                                                             
-    var stdin = process.stdin;
-    stdin.setRawMode(true);
-    stdin.resume();
-    stdin.setEncoding("utf8");
-    stdin.on("data", function(key) {
+        //  Map keyboard input                                                                                                                         
+        var stdin = process.stdin;
+        stdin.setRawMode(true);
+        stdin.resume();
+        stdin.setEncoding("utf8");
 
-        var event_name = this.event_names[key];          /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+        var key_reaction = function(key) {
 
-        if (typeof event_name == "string" && typeof Buffer.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
-            Buffer.events[event_name]();
-        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
-            _events["TEXT"](key);
-        }
+            var event_name = this.event_names[key];          /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
 
-        draw();                                          /**  Redraw the whole screen on any keypress.                               **/
-    });
-  },
+            if (typeof event_name == "string" && typeof Buffer.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+                Buffer.events[event_name]();
+            } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
+                _events["TEXT"](key);
+            }
+            draw();                                          /**  Redraw the whole screen on any keypress.                               **/
+        };
+
+        stdin.on("data", key_reaction);
+    },
   
 
 };
