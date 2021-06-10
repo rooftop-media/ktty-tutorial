@@ -1328,7 +1328,7 @@ var Buffer = { ... };
 var StatusBar = { ... };
 var FeedbackBar = { ... };
 
-var Window {
+var Window = {
   height:    100,
   width:     100,
   
@@ -1347,7 +1347,7 @@ var Window {
 <br/><br/><br/><br/>
 
 
-<h3 id="e-5">  ☑️ Step 7.  Add the <code>Keyboard</code>. </h3> 
+<h3 id="e-7">  ☑️ Step 7.  Add the <code>Keyboard</code>. </h3> 
 
 ```javascript
 //  SECTION 2:  Objects
@@ -1355,8 +1355,42 @@ var Window {
 var Buffer = { ... };
 var StatusBar = { ... };
 var FeedbackBar = { ... };
-var Window { ... };
+var Window = { ... };
 
+var Keyboard = {
+  event_names: {
+    "\u001b[A": "UP",
+    "\u001b[B": "DOWN",
+    "\u001b[C": "RIGHT",
+    "\u001b[D": "LEFT",
+    "\u007f":   "BACKSPACE",
+    "\u000D":   "ENTER",
+    "\u0003":   "CTRL-C",
+    "\u0013":   "CTRL-S",
+  },
+  
+  map_events: function() {
+    //  Map keyboard input                                                                                                                             
+    var stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+    stdin.on("data", function(key) {
+
+        var event_name = this.event_names[key];          /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+
+        if (typeof event_name == "string" && typeof Buffer.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+            Buffer.events[event_name]();
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
+            _events["TEXT"](key);
+        }
+
+        draw();                                          /**  Redraw the whole screen on any keypress.                               **/
+    });
+  },
+  
+
+};
 
 ```
 <br/><br/><br/><br/>
