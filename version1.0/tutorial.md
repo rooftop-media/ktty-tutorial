@@ -1593,8 +1593,8 @@ Pressing `ctrl-c` should quit with no error.  Any other key should throw an erro
 Let's uncomment & implement the edit controls for the Buffer.
 
 The function `Buffer_add_to_text(key)` comes from our `i_add_to_buffer(key)`.
-The function `Buffer_delete_from_text` comes from our `j_delete_from_buffer()`.
-The function `Buffer_save_to_file` comes from our `k_save_buffer_to_file`.
+The function `Buffer_delete_from_text()` comes from our `j_delete_from_buffer()`.
+The function `Buffer_save_to_file()` comes from our `k_save_buffer_to_file()`.
 
 
 ```javascript
@@ -1655,6 +1655,19 @@ function Buffer_add_to_text(key) {
     }
 }
 function Buffer_delete_from_text() {
+    if ( Buffer.cursor_position == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+    var new_buffer = Buffer.text.slice(0, Buffer.cursor_position - 1);
+    new_buffer    += Buffer.text.slice(Buffer.cursor_position, Buffer.text.length);
+    Buffer.text = new_buffer;
+    Buffer.cursor_position--;
+    FeedbackBar.text = "Text deleted.";
+    if (!Buffer.modified && Buffer.cursor_position != 0) {
+        Buffer.modified = true;
+    }
+}
+function Buffer_save_to_file() {
     fs.writeFileSync(Buffer.filename, Buffer.text, { encoding: 'utf8' } );
     Buffer.modified = false;
     FeedbackBar.text = "saved :)";
