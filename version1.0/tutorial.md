@@ -1678,9 +1678,21 @@ function Buffer_save_to_file() {
 
 
 
-<h3 id="e-?">  ☑️ Step ?.  ❖ Part E review. </h3> 
+<h3 id="e-10">  ☑️ Step 10.  ☞ Test your code! </h3> 
+
+Test the code now, to see if you can edit the buffer.   
+Pressing `ctrl-s` should save your changes to the file.
+
+<br/><br/><br/><br/>
 
 
+
+<h3 id="e-11">  ☑️ Step 11.  ❖ Part E review. </h3> 
+
+In this section, we reorganized our code to be Object Oriented!  
+Our code will be much easier to navigate from here on out.  
+
+Next up, we'll add a feedback prompt mode!
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
