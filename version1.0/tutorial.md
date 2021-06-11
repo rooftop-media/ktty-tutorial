@@ -1343,6 +1343,7 @@ var Window = {
   
   get_size:  Window_get_size,
   draw:      Window_draw,
+  quit:      Window_quit
 };
 function Window_get_size() {
     _window_h = process.stdout.rows;
@@ -1354,6 +1355,10 @@ function Window_draw() {
     FeedbackBar.draw();
     
     Buffer.position_cursor();
+}
+function Window_quit() {
+    console.clear();
+    process.exit();
 }
 ```
 <br/><br/><br/><br/>
@@ -1424,14 +1429,165 @@ We'll do that next!
 
 
 
-<h3 id="e-9">  ☑️ Step 9.  Adding <code>Buffer.events</code>  </h3> 
+<h3 id="e-9">  ☑️ Step 9.  Adding movement to <code>Buffer.events</code>  </h3> 
 
 We'll take the events that were previously stored in `_events` and add them to `Buffer.events`.
 
-```javascript
+The function `Buffer_move_cursor_left` comes from our `e_move_cursor_left`.
+The function `Buffer_move_cursor_right` comes from our `f_move_cursor_right`.
+The function `Buffer_move_cursor_up` comes from our `g_move_cursor_up`.
+The function `Buffer_move_cursor_down` comes from our `h_move_cursor_down`.
 
+
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = {
+  text:        "",
+  filename:    "",
+  modified:    "",
+  cursor_pos:  0,
+  scroll:      0,
+  
+  load_file:         Buffer_load_file,
+  get_cursor_coords: Buffer_get_cursor_coords,
+  draw:              Buffer_draw,
+  position_cursor:   Buffer_position_cursor
+  
+  events:            {
+    "CTRL-C":     function() {  Window.quit()  },
+
+    "LEFT":       Buffer_move_cursor_left,
+    "RIGHT":      Buffer_move_cursor_right,
+    "UP":         Buffer_move_cursor_up,
+    "DOWN":       Buffer_move_cursor_down,
+
+    // "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+    // "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+    // "BACKSPACE":  Buffer_delete_from_text,
+
+    // "CTRL-S":     Buffer_save_to_file,
+
+    // "CTRL-Z":     p_undo,                                                                                                                           
+    // "CTRL-R":     q_redo, 
+  }
+  
+};
+
+function Buffer_load_file() { ... }
+function Buffer_get_cursor_coords() { ... }
+function Buffer_draw() { ... }
+function Buffer_position_cursor() { ... }
+
+//  Buffer event functions:
+function Buffer_move_cursor_left() {
+    this.cursor_pos -= 1;
+    if ( this.cursor_pos < 0 ) {             /**   Don't let the cursor position be negative.         **/
+        this.cursor_pos++;
+    } else {
+        FeedbackBar.text = "Moved left.";
+    }
+}
+function Buffer_move_cursor_right() {
+    this.cursor_pos += 1;
+    var buff_limit = this.text.length;     /**   Don't let the cursor position exceed the buffer.   **/
+    if ( this.cursor_pos > buff_limit ) {
+        this.cursor_pos--;
+    } else {
+        FeedbackBar.text = "Moved right.";
+    }
+}
+function Buffer_move_cursor_up() {
+    var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
+    var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
+    for (var i = 0; i < this.cursor_pos; i++ ) {
+        if (this.text[i] == "\n") {
+            prev_line_length = current_x_pos;
+            current_x_pos = 1;
+        } else {
+            current_x_pos++;
+        }
+    }
+    if (prev_line_length > current_x_pos) {        /**   If we're going up **into** a line...        **/
+        this.cursor_pos -= prev_line_length;
+    }
+    else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
+        this.cursor_pos -= current_x_pos;
+    }
+
+    FeedbackBar.text = "Moved up.";
+}
+function Buffer_move_cursor_down() {
+    var current_x_pos = 1;
+    var current_line_length = 0;
+    var found_line_start = false;            /**    We'll use this flag to find the NEXT line start.   **/
+    var next_line_length = 0;
+
+    for (var i = 0; i < this.text.length; i++ ) {
+
+        if ( i < this.cursor_pos ) {      /**    1. Get current_x_pos           **/
+            if (this.text[i] == "\n") {
+                current_x_pos = 1;
+            } else {
+                current_x_pos++;
+            }
+
+        } else if ( !found_line_start ) {    /**    2. Get current_line_length     **/
+            if (this.text[i] == "\n") {
+                current_line_length += current_x_pos;
+                found_line_start = true;
+            }
+            else {
+                current_line_length++;
+            }
+
+        } else if ( found_line_start ) {     /**    3. Get next_line_length        **/
+            if (this.text[i] == "\n") {
+                break;   // Exit for loop early                                                                                                        
+            } else {
+                next_line_length++;
+            }
+        } //  End of "if" statements
+    } //  End of "for" loop
+    
+    if (next_line_length >= current_x_pos) {          /**   If we're going down **into** a line...                **/
+        _cursor_buffer_pos += current_line_length;
+    }
+    else if (next_line_length < current_x_pos) {     /**   If we're going down **above** a line...                **/
+        _cursor_buffer_pos += current_line_length;
+        _cursor_buffer_pos -= current_x_pos;         /**   This should get us to the start of the next line...    **/
+        _cursor_buffer_pos += next_line_length + 1;  /**   ...and then we jump to the end.                        **/
+    }
+
+    var buff_limit = this.text.length;               /**   Don't let the cursor position exceed the buffer.       **/
+    if ( this.cursor_pos > buff_limit ) {
+        this.cursor_pos--;
+    } else {
+        FeedbackBar.text = "Moved down.";
+    }
+
+}
 
 ```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-9">  ☑️ Step 9.  ☞ Test your code! </h3> 
+
+Test the code now, to see if your arrow keys properly move the cursor around the buffer.
+
+Pressing `ctrl-c` should quit with no error.  Any other key should throw an error (for now!).
+
+<br/><br/><br/><br/>
+
+
+
+
+<h3 id="e-10">  ☑️ Step 10.  Adding movement to <code>Buffer.events</code> </h3> 
+
+
 
 <br/><br/><br/><br/>
 
