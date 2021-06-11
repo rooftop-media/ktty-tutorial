@@ -322,3 +322,47 @@ function boot() {
 
 }
 boot();  //  Boot it!! 
+
+
+
+
+
+
+
+
+
+
+////  SECTION 5:  Draw functions.
+
+//  Drawing the file's status bar -- filename, modified status, and cursor position. 
+function draw_status_bar() {
+
+    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
+
+    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
+    if (_modified) {                                           /**  Add the [modified] indicator.     **/
+        status_bar_text += "     [modified]";
+    } else {
+        status_bar_text += "               ";
+    }
+
+    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
+    status_bar_text += "  cursor on line " + cursor_position[0];
+    status_bar_text += ", row " + cursor_position[1];
+
+    while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
+        status_bar_text += " ";
+    }
+
+    process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+}
+
+//  Move the cursor to its position in the buffer.   
+function position_cursor() {
+    var cursor_position = d_get_cursor_pos(); //  d_get_cursor_pos is an algorithm.
+    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+}
+
+
