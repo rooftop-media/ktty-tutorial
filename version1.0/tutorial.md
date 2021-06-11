@@ -1267,7 +1267,7 @@ var Buffer = { ... };
 //  Buffer methods defined here.
 
 var StatusBar = { 
-  draw:   StatusBar_draw(),
+  draw:   StatusBar_draw,
 };
 function StatusBar_draw() {
     process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
