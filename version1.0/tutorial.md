@@ -1438,6 +1438,9 @@ The function `Buffer_move_cursor_right` comes from our `f_move_cursor_right`.
 The function `Buffer_move_cursor_up` comes from our `g_move_cursor_up`.
 The function `Buffer_move_cursor_down` comes from our `h_move_cursor_down`.
 
+Note that, because these events are in `Buffer.events` and not `Buffer` directly,  
+we can't use `this` to access Buffer's data directly. 
+
 
 ```javascript
 //  SECTION 2:  Objects
@@ -1481,18 +1484,18 @@ function Buffer_position_cursor() { ... }
 
 //  Buffer event functions:
 function Buffer_move_cursor_left() {
-    this.cursor_pos -= 1;
-    if ( this.cursor_pos < 0 ) {             /**   Don't let the cursor position be negative.         **/
-        this.cursor_pos++;
+    Buffer.cursor_pos -= 1;
+    if ( Buffer.cursor_pos < 0 ) {         /**   Don't let the cursor position be negative.         **/
+        Buffer.cursor_pos++;
     } else {
         FeedbackBar.text = "Moved left.";
     }
 }
 function Buffer_move_cursor_right() {
-    this.cursor_pos += 1;
-    var buff_limit = this.text.length;     /**   Don't let the cursor position exceed the buffer.   **/
-    if ( this.cursor_pos > buff_limit ) {
-        this.cursor_pos--;
+    Buffer.cursor_pos += 1;
+    var buff_limit = Buffer.text.length;   /**   Don't let the cursor position exceed the buffer.   **/
+    if ( Buffer.cursor_pos > buff_limit ) {
+        Buffer.cursor_pos--;
     } else {
         FeedbackBar.text = "Moved right.";
     }
@@ -1500,8 +1503,8 @@ function Buffer_move_cursor_right() {
 function Buffer_move_cursor_up() {
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
     var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
-    for (var i = 0; i < this.cursor_pos; i++ ) {
-        if (this.text[i] == "\n") {
+    for (var i = 0; i < Buffer.cursor_pos; i++ ) {
+        if (Buffer.text[i] == "\n") {
             prev_line_length = current_x_pos;
             current_x_pos = 1;
         } else {
@@ -1509,10 +1512,10 @@ function Buffer_move_cursor_up() {
         }
     }
     if (prev_line_length > current_x_pos) {        /**   If we're going up **into** a line...        **/
-        this.cursor_pos -= prev_line_length;
+        Buffer.cursor_pos -= prev_line_length;
     }
     else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
-        this.cursor_pos -= current_x_pos;
+        Buffer.cursor_pos -= current_x_pos;
     }
 
     FeedbackBar.text = "Moved up.";
@@ -1523,17 +1526,17 @@ function Buffer_move_cursor_down() {
     var found_line_start = false;            /**    We'll use this flag to find the NEXT line start.   **/
     var next_line_length = 0;
 
-    for (var i = 0; i < this.text.length; i++ ) {
+    for (var i = 0; i < Buffer.text.length; i++ ) {
 
-        if ( i < this.cursor_pos ) {      /**    1. Get current_x_pos           **/
-            if (this.text[i] == "\n") {
+        if ( i < Buffer.cursor_pos ) {      /**    1. Get current_x_pos           **/
+            if (Buffer.text[i] == "\n") {
                 current_x_pos = 1;
             } else {
                 current_x_pos++;
             }
 
         } else if ( !found_line_start ) {    /**    2. Get current_line_length     **/
-            if (this.text[i] == "\n") {
+            if (Buffer.text[i] == "\n") {
                 current_line_length += current_x_pos;
                 found_line_start = true;
             }
@@ -1542,7 +1545,7 @@ function Buffer_move_cursor_down() {
             }
 
         } else if ( found_line_start ) {     /**    3. Get next_line_length        **/
-            if (this.text[i] == "\n") {
+            if (Buffer.text[i] == "\n") {
                 break;   // Exit for loop early                                                                                                        
             } else {
                 next_line_length++;
@@ -1559,9 +1562,9 @@ function Buffer_move_cursor_down() {
         _cursor_buffer_pos += next_line_length + 1;  /**   ...and then we jump to the end.                        **/
     }
 
-    var buff_limit = this.text.length;               /**   Don't let the cursor position exceed the buffer.       **/
-    if ( this.cursor_pos > buff_limit ) {
-        this.cursor_pos--;
+    var buff_limit = Buffer.text.length;             /**   Don't let the cursor position exceed the buffer.       **/
+    if ( Buffer.cursor_pos > buff_limit ) {
+        Buffer.cursor_pos--;
     } else {
         FeedbackBar.text = "Moved down.";
     }
