@@ -1193,10 +1193,10 @@ We'll now make the Buffer object.
 
 The data `Buffer.text` takes the place of `_buffer`.
 
-The function for `Buffer.load_file()` is from `a_load_file_to_buffer`.
-The function for `Buffer.get_cursor_coords()` is from `d_get_cursor_pos`.
-The function for `Buffer.draw()` is from `draw_buffer()`.
-The function for `Buffer.position_cursor()` is from `position_cursor()`.
+The function for `Buffer.load_file()` is from `a_load_file_to_buffer`.  
+The function for `Buffer.get_cursor_coords()` is from `d_get_cursor_pos`.  
+The function for `Buffer.draw()` is from `draw_buffer()`.  
+The function for `Buffer.position_cursor()` is from `position_cursor()`.    
 
 ```javascript
 //  SECTION 2:  Objects
@@ -1208,7 +1208,14 @@ var Buffer = {
   cursor_pos:  0,
   scroll:      0,
   
-  load_file:   function() {
+  load_file:         Buffer_load_file,
+  get_cursor_coords: Buffer_get_cursor_coords,
+  draw:              Buffer_draw,
+  position_cursor:   Buffer_position_cursor
+  
+};
+
+function Buffer_load_file() {
     this.filename = process.argv[2];
     if ( this.filename == undefined ) {
         this.text = "";
@@ -1219,9 +1226,9 @@ var Buffer = {
             this.text = "Unable to find a file at '" + this.filepath + "'";
         }
     }
-  },
-  
-  get_cursor_coords: function() {
+}
+
+function Buffer_get_cursor_coords() {
     var cursor_coords = [1,1];
     for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's                                                          
 
@@ -1234,19 +1241,18 @@ var Buffer = {
         }
     }
     return cursor_position;
-  },
-  
-  draw:    function() {
+}
+
+function Buffer_draw() {
     console.clear();
     console.log(this.text);
-  },
-  
-  position_cursor() {
+}
+
+function Buffer_position_cursor() {
     var cursor_position = d_get_cursor_pos();                                                                     
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
-  }
-  
-};
+}
+
 ```
 <br/><br/><br/><br/>
 
@@ -1258,8 +1264,12 @@ var Buffer = {
 //  SECTION 2:  Objects
 
 var Buffer = { ... };
+//  Buffer methods defined here.
+
 var StatusBar = { 
-  draw:   function() {
+  draw:   StatusBar_draw(),
+};
+function StatusBar_draw() {
     process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
     process.stdout.write("\x1b[7m");                               /**  Reverse video.                    **/
 
@@ -1280,8 +1290,7 @@ var StatusBar = {
 
     process.stdout.write(status_bar_text);                            /**  Output the status bar string.     **/
     process.stdout.write("\x1b[0m");                                  /**  No more reverse video.            **/
-  }
-};
+}
 ```
 <br/><br/><br/><br/>
 
@@ -1298,17 +1307,20 @@ Snag `FeedbackBar.draw()` from `draw_feedback_bar()` in the previous version.
 
 var Buffer = { ... };
 var StatusBar = { ... };
+
 var FeedbackBar = { 
   text:    "",
   
-  draw:    function() {
+  draw:    FeedbackBar_draw,
+};
+
+function FeedbackBar_draw() {
     process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
     process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
     process.stdout.write(this.text);
     _feedback_bar = "";
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
-  }
-};
+}
 
 ```
 <br/><br/><br/><br/>
@@ -1332,17 +1344,20 @@ var Window = {
   height:    100,
   width:     100,
   
-  get_size:  function() {
+  get_size:  Window_get_size,
+  draw:      Window_draw,
+};
+
+function Window_get_size() {
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
-  },
-  
-  draw:      function() {
+}
+
+function Window_draw() {
     Buffer.draw();
     StatusBar.draw();
     FeedbackBar.draw();
-  }
-};
+}
 ```
 <br/><br/><br/><br/>
 
@@ -1369,39 +1384,65 @@ var Keyboard = {
     "\u0013":   "CTRL-S",
   },
   
-  map_events: function() {
+  map_events: Keyboard_map_events
+  
+};
+
+function Keyboard_map_events() {
         //  Map keyboard input                                                                                                                         
         var stdin = process.stdin;
         stdin.setRawMode(true);
         stdin.resume();
         stdin.setEncoding("utf8");
 
+	var _this = this;
         var key_reaction = function(key) {
 
-            var event_name = this.event_names[key];          /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+            var event_name = _this.event_names[key];         /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
 
             if (typeof event_name == "string" && typeof Buffer.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
                 Buffer.events[event_name]();
             } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
-                _events["TEXT"](key);
+                Buffer.events["TEXT"](key);
             }
             draw();                                          /**  Redraw the whole screen on any keypress.                               **/
         };
 
         stdin.on("data", key_reaction);
-    },
-  
-
-};
+}
 
 ```
 <br/><br/><br/><br/>
 
 
 
-<h3 id="e-?">  ☑️ Step 8.  ❖ Part E review. </h3> 
+<h3 id="e-8">  ☑️ Step 8.  ☞ Test your code! </h3> 
 
-In this part, we added some basic editing controls. 
+At this point, opening ktty with a filename should display that file!
+
+Pressing any keys will throw an error, because we haven't added events to the Buffer.
+We'll do that next!
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-9">  ☑️ Step 9.  Adding <code>Buffer.events</code>  </h3> 
+
+We'll take the events that were previously stored in `_events` and add them to `Buffer.events`.
+
+```javascript
+
+
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-?">  ☑️ Step ?.  ❖ Part E review. </h3> 
+
+
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
