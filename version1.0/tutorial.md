@@ -1227,7 +1227,6 @@ function Buffer_load_file() {
         }
     }
 }
-
 function Buffer_get_cursor_coords() {
     var cursor_coords = [1,1];
     for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's                                                          
@@ -1240,16 +1239,14 @@ function Buffer_get_cursor_coords() {
             cursor_coords[1]++;        /**  Advance a character.   **/
         }
     }
-    return cursor_position;
+    return cursor_coords;
 }
-
 function Buffer_draw() {
     console.clear();
     console.log(this.text);
 }
-
 function Buffer_position_cursor() {
-    var cursor_position = d_get_cursor_pos();                                                                     
+    var cursor_position = this.get_cursor_coords();                                                                     
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 
@@ -1273,7 +1270,7 @@ function StatusBar_draw() {
     process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
     process.stdout.write("\x1b[7m");                               /**  Reverse video.                    **/
 
-    var status_bar_text = "  " + Window.filename;                  /**  Add the filename                  **/
+    var status_bar_text = "  " + Buffer.filename;                  /**  Add the filename                  **/
     if (Buffer.modified) {                                         /**  Add the [modified] indicator.     **/
         status_bar_text += "     [modified]";
     } else {
@@ -1347,16 +1344,16 @@ var Window = {
   get_size:  Window_get_size,
   draw:      Window_draw,
 };
-
 function Window_get_size() {
     _window_h = process.stdout.rows;
     _window_w = process.stdout.columns;
 }
-
 function Window_draw() {
     Buffer.draw();
     StatusBar.draw();
     FeedbackBar.draw();
+    
+    Buffer.position_cursor();
 }
 ```
 <br/><br/><br/><br/>
