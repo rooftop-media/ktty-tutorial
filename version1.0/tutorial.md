@@ -1592,7 +1592,7 @@ Pressing `ctrl-c` should quit with no error.  Any other key should throw an erro
 
 Let's uncomment & implement the edit controls for the Buffer.
 
-The function `Buffer_add_to_text(key)` comes from our `i_add_to_buffer(key)`.
+The function `Buffer_add_to_text(new_text)` comes from our `i_add_to_buffer(new_text)`.
 The function `Buffer_delete_from_text()` comes from our `j_delete_from_buffer()`.
 The function `Buffer_save_to_file()` comes from our `k_save_buffer_to_file()`.
 
@@ -1643,14 +1643,14 @@ function Buffer_move_cursor_right() { ... }
 function Buffer_move_cursor_up() { ... }
 function Buffer_move_cursor_down() { ... }
 
-function Buffer_add_to_text(key) {
-    var new_buffer = Buffer.text.slice(0, Buffer.cursor_position);
+function Buffer_add_to_text(new_text) {
+    var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos);
     new_buffer    += new_text;
-    new_buffer    += Buffer.text.slice(Buffer.cursor_position, Buffer.text.length);
+    new_buffer    += Buffer.text.slice(Buffer.cursor_pos, Buffer.text.length);
     Buffer.text    = new_buffer;
-    Buffer.cursor_position++;
+    Buffer.cursor_pos++;
     FeedbackBar.text = "Typed '" + new_text + "'";
-    if (!_modified) {
+    if (!Buffer.modified) {
         Buffer.modified = true;
     }
 }
@@ -1658,12 +1658,12 @@ function Buffer_delete_from_text() {
     if ( Buffer.cursor_position == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
-    var new_buffer = Buffer.text.slice(0, Buffer.cursor_position - 1);
-    new_buffer    += Buffer.text.slice(Buffer.cursor_position, Buffer.text.length);
+    var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos - 1);
+    new_buffer    += Buffer.text.slice(Buffer.cursor_pos, Buffer.text.length);
     Buffer.text = new_buffer;
-    Buffer.cursor_position--;
+    Buffer.cursor_pos--;
     FeedbackBar.text = "Text deleted.";
-    if (!Buffer.modified && Buffer.cursor_position != 0) {
+    if (!Buffer.modified && Buffer.cursor_pos != 0) {
         Buffer.modified = true;
     }
 }
