@@ -1588,9 +1588,78 @@ Pressing `ctrl-c` should quit with no error.  Any other key should throw an erro
 
 
 
-<h3 id="e-10">  ☑️ Step 10.  Adding movement to <code>Buffer.events</code> </h3> 
+<h3 id="e-10">  ☑️ Step 10.  Adding editing to <code>Buffer.events</code> </h3> 
+
+Let's uncomment & implement the edit controls for the Buffer.
+
+The function `Buffer_add_to_text(key)` comes from our `i_add_to_buffer(key)`.
+The function `Buffer_delete_from_text` comes from our `j_delete_from_buffer()`.
+The function `Buffer_save_to_file` comes from our `k_save_buffer_to_file`.
 
 
+```javascript
+//  SECTION 2:  Objects
+
+var Buffer = {
+  text:        "",
+  filename:    "",
+  modified:    "",
+  cursor_pos:  0,
+  scroll:      0,
+  
+  load_file:         Buffer_load_file,
+  get_cursor_coords: Buffer_get_cursor_coords,
+  draw:              Buffer_draw,
+  position_cursor:   Buffer_position_cursor
+  
+  events:            {
+    "CTRL-C":     function() {  Window.quit()  },
+
+    "LEFT":       Buffer_move_cursor_left,
+    "RIGHT":      Buffer_move_cursor_right,
+    "UP":         Buffer_move_cursor_up,
+    "DOWN":       Buffer_move_cursor_down,
+
+    "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+    "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+    "BACKSPACE":  Buffer_delete_from_text,
+
+    "CTRL-S":     Buffer_save_to_file,
+
+    // "CTRL-Z":     p_undo,                                                                                                                           
+    // "CTRL-R":     q_redo, 
+  }
+  
+};
+
+function Buffer_load_file() { ... }
+function Buffer_get_cursor_coords() { ... }
+function Buffer_draw() { ... }
+function Buffer_position_cursor() { ... }
+
+//  Buffer event functions:
+function Buffer_move_cursor_left() { ... }
+function Buffer_move_cursor_right() { ... }
+function Buffer_move_cursor_up() { ... }
+function Buffer_move_cursor_down() { ... }
+
+function Buffer_add_to_text(key) {
+    var new_buffer = Buffer.text.slice(0, Buffer.cursor_position);
+    new_buffer    += new_text;
+    new_buffer    += Buffer.text.slice(Buffer.cursor_position, Buffer.text.length);
+    Buffer.text    = new_buffer;
+    Buffer.cursor_position++;
+    FeedbackBar.text = "Typed '" + new_text + "'";
+    if (!_modified) {
+        Buffer.modified = true;
+    }
+}
+function Buffer_delete_from_text() {
+    fs.writeFileSync(Buffer.filename, Buffer.text, { encoding: 'utf8' } );
+    Buffer.modified = false;
+    FeedbackBar.text = "saved :)";
+}
+```
 
 <br/><br/><br/><br/>
 
