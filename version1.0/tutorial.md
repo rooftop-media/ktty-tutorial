@@ -1554,15 +1554,15 @@ function Buffer_move_cursor_down() {
     } //  End of "for" loop
     
     if (next_line_length >= current_x_pos) {          /**   If we're going down **into** a line...                **/
-        _cursor_buffer_pos += current_line_length;
+        Buffer.cursor_pos += current_line_length;
     }
-    else if (next_line_length < current_x_pos) {     /**   If we're going down **above** a line...                **/
-        _cursor_buffer_pos += current_line_length;
-        _cursor_buffer_pos -= current_x_pos;         /**   This should get us to the start of the next line...    **/
-        _cursor_buffer_pos += next_line_length + 1;  /**   ...and then we jump to the end.                        **/
+    else if (next_line_length < current_x_pos) {      /**   If we're going down **above** a line...                **/
+        Buffer.cursor_pos += current_line_length;
+        Buffer.cursor_pos -= current_x_pos;           /**   This should get us to the start of the next line...    **/
+        Buffer.cursor_pos += next_line_length + 1;    /**   ...and then we jump to the end.                        **/
     }
 
-    var buff_limit = Buffer.text.length;             /**   Don't let the cursor position exceed the buffer.       **/
+    var buff_limit = Buffer.text.length;              /**   Don't let the cursor position exceed the buffer.       **/
     if ( Buffer.cursor_pos > buff_limit ) {
         Buffer.cursor_pos--;
     } else {
