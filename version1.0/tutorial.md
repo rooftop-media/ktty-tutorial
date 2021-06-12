@@ -22,7 +22,7 @@ Click a part title to jump down to it, in this file.
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Complete, tested. | 11 |
 | [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Complete, tested.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Complete, tested. | 8 |
-| [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Complete, tested. | 19 |
+| [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | In progress | 9 |
 | [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | In progress | 9 |
 | [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-h) | Todo | ? |
@@ -1678,9 +1678,21 @@ function Buffer_save_to_file() {
 
 
 
-<h3 id="e-?">  ☑️ Step ?.  ❖ Part E review. </h3> 
+<h3 id="e-10">  ☑️ Step 10.  ☞ Test your code! </h3> 
+
+Test the code now, to see if you can edit the buffer.   
+Pressing `ctrl-s` should save your changes to the file.
+
+<br/><br/><br/><br/>
 
 
+
+<h3 id="e-11">  ☑️ Step 11.  ❖ Part E review. </h3> 
+
+In this section, we reorganized our code to be Object Oriented!  
+Our code will be much easier to navigate from here on out.  
+
+Next up, we'll add a feedback prompt mode!
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
