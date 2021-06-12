@@ -39,6 +39,7 @@ Click a part title to jump down to it, in this file.
 The steps in this part will culminate in us displaying the text file on the screen, along with controls to move and type.  
 
 Along the way, we’ll break the code into 6 code sections with comments, and add some code to each section.  
+
 <br/><br/><br/><br/>
 
 
@@ -1700,13 +1701,11 @@ Next up, we'll add a feedback prompt mode!
 
 <h2 id="part-f" align="center">  Part F:   Feedback Prompt </h2>
 
-KTTY will be able to run in different **modes**, which affect what the keyboard events do.   
-
 Up until now, we've been building Buffer Editor Mode.  
-In Buffer Editor Mode, keyboard input edits the contents of the `_buffer`.
+In Buffer Editor Mode, keyboard input edits the contents of `Buffer.text`.
 
 In this section, we’ll be implementing Feedback Mode.   
-In Feedback Mode, keyboard input types to the `_feedback_input`.
+In Feedback Mode, keyboard input types to the `FeedbackBar.input`.
 
 We’ll be using Feedback Mode in two ways, in this version:  
  - When opening with no filename or a non-existing filename, prompt the user appropriately.  
@@ -1717,12 +1716,15 @@ We’ll be using Feedback Mode in two ways, in this version:
 
 
 
+<h3 id="f-1">  ☑️ Step 1.  Editing <code>FeedbackBar</code> </h3>
 
 
 
+<br/><br/><br/><br/>
 
 
-<h3 id="e-19">  ☑️ Step 19.  ❖  Part F review. </h3>
+
+<h3 id="f-19">  ☑️ Step 19.  ❖  Part F review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
