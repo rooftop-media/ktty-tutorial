@@ -225,8 +225,12 @@ function StatusBar_draw() {
 
 //  Feedback object & functions
 var FeedbackBar = { 
-    text:    "",
-    draw:    FeedbackBar_draw
+    text:            "",
+    input:           "",
+    cursor_pos:      0,
+    confirm_event:   function(response) {},
+
+    draw:            FeedbackBar_draw,
 };
 function FeedbackBar_draw() {
     process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
