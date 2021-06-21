@@ -1116,7 +1116,7 @@ It *is* more work, you're right.  It will be even more work to think about.
 But in return for that investment, we'll have a clear, interconnected web  
 of discrete, well-understood parts. 
 
-=== Here's what we'll keep:
+**=== Here's what we'll keep:**
 
 We'll still use the same essential *event loop* model.  
 In an event loop, the program listens for events, and reacts to those events with functions.
@@ -1128,7 +1128,7 @@ This is considered Model-View-Controller architecture, or MVC architecture:
  - The functions that events trigger affect global data, which is the "Model"
  - The data is used to draw the screen, which is the "View"
 
-=== Here's what we'll change:
+**=== Here's what we'll change:**
 
 The big thing we need to do is sort our data & algorithms by object,  
 instead of having two big separate piles.  
@@ -1140,7 +1140,8 @@ There won't be a single "draw" function, for example, but
 the objects for the Buffer, StatusBar, & FeedbackBar will all have a `draw()` method. 
 
 The key to refactoring is having a well understood plan.  
-I have a nice OO data diagram, which I'll upload here soon. 
+Here's a diagram of how our new code will look:
+![Part E refactor plan](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial_assets/partE_summary.png?raw=true)
 
 <br/><br/><br/><br/>
 
@@ -1718,7 +1719,39 @@ We’ll be using Feedback Mode in two ways, in this version:
 
 <h3 id="f-1">  ☑️ Step 1.  Editing <code>FeedbackBar</code> </h3>
 
+In Feedback Mode, the Feedback Bar will use some extra methods:
+ - First, we'll add a `FeedbackBar.focus()` method, to let us switch into the mode.
+ - Then we'll edit `FeedbackBar.draw()` to include user's input.
+ - When focused on  the FeedbackBar, `FeedbackBar.position_cursor()` will position the cursor relative to the input. 
 
+
+```javascript
+//  Feedback object & functions                                                                                                                        
+var FeedbackBar = {
+    text:            "",
+    input:           "",
+    cursor_pos:      0,
+    confirm_event:   function(response) {},
+
+    focus:           FeedbackBar_focus,
+    draw:            FeedbackBar_draw,
+    position_cursor: FeedbackBar_position_cursor,
+};
+function FeedbackBar_focus() {
+
+}
+function FeedbackBar_draw() {
+    process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
+    process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
+    process.stdout.write(this.text + " " + this.input);
+    _feedback_bar = "";
+    process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
+}
+function FeedbackBar_position_cursor() {
+
+}
+
+```
 
 <br/><br/><br/><br/>
 
