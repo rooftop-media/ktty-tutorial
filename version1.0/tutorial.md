@@ -1159,7 +1159,7 @@ which we can outline to look like this:
 ;
 
 ////  SECTION 1:  Imports
-//  Importing NodeJS libraries.                                                                                                                        
+//  Importing NodeJS libraries. 
 var process      = require("process");
 var fs           = require("fs");
 
@@ -1244,8 +1244,7 @@ function Buffer_load_file() {
 }
 function Buffer_get_cursor_coords() {
     var cursor_coords = [1,1];
-    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's                                                          
-
+    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's 
         var current = this.text[i];
         if (current == "\n") {
             cursor_coords[0]++;        /**  Advance a line.        **/
@@ -1261,7 +1260,7 @@ function Buffer_draw() {
     console.log(this.text);
 }
 function Buffer_position_cursor() {
-    var cursor_position = this.get_cursor_coords();                                                                     
+    var cursor_position = this.get_cursor_coords();
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 
@@ -1361,8 +1360,8 @@ var Window = {
   quit:      Window_quit
 };
 function Window_get_size() {
-    _window_h = process.stdout.rows;
-    _window_w = process.stdout.columns;
+    this.height = process.stdout.rows;
+    this.width  = process.stdout.columns;
 }
 function Window_draw() {
     Buffer.draw();
