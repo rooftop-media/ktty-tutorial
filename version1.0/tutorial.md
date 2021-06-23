@@ -1457,7 +1457,7 @@ var Buffer = {
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
   draw:              Buffer_draw,
-  position_cursor:   Buffer_position_cursor
+  position_cursor:   Buffer_position_cursor,
   
   events:            {
     "CTRL-C":     function() {  Window.quit()  },
@@ -1612,7 +1612,7 @@ var Buffer = {
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
   draw:              Buffer_draw,
-  position_cursor:   Buffer_position_cursor
+  position_cursor:   Buffer_position_cursor,
   
   events:            {
     "CTRL-C":     function() {  Window.quit()  },
