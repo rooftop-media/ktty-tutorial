@@ -39,6 +39,7 @@ Click a part title to jump down to it, in this file.
 The steps in this part will culminate in us displaying the text file on the screen, along with controls to move and type.  
 
 Along the way, we’ll break the code into 6 code sections with comments, and add some code to each section.  
+
 <br/><br/><br/><br/>
 
 
@@ -1115,7 +1116,7 @@ It *is* more work, you're right.  It will be even more work to think about.
 But in return for that investment, we'll have a clear, interconnected web  
 of discrete, well-understood parts. 
 
-=== Here's what we'll keep:
+**=== Here's what we'll keep:**
 
 We'll still use the same essential *event loop* model.  
 In an event loop, the program listens for events, and reacts to those events with functions.
@@ -1127,7 +1128,7 @@ This is considered Model-View-Controller architecture, or MVC architecture:
  - The functions that events trigger affect global data, which is the "Model"
  - The data is used to draw the screen, which is the "View"
 
-=== Here's what we'll change:
+**=== Here's what we'll change:**
 
 The big thing we need to do is sort our data & algorithms by object,  
 instead of having two big separate piles.  
@@ -1139,20 +1140,46 @@ There won't be a single "draw" function, for example, but
 the objects for the Buffer, StatusBar, & FeedbackBar will all have a `draw()` method. 
 
 The key to refactoring is having a well understood plan.  
-I have a nice OO data diagram, which I'll upload here soon. 
+Here's a diagram of how our new code will look:
+![Part E refactor plan](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial_assets/partE_summary.png?raw=true)
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="e-1">  ☑️ Step 1.  Editing <code>boot()</code> </h3>
+<h3 id="e-1">  ☑️ Step 1.  Outlining the file again </h3>
+
+We'll be keeping almost all the same code, just restructuring it.  
+
+It will be easier to start a brand-new file for our OO refactor,  
+which we can outline to look like this:
+
+```javascript
+#!/usr/bin/env node
+;
+
+////  SECTION 1:  Imports
+//  Importing NodeJS libraries. 
+var process      = require("process");
+var fs           = require("fs");
+
+////  SECTION 2:  Objects
+
+////  SECTION 3:  Boot stuff. 
+
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-2">  ☑️ Step 2.   Editing <code>boot()</code> </h3> 
 
 We'll edit the boot function to use our new object-oriented syntax!
 
 ```javascript
-////  SECTION 3:  Boot stuff.                                                                                                                          
+////  SECTION 3:  Boot stuff. 
 
-//  The boot sequence.                                                                                                                                 
+//  The boot sequence.
 function boot() {
 
     /**  Load a file to the buffer.       **/
@@ -1170,19 +1197,7 @@ function boot() {
 }
 boot();  //  Boot it!! 
 ```
-<br/><br/><br/><br/>
 
-
-
-<h3 id="e-2">  ☑️ Step 2.  Rename Section 2 </h3> 
-
-Section 2 will *no longer* be our app data!  It's now our *objects!*
-
-You can delete all our variables, too.  We'll replace them in our objects. 
-
-```javascript
-//  SECTION 2:  Objects
-```
 <br/><br/><br/><br/>
 
 
@@ -1199,7 +1214,7 @@ The function for `Buffer.draw()` is from `draw_buffer()`.
 The function for `Buffer.position_cursor()` is from `position_cursor()`.    
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = {
   text:        "",
@@ -1229,8 +1244,7 @@ function Buffer_load_file() {
 }
 function Buffer_get_cursor_coords() {
     var cursor_coords = [1,1];
-    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's                                                          
-
+    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's 
         var current = this.text[i];
         if (current == "\n") {
             cursor_coords[0]++;        /**  Advance a line.        **/
@@ -1246,7 +1260,7 @@ function Buffer_draw() {
     console.log(this.text);
 }
 function Buffer_position_cursor() {
-    var cursor_position = this.get_cursor_coords();                                                                     
+    var cursor_position = this.get_cursor_coords();
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 
@@ -1258,7 +1272,7 @@ function Buffer_position_cursor() {
 <h3 id="e-4">  ☑️ Step 4.  Add the <code>StatusBar</code>. </h3> 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 //  Buffer methods defined here.
@@ -1300,7 +1314,7 @@ We'll make an object for the Feedback Bar.
 Snag `FeedbackBar.draw()` from `draw_feedback_bar()` in the previous version.
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 var StatusBar = { ... };
@@ -1331,7 +1345,7 @@ We'll have an object to represent the Window, too.
 This is kind of a special object, that "aggregates" the other objects for drawing & such. 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 var StatusBar = { ... };
@@ -1346,8 +1360,8 @@ var Window = {
   quit:      Window_quit
 };
 function Window_get_size() {
-    _window_h = process.stdout.rows;
-    _window_w = process.stdout.columns;
+    this.height = process.stdout.rows;
+    this.width  = process.stdout.columns;
 }
 function Window_draw() {
     Buffer.draw();
@@ -1367,7 +1381,7 @@ function Window_quit() {
 <h3 id="e-7">  ☑️ Step 7.  Add the <code>Keyboard</code>. </h3> 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 var StatusBar = { ... };
@@ -1407,7 +1421,7 @@ function Keyboard_map_events() {
             } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
                 Buffer.events["TEXT"](key);
             }
-            draw();                                          /**  Redraw the whole screen on any keypress.                               **/
+            Window.draw();                                   /**  Redraw the whole screen on any keypress.                               **/
         };
 
         stdin.on("data", key_reaction);
@@ -1443,7 +1457,7 @@ we can't use `this` to access Buffer's data directly.
 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = {
   text:        "",
@@ -1455,7 +1469,7 @@ var Buffer = {
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
   draw:              Buffer_draw,
-  position_cursor:   Buffer_position_cursor
+  position_cursor:   Buffer_position_cursor,
   
   events:            {
     "CTRL-C":     function() {  Window.quit()  },
@@ -1598,7 +1612,7 @@ The function `Buffer_save_to_file()` comes from our `k_save_buffer_to_file()`.
 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = {
   text:        "",
@@ -1610,7 +1624,7 @@ var Buffer = {
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
   draw:              Buffer_draw,
-  position_cursor:   Buffer_position_cursor
+  position_cursor:   Buffer_position_cursor,
   
   events:            {
     "CTRL-C":     function() {  Window.quit()  },
@@ -1700,13 +1714,11 @@ Next up, we'll add a feedback prompt mode!
 
 <h2 id="part-f" align="center">  Part F:   Feedback Prompt </h2>
 
-KTTY will be able to run in different **modes**, which affect what the keyboard events do.   
-
 Up until now, we've been building Buffer Editor Mode.  
-In Buffer Editor Mode, keyboard input edits the contents of the `_buffer`.
+In Buffer Editor Mode, keyboard input edits the contents of `Buffer.text`.
 
 In this section, we’ll be implementing Feedback Mode.   
-In Feedback Mode, keyboard input types to the `_feedback_input`.
+In Feedback Mode, keyboard input types to the `FeedbackBar.input`.
 
 We’ll be using Feedback Mode in two ways, in this version:  
  - When opening with no filename or a non-existing filename, prompt the user appropriately.  
@@ -1717,12 +1729,47 @@ We’ll be using Feedback Mode in two ways, in this version:
 
 
 
+<h3 id="f-1">  ☑️ Step 1.  Editing <code>FeedbackBar</code> </h3>
+
+In Feedback Mode, the Feedback Bar will use some extra methods:
+ - First, we'll add a `FeedbackBar.focus()` method, to let us switch into the mode.
+ - Then we'll edit `FeedbackBar.draw()` to include user's input.
+ - When focused on  the FeedbackBar, `FeedbackBar.position_cursor()` will position the cursor relative to the input. 
+
+
+```javascript
+//  Feedback object & functions                                                                                                                        
+var FeedbackBar = {
+    text:            "",
+    input:           "",
+    cursor_pos:      0,
+    confirm_event:   function(response) {},
+
+    focus:           FeedbackBar_focus,
+    draw:            FeedbackBar_draw,
+    position_cursor: FeedbackBar_position_cursor,
+};
+function FeedbackBar_focus() {
+
+}
+function FeedbackBar_draw() {
+    process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
+    process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
+    process.stdout.write(this.text + " " + this.input);
+    _feedback_bar = "";
+    process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
+}
+function FeedbackBar_position_cursor() {
+
+}
+
+```
+
+<br/><br/><br/><br/>
 
 
 
-
-
-<h3 id="e-19">  ☑️ Step 19.  ❖  Part F review. </h3>
+<h3 id="f-19">  ☑️ Step 19.  ❖  Part F review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
