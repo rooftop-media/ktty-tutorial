@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-;
+    ;
 
-////  SECTION 1:  Imports.
+////  SECTION 1:  Imports
 
-//  Importing NodeJS libraries. 
+//  Importing NodeJS libraries.                                                                                                                        
 var process      = require("process");
 var fs           = require("fs");
 
@@ -11,7 +11,7 @@ var fs           = require("fs");
 
 ////  SECTION 2:  Objects
 
-//  Buffer object & functions
+
 var Buffer = {
     text:        "",
     filename:    "",
@@ -41,7 +41,9 @@ var Buffer = {
 	// "CTRL-Z":     p_undo,                                                                                                                           
 	// "CTRL-R":     q_redo, 
     }
+  
 };
+
 function Buffer_load_file() {
     this.filename = process.argv[2];
     if ( this.filename == undefined ) {
@@ -57,7 +59,7 @@ function Buffer_load_file() {
 function Buffer_get_cursor_coords() {
     var cursor_coords = [1,1];
     for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's                                                          
-	
+
         var current = this.text[i];
         if (current == "\n") {
             cursor_coords[0]++;        /**  Advance a line.        **/
@@ -73,7 +75,7 @@ function Buffer_draw() {
     console.log(this.text);
 }
 function Buffer_position_cursor() {
-    var cursor_position = this.get_cursor_coords();
+    var cursor_position = this.get_cursor_coords();                                                                     
     process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
 }
 
@@ -163,7 +165,6 @@ function Buffer_move_cursor_down() {
     } else {
         FeedbackBar.text = "Moved down.";
     }
-
 }
 function Buffer_add_to_text(new_text) {
     var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos);
@@ -195,43 +196,40 @@ function Buffer_save_to_file() {
     FeedbackBar.text = "saved :)";
 }
 
-//  StatusBar object & functions
+//  The status bar
 var StatusBar = { 
     draw:   StatusBar_draw,
 };
 function StatusBar_draw() {
     process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
     process.stdout.write("\x1b[7m");                               /**  Reverse video.                    **/
-    
+
     var status_bar_text = "  " + Buffer.filename;                  /**  Add the filename                  **/
     if (Buffer.modified) {                                         /**  Add the [modified] indicator.     **/
         status_bar_text += "     [modified]";
     } else {
         status_bar_text += "               ";
     }
-    
+
     var cursor_position = Buffer.get_cursor_coords(); 
     status_bar_text += "  cursor on line " + cursor_position[0];
     status_bar_text += ", row " + cursor_position[1];
-    
+
     while (status_bar_text.length < Window.width) {                   /**  Padding it with whitespace.       **/
         status_bar_text += " ";
     }
-    
+
     process.stdout.write(status_bar_text);                            /**  Output the status bar string.     **/
     process.stdout.write("\x1b[0m");                                  /**  No more reverse video.            **/
 }
 
-
-//  Feedback object & functions
+//  The feedback bar
 var FeedbackBar = { 
-    text:            "",
-    input:           "",
-    cursor_pos:      0,
-    confirm_event:   function(response) {},
-
-    draw:            FeedbackBar_draw,
+    text:    "",
+  
+    draw:    FeedbackBar_draw,
 };
+
 function FeedbackBar_draw() {
     process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
     process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
@@ -240,25 +238,24 @@ function FeedbackBar_draw() {
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 
-
-//  Window object & associated functions!
+//  The window.
 var Window = {
     height:    100,
     width:     100,
-
+  
     get_size:  Window_get_size,
     draw:      Window_draw,
     quit:      Window_quit
 };
 function Window_get_size() {
     this.height = process.stdout.rows;
-    this.width = process.stdout.columns;
+    this.width  = process.stdout.columns;
 }
 function Window_draw() {
     Buffer.draw();
     StatusBar.draw();
     FeedbackBar.draw();
-
+    
     Buffer.position_cursor();
 }
 function Window_quit() {
@@ -266,8 +263,7 @@ function Window_quit() {
     process.exit();
 }
 
-
-//  Keyboard object & associated functions!
+//  The keyboard.
 var Keyboard = {
     event_names: {
 	"\u001b[A": "UP",
@@ -281,7 +277,9 @@ var Keyboard = {
     },
   
     map_events: Keyboard_map_events
+  
 };
+
 function Keyboard_map_events() {
     //  Map keyboard input                                                                                                                         
     var stdin = process.stdin;
@@ -306,11 +304,7 @@ function Keyboard_map_events() {
 }
 
 
-
-
-
-
-////  SECTION 3:  Boot stuff.
+////  SECTION 3:  Boot stuff. 
 
 //  The boot sequence.
 function boot() {
