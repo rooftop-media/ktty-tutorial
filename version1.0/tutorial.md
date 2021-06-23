@@ -1421,7 +1421,7 @@ function Keyboard_map_events() {
             } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
                 Buffer.events["TEXT"](key);
             }
-            draw();                                          /**  Redraw the whole screen on any keypress.                               **/
+            Window.draw();                                   /**  Redraw the whole screen on any keypress.                               **/
         };
 
         stdin.on("data", key_reaction);
