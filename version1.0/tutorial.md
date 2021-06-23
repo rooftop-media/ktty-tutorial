@@ -1147,14 +1147,39 @@ Here's a diagram of how our new code will look:
 
 
 
-<h3 id="e-1">  ☑️ Step 1.  Editing <code>boot()</code> </h3>
+<h3 id="e-1">  ☑️ Step 1.  Outlining the file again </h3>
+
+We'll be keeping almost all the same code, just restructuring it.  
+
+It will be easier to start a brand-new file for our OO refactor,  
+which we can outline to look like this:
+
+```javascript
+#!/usr/bin/env node
+;
+
+//  SECTION 1:  Imports
+//  Importing NodeJS libraries.                                                                                                                        
+var process      = require("process");
+var fs           = require("fs");
+
+//  SECTION 2:  Objects
+
+////  SECTION 3:  Boot stuff. 
+
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="e-2">  ☑️ Step 2.   Editing <code>boot()</code> </h3> 
 
 We'll edit the boot function to use our new object-oriented syntax!
 
 ```javascript
-////  SECTION 3:  Boot stuff.                                                                                                                          
+////  SECTION 3:  Boot stuff. 
 
-//  The boot sequence.                                                                                                                                 
+//  The boot sequence.
 function boot() {
 
     /**  Load a file to the buffer.       **/
@@ -1172,19 +1197,7 @@ function boot() {
 }
 boot();  //  Boot it!! 
 ```
-<br/><br/><br/><br/>
 
-
-
-<h3 id="e-2">  ☑️ Step 2.  Rename Section 2 </h3> 
-
-Section 2 will *no longer* be our app data!  It's now our *objects!*
-
-You can delete all our variables, too.  We'll replace them in our objects. 
-
-```javascript
-//  SECTION 2:  Objects
-```
 <br/><br/><br/><br/>
 
 
