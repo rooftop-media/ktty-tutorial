@@ -1158,12 +1158,12 @@ which we can outline to look like this:
 #!/usr/bin/env node
 ;
 
-//  SECTION 1:  Imports
+////  SECTION 1:  Imports
 //  Importing NodeJS libraries.                                                                                                                        
 var process      = require("process");
 var fs           = require("fs");
 
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 ////  SECTION 3:  Boot stuff. 
 
@@ -1214,7 +1214,7 @@ The function for `Buffer.draw()` is from `draw_buffer()`.
 The function for `Buffer.position_cursor()` is from `position_cursor()`.    
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = {
   text:        "",
@@ -1273,7 +1273,7 @@ function Buffer_position_cursor() {
 <h3 id="e-4">  ☑️ Step 4.  Add the <code>StatusBar</code>. </h3> 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 //  Buffer methods defined here.
@@ -1315,7 +1315,7 @@ We'll make an object for the Feedback Bar.
 Snag `FeedbackBar.draw()` from `draw_feedback_bar()` in the previous version.
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 var StatusBar = { ... };
@@ -1346,7 +1346,7 @@ We'll have an object to represent the Window, too.
 This is kind of a special object, that "aggregates" the other objects for drawing & such. 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 var StatusBar = { ... };
@@ -1382,7 +1382,7 @@ function Window_quit() {
 <h3 id="e-7">  ☑️ Step 7.  Add the <code>Keyboard</code>. </h3> 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = { ... };
 var StatusBar = { ... };
@@ -1458,7 +1458,7 @@ we can't use `this` to access Buffer's data directly.
 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = {
   text:        "",
@@ -1613,7 +1613,7 @@ The function `Buffer_save_to_file()` comes from our `k_save_buffer_to_file()`.
 
 
 ```javascript
-//  SECTION 2:  Objects
+////  SECTION 2:  Objects
 
 var Buffer = {
   text:        "",
