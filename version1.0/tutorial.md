@@ -1807,6 +1807,11 @@ New methods include:
  - Then we'll edit `FeedbackBar.draw()` to include user's input.
  - When focused on  the FeedbackBar, `FeedbackBar.position_cursor()` will position the cursor relative to the input. 
 
+We'll also have some event methods, including:
+ - `FeedbackBar.events.TEXT(key)` which will add to `FeedbackBar.input`.
+ - `FeedbackBar.events.BACKSPACE()` which will delete from `FeedbackBar.input`.
+ - `FeedbackBar.events.ENTER()` which will call `FeedbackBar.confirm_event()` with the input.
+
 
 ```javascript
 //  Feedback object & functions                                                                                                                        
@@ -1827,8 +1832,8 @@ var FeedbackBar = {
         // "RIGHT":      FeedbackBar_move_cursor_right,
 
         "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
+	"BACKSPACE":  FeedbackBar_delete_from_text,
         "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
-        "BACKSPACE":  FeedbackBar_delete_from_text,
     }
 };
 function FeedbackBar_focus() {
@@ -1846,6 +1851,13 @@ function FeedbackBar_draw() {
 function FeedbackBar_position_cursor() {
     var cursor_x = this.text.length + this.input.length;
     process.stdout.write("\x1b[" + (Window.height - 1) + ";" + cursor_x + "H");
+}
+// FeedbackBar event functions...
+function FeedbackBar_add_to_text(key) {
+
+}
+function FeedbackBar_delete_from_text() {
+
 }
 
 ```
