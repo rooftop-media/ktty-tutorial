@@ -1945,7 +1945,7 @@ function Buffer_load_file() {
     if ( this.filename == undefined ) {
     	FeedbackBar.focus();
 	FeedbackBar.text = "No file name given!  Enter a new filename:";
-	FeedbackBar.event_reaction = function(new_filename) {
+	FeedbackBar.confirm_event = function(new_filename) {
 	    Buffer.filename = new_filename;
 	    Buffer.focus();
 	}
@@ -1956,7 +1956,7 @@ function Buffer_load_file() {
 	    FeedbackBar.focus();
 	    FeedbackBar.text    = "Unable to find a file at '" + this.filepath + "'.  Enter a new filename:";
 	    FeedbackBar.input   = this.filename;
-	    FeedbackBar.event_reaction = function(new_filename) {
+	    FeedbackBar.confirm_event = function(new_filename) {
 	        Buffer.filename = new_filename;
 		Buffer.focus();
 	    }
