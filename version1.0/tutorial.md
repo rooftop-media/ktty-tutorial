@@ -1714,22 +1714,82 @@ Next up, we'll add a feedback prompt mode!
 
 <h2 id="part-f" align="center">  Part F:   Feedback Prompt </h2>
 
-Up until now, we've been building Buffer Editor Mode.  
-In Buffer Editor Mode, keyboard input edits the contents of `Buffer.text`.
+Up until now, keyboard input edits the contents of `Buffer.text`.
 
-In this section, we’ll be implementing Feedback Mode.   
-In Feedback Mode, keyboard input types to the `FeedbackBar.input`.
+In this section, we’ll be implementing a keyboard "focus" system,  
+which will switch between focus on either the Buffer or the FeedbackBar.  
+Later, we'll add other focusable options!
 
-We’ll be using Feedback Mode in two ways, in this version:  
+When focused on the FeedbackBar, keyboard input types to the `FeedbackBar.input`.
+
+We’ll switch to FeedbackBar focus in *two situations*:
  - When opening with no filename or a non-existing filename, prompt the user appropriately.  
  - When quitting with a modified file, prompt the user to save. 
-
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="f-1">  ☑️ Step 1.  Editing <code>FeedbackBar</code> </h3>
+<h3 id="f-1">  ☑️ Step 1.  Editing <code>Keyboard</code> </h3>
+
+The first thing we'll do is add to the `Keyboard` object, to implement the focus system.
+
+We'll do two things:
+ - Add a String data field, `Keyboard.focus`, to track what object we're focused on. 
+ - Edit `Keyboard.map_events()` to switch the mapping when the focus switches.
+
+```javascript
+//  The keyboard.                                                                                                                                      
+var Keyboard = {
+    focus: "Buffer",
+
+    event_names: {
+        "\u001b[A": "UP",
+        "\u001b[B": "DOWN",
+        "\u001b[C": "RIGHT",
+        "\u001b[D": "LEFT",
+        "\u007f":   "BACKSPACE",
+        "\u000D":   "ENTER",
+        "\u0003":   "CTRL-C",
+        "\u0013":   "CTRL-S",
+    },
+
+    map_events: Keyboard_map_events
+
+};
+
+function Keyboard_map_events() {
+    //  Map keyboard input                                                                                                                             
+    var stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+
+    var _this = this;
+    var key_reaction = function(key) {
+
+        var event_name = _this.event_names[key];         /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+	
+	var focus_item = Buffer;
+	if (_this.focus == "FeedbackBar") {
+	    focus_item = FeedbackBar
+	}
+
+        if (typeof event_name == "string" && typeof focus_item.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+            focus_item.events[event_name]();
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
+            focus_item.events["TEXT"](key);
+        }
+        Window.draw();                                   /**  Redraw the whole screen on any keypress.                               **/
+    };
+
+    stdin.on("data", key_reaction);
+}
+```
+
+
+
+<h3 id="f-2">  ☑️ Step 2.  Editing <code>FeedbackBar</code> </h3>
 
 In Feedback Mode, the Feedback Bar will use some extra methods:
  - First, we'll add a `FeedbackBar.focus()` method, to let us switch into the mode.
