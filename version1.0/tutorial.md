@@ -1848,7 +1848,11 @@ function FeedbackBar_draw() {
         process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
     }
     process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
-    process.stdout.write(this.text + " " + this.input);
+    process.stdout.write(this.text + " ");
+    if (Keyboard.focus_item === this) {
+        process.stdout.write("\x1b[0m");
+        console.log(this.input);
+    }
     _feedback_bar = "";
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
@@ -1881,7 +1885,55 @@ function FeedbackBar_delete_from_text() {
 
 
 
-<h3 id="f-4">  ☑️ Step 4.  Editing <code>Buffer.load_file</code> </h3>
+<h3 id="f-4">  ☑️ Step 4.  Editing <code>Buffer</code> </h3>
+
+We'll add one function to Buffer: `Buffer.focus()`.
+It'll be implemented in `Buffer_focus()`, of course.
+
+```javascript
+var Buffer = {
+    text:        "",
+    filename:    "",
+    modified:    "",
+    cursor_pos:  0,
+    scroll:      0,
+
+    focus:             Buffer_focus,
+    load_file:         Buffer_load_file,
+    get_cursor_coords: Buffer_get_cursor_coords,
+    draw:              Buffer_draw,
+    position_cursor:   Buffer_position_cursor,
+
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       Buffer_move_cursor_left,
+        "RIGHT":      Buffer_move_cursor_right,
+        "UP":         Buffer_move_cursor_up,
+        "DOWN":       Buffer_move_cursor_down,
+
+        "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+        "BACKSPACE":  Buffer_delete_from_text,
+
+        "CTRL-S":     Buffer_save_to_file,
+
+        // "CTRL-Z":     p_undo,                                                                                                                      \
+                                                                                                                                                       
+        // "CTRL-R":     q_redo,                                                                                                                       
+    }
+
+};
+function Buffer_focus() {
+    Keyboard.focus_item = this;
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-5">  ☑️ Step 5.  Editing <code>Buffer.load_file</code> </h3>
 
 This is the first of 2 places we'll use FeedbackBar focus, in this version.
 
@@ -1895,6 +1947,7 @@ function Buffer_load_file() {
 	FeedbackBar.text = "No file name given!  Enter a new filename:";
 	FeedbackBar.event_reaction = function(new_filename) {
 	    Buffer.filename = new_filename;
+	    Keyboard.
 	}
     } else {
         try {
