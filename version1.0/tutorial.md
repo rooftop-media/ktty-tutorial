@@ -1735,13 +1735,13 @@ We’ll switch to FeedbackBar focus in *two situations*:
 The first thing we'll do is add to the `Keyboard` object, to implement the focus system.
 
 We'll do two things:
- - Add a String data field, `Keyboard.focus`, to track what object we're focused on. 
- - Edit `Keyboard.map_events()` to switch the mapping when the focus switches.
+ - Add a data field, `Keyboard.focus_item`, which will "point" to the object we're focused on.
+ - Edit `Keyboard.map_events()` to switch the mapping to `Keyboard.focus_item.events`.
 
 ```javascript
 //  The keyboard.                                                                                                                                      
 var Keyboard = {
-    focus: "Buffer",
+    focus_item:  Buffer,
 
     event_names: {
         "\u001b[A": "UP",
@@ -1769,16 +1769,11 @@ function Keyboard_map_events() {
     var key_reaction = function(key) {
 
         var event_name = _this.event_names[key];         /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
-	
-	var focus_item = Buffer;
-	if (_this.focus == "FeedbackBar") {
-	    focus_item = FeedbackBar
-	}
 
-        if (typeof event_name == "string" && typeof focus_item.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
-            focus_item.events[event_name]();
+        if (typeof event_name == "string" && typeof _this.focus_item.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+            _this.focus_item.events[event_name]();
         } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
-            focus_item.events["TEXT"](key);
+            _this.focus_item.events["TEXT"](key);
         }
         Window.draw();                                   /**  Redraw the whole screen on any keypress.                               **/
     };
@@ -1786,10 +1781,19 @@ function Keyboard_map_events() {
     stdin.on("data", key_reaction);
 }
 ```
+<br/><br/><br/><br/>
 
 
 
-<h3 id="f-2">  ☑️ Step 2.  Editing <code>FeedbackBar</code> </h3>
+<h3 id="f-2">  ☑️ Step 2.  ☞ Test your code!   </h3>
+
+Run the code to make sure we can still move & edit the buffer, with this new system. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-3">  ☑️ Step 3.  Editing <code>FeedbackBar</code> </h3>
 
 In Feedback Mode, the Feedback Bar will use some extra methods:
  - First, we'll add a `FeedbackBar.focus()` method, to let us switch into the mode.
@@ -1810,7 +1814,9 @@ var FeedbackBar = {
     position_cursor: FeedbackBar_position_cursor,
 };
 function FeedbackBar_focus() {
-
+    Keyboard.focus_item  = this;
+    this.cursor_pos      = 0;
+    this.input           = "";
 }
 function FeedbackBar_draw() {
     process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
@@ -1820,7 +1826,8 @@ function FeedbackBar_draw() {
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 function FeedbackBar_position_cursor() {
-
+    var cursor_x = this.text.length + this.input.length;
+    process.stdout.write("\x1b[" + (Window.height - 1) + ";" + cursor_x + "H");
 }
 
 ```
