@@ -1868,7 +1868,7 @@ function FeedbackBar_delete_from_text() {
     }
     var new_input  = _this.input.slice(0, _this.cursor_pos - 1);
     new_input     += _this.input.slice(_this.cursor_pos, _this.input.length);
-    _this.input    = new_buffer;
+    _this.input    = new_input;
     _this.cursor_pos--;
 }
 ```
@@ -1910,7 +1910,7 @@ function Buffer_load_file() {
 
 
 
-<h3 id="f-4">  ☑️ Step 4.  ☞ Test your code!   </h3>
+<h3 id="f-5">  ☑️ Step 5.  ☞ Test your code!   </h3>
 
 Try opening Ktty without a filename.  You should see our first message!
 
