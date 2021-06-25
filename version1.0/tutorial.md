@@ -1954,8 +1954,8 @@ function Buffer_load_file() {
             this.text = fs.readFileSync( this.filename, {encoding: 'utf8'} );
         } catch (err) {
 	    FeedbackBar.focus();
-	    FeedbackBar.text = "Unable to find a file at '" + this.filepath + "'.  Enter a new filename:";
-	    FeedbackBar.input = this.filename
+	    FeedbackBar.text    = "Unable to find a file at '" + this.filepath + "'.  Enter a new filename:";
+	    FeedbackBar.input   = this.filename;
 	    FeedbackBar.event_reaction = function(new_filename) {
 	        Buffer.filename = new_filename;
 		Buffer.focus();
@@ -1968,9 +1968,11 @@ function Buffer_load_file() {
 
 
 
-<h3 id="f-5">  ☑️ Step 5.  ☞ Test your code!   </h3>
+<h3 id="f-6">  ☑️ Step 6.  ☞ Test your code!   </h3>
 
-Try opening Ktty without a filename.  You should see our first message!
+Try opening Ktty without a filename.  You should see our first message!  
+Typing should let you add text to the filename.  
+Pressing ENTER should start you off editing that file, with Buffer focus.
 
 Now try opening Ktty with an *invalid* filename.  You should see the second message!
 
