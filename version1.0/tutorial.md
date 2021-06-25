@@ -1795,8 +1795,15 @@ Run the code to make sure we can still move & edit the buffer, with this new sys
 
 <h3 id="f-3">  ☑️ Step 3.  Editing <code>FeedbackBar</code> </h3>
 
-In Feedback Mode, the Feedback Bar will use some extra methods:
- - First, we'll add a `FeedbackBar.focus()` method, to let us switch into the mode.
+In Feedback Mode, the Feedback Bar will use some extra data fields & methods.
+
+New data fields include:
+ - `FeedbackBar.input`, which is where users can type responses.
+ - `FeedbackBar.cursor_pos`, which allows the user to move back & forth within their answer.
+ - `FeedbackBar.confirm_event`, which stores a function to call when the user hits ENTER.
+
+New methods include:
+ - `FeedbackBar.focus()` will let us switch into FeedbackBar focus.
  - Then we'll edit `FeedbackBar.draw()` to include user's input.
  - When focused on  the FeedbackBar, `FeedbackBar.position_cursor()` will position the cursor relative to the input. 
 
@@ -1831,6 +1838,49 @@ function FeedbackBar_position_cursor() {
 }
 
 ```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-4">  ☑️ Step 4.  Editing <code>Buffer.load_file</code> </h3>
+
+This is the first of 2 places we'll use FeedbackBar focus, in this version.
+
+When the user opens Ktty with no file name, we need to prompt the user.
+
+```javascript
+function Buffer_load_file() {
+    this.filename = process.argv[2];
+    if ( this.filename == undefined ) {
+    	FeedbackBar.focus();
+	FeedbackBar.text = "No file name given!  Enter a new filename:";
+	FeedbackBar.event_reaction = function(new_filename) {
+	    Buffer.filename = new_filename;
+	}
+    } else {
+        try {
+            this.text = fs.readFileSync( this.filename, {encoding: 'utf8'} );
+        } catch (err) {
+	    FeedbackBar.focus();
+	    FeedbackBar.text = "Unable to find a file at '" + this.filepath + "'.  Enter a new filename:";
+	    FeedbackBar.input = this.filename
+	    FeedbackBar.event_reaction = function(new_filename) {
+	        Buffer.filename = new_filename;
+	    }
+        }
+    }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-4">  ☑️ Step 4.  ☞ Test your code!   </h3>
+
+Try opening Ktty without a filename.  You should see our first message!
+
+Now try opening Ktty with an *invalid* filename.  You should see the second message!
 
 <br/><br/><br/><br/>
 
