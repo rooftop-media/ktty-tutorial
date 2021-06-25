@@ -1980,6 +1980,23 @@ Now try opening Ktty with an *invalid* filename.  You should see the second mess
 
 
 
+<h3 id="f-7">  ☑️ Step 7.  Edit <code>window.draw()</code>   </h3>
+
+We need to add one line to make position the cursor.
+
+```javascript
+function Window_draw() {
+    Buffer.draw();
+    StatusBar.draw();
+    FeedbackBar.draw();
+    Keyboard.focus_item.position_cursor();
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
 <h3 id="f-19">  ☑️ Step 19.  ❖  Part F review. </h3>
 
 At this point, we have our feedback prompt system working well!  
