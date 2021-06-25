@@ -1854,12 +1854,21 @@ function FeedbackBar_position_cursor() {
 }
 // FeedbackBar event functions...
 function FeedbackBar_add_to_text(key) {
-
+    var new_input = this.input.slice(0, this.cursor_pos);
+    new_input    += key;
+    new_input    += this.input.slice(this.cursor_pos, this.input.length);
+    this.input    = new_input;
+    this.cursor_pos++;
 }
 function FeedbackBar_delete_from_text() {
-
+    if ( this.cursor_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+    var new_input  = this.input.slice(0, this.cursor_pos - 1);
+    new_input     += this.input.slice(this.cursor_pos, this.input.length);
+    this.input     = new_buffer;
+    this.cursor_pos--;
 }
-
 ```
 
 <br/><br/><br/><br/>
