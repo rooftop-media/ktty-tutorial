@@ -1842,7 +1842,11 @@ function FeedbackBar_focus() {
     this.input           = "";
 }
 function FeedbackBar_draw() {
-    process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
+    if (Keyboard.focus_item === this) {
+        process.stdout.write("\x1b[36m");                          /**  Cyan text.                        **/
+    } else {
+        process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
+    }
     process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
     process.stdout.write(this.text + " " + this.input);
     _feedback_bar = "";
