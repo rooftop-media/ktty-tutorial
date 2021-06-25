@@ -1816,9 +1816,20 @@ var FeedbackBar = {
     cursor_pos:      0,
     confirm_event:   function(response) {},
 
-    focus:           FeedbackBar_focus,
     draw:            FeedbackBar_draw,
+    focus:           FeedbackBar_focus,
     position_cursor: FeedbackBar_position_cursor,
+    
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        // "LEFT":       FeedbackBar_move_cursor_left,
+        // "RIGHT":      FeedbackBar_move_cursor_right,
+
+        "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
+        "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
+        "BACKSPACE":  FeedbackBar_delete_from_text,
+    }
 };
 function FeedbackBar_focus() {
     Keyboard.focus_item  = this;
