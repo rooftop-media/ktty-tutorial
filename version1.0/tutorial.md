@@ -1947,7 +1947,7 @@ function Buffer_load_file() {
 	FeedbackBar.text = "No file name given!  Enter a new filename:";
 	FeedbackBar.event_reaction = function(new_filename) {
 	    Buffer.filename = new_filename;
-	    Keyboard.
+	    Buffer.focus();
 	}
     } else {
         try {
@@ -1958,6 +1958,7 @@ function Buffer_load_file() {
 	    FeedbackBar.input = this.filename
 	    FeedbackBar.event_reaction = function(new_filename) {
 	        Buffer.filename = new_filename;
+		Buffer.focus();
 	    }
         }
     }
