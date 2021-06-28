@@ -1857,7 +1857,7 @@ function FeedbackBar_draw() {
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 function FeedbackBar_position_cursor() {
-    var cursor_x = this.text.length + this.input.length;
+    var cursor_x = this.text.length + this.cursor_pos + 2;
     process.stdout.write("\x1b[" + (Window.height - 1) + ";" + cursor_x + "H");
 }
 // FeedbackBar event functions...
@@ -2007,7 +2007,10 @@ Run ktty again with no file path.  This time, the cursor should appear where you
 
 <h3 id="f-9">  ☑️ Step 9.  Edit <code>FeedbackBar.events</code> to add cursor movement  </h3>
 
-We need 
+We need to add two more events to the FeedbackBar:
+ - `FeedbackBar.events.LEFT`, and 
+ - `FeedbackBar.events.RIGHT`.
+Uncomment them in `FeedbackBar.events`, and implement them below.
 
 ```javascript
 //  Feedback object & functions                                                                                                                        
@@ -2039,21 +2042,26 @@ function FeedbackBar_position_cursor() { ... }
 function FeedbackBar_add_to_text(key) { ... }
 function FeedbackBar_delete_from_text() { ... }
 function FeedbackBar_move_cursor_left() {
-    this.cursor_pos -= 1;
-    if ( this.cursor_pos < 0 ) {                  /**   Don't let the cursor position be negative.         **/
-        this.cursor_pos++;
+    var _this = FeedbackBar;
+    _this.cursor_pos -= 1;
+    if ( _this.cursor_pos < 0 ) {                  /**   Don't let the cursor position be negative.         **/
+        _this.cursor_pos++;
     } else {
-        this.draw();
+        _this.draw();
+        _this.position_cursor();
     }
 }
 function FeedbackBar_move_cursor_right() {
-    this.cursor_pos += 1;
-    if ( this.cursor_pos > this.input.length ) {  /**   Don't let the cursor position exceed the buffer.   **/
-        this.cursor_pos--;
+    var _this = FeedbackBar;
+    _this.cursor_pos += 1;
+    if ( _this.cursor_pos > _this.input.length ) {  /**   Don't let the cursor position exceed the buffer.   **/
+        _this.cursor_pos--;
     } else {
-        this.draw();
+        _this.draw();
+        _this.position_cursor();
     }
 }
+
 ```
 
 <br/><br/><br/><br/>
@@ -2075,11 +2083,55 @@ You should be able to edit your feedback input this way, now!
 
 We can now use our FeedbackBar to prompt users for yes or no input when closing an unsaved file.
 
+```javascript
+function Window_quit() {
+    if (!Buffer.modified) {
+         console.clear();
+	 console.exit();
+    } else {
+        FeedbackBar.focus();
+	FeedbackBar.text = "Modified buffer exists!! Save before quitting? (y/n)";
+	FeedbackBar.confirm_event = function(response) {
+	    if (response.toLowerCase() == "y") {
+	        Buffer.events["CTRL-S"]();
+		console.clear();
+		console.exit();
+	    } else if (response.toLowerCase() == "n" {
+	        FeedbackBar.focus();
+		FeedbackBar.text = "Quit without saving? Changes will be lost! (y/n)";
+		FeedbackBar.confirm_event = function(response) {
+		    if (response.toLowerCase() == "y") {
+		        console.clear();
+		        console.exit();
+		    } else {
+		        FeedbackBar.text = "";
+		        Buffer.focus();
+		    }
+		}
+	    } else {
+	        FeedbackBar.text = "Modified buffer exists!! Save before quitting? (Respond with 'y' or 'n')";
+		FeedbackBar.input = "";
+	    }
+	    
+	}
+    }
+}
+```
+
 <br/><br/><br/><br/>
 
 
 
 <h3 id="f-12">  ☑️ Step 12.  ☞ Test your code!   </h3>
+
+Test the code by opening a file with ktty, editing it, and then quitting without saving.
+
+There are 3 total options we need to test:
+ - Save & quit by typing `y` to the first question. 
+ - Quit WITHOUT saving by typing `n` to the first question and `y` to the second. 
+ - Don't quit, by typing `n` to the first question and `n` to the second.
+
+Finally, we need to make sure both questions can handle invalid input appropriately. 
 
 <br/><br/><br/><br/>
 
