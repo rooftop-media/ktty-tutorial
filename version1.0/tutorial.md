@@ -2087,7 +2087,7 @@ We can now use our FeedbackBar to prompt users for yes or no input when closing 
 function Window_quit() {
     if (!Buffer.modified) {
          console.clear();
-	 console.exit();
+	 process.exit();
     } else {
         FeedbackBar.focus();
 	FeedbackBar.text = "Modified buffer exists!! Save before quitting? (y/n)";
@@ -2095,14 +2095,14 @@ function Window_quit() {
 	    if (response.toLowerCase() == "y") {
 	        Buffer.events["CTRL-S"]();
 		console.clear();
-		console.exit();
+		process.exit();
 	    } else if (response.toLowerCase() == "n") {
 	        FeedbackBar.focus();
 		FeedbackBar.text = "Quit without saving? Changes will be lost! (y/n)";
 		FeedbackBar.confirm_event = function(response) {
 		    if (response.toLowerCase() == "y") {
 		        console.clear();
-		        console.exit();
+		        process.exit();
 		    } else {
 		        FeedbackBar.text = "";
 		        Buffer.focus();
@@ -2111,6 +2111,7 @@ function Window_quit() {
 	    } else {
 	        FeedbackBar.text = "Modified buffer exists!! Save before quitting? (Respond with 'y' or 'n')";
 		FeedbackBar.input = "";
+		FeedbackBar.cursor_pos = 0;
 	    }
 	    
 	}
