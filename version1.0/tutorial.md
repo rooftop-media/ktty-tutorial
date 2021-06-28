@@ -1714,27 +1714,103 @@ Next up, we'll add a feedback prompt mode!
 
 <h2 id="part-f" align="center">  Part F:   Feedback Prompt </h2>
 
-Up until now, we've been building Buffer Editor Mode.  
-In Buffer Editor Mode, keyboard input edits the contents of `Buffer.text`.
+Up until now, keyboard input edits the contents of `Buffer.text`.
 
-In this section, we’ll be implementing Feedback Mode.   
-In Feedback Mode, keyboard input types to the `FeedbackBar.input`.
+In this section, we’ll be implementing a keyboard "focus" system,  
+which will switch between focus on either the Buffer or the FeedbackBar.  
+Later, we'll add other focusable options!
 
-We’ll be using Feedback Mode in two ways, in this version:  
+When focused on the FeedbackBar, keyboard input types to the `FeedbackBar.input`.
+
+We’ll switch to FeedbackBar focus in *two situations*:
  - When opening with no filename or a non-existing filename, prompt the user appropriately.  
  - When quitting with a modified file, prompt the user to save. 
-
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="f-1">  ☑️ Step 1.  Editing <code>FeedbackBar</code> </h3>
+<h3 id="f-1">  ☑️ Step 1.  Editing <code>Keyboard</code> </h3>
 
-In Feedback Mode, the Feedback Bar will use some extra methods:
- - First, we'll add a `FeedbackBar.focus()` method, to let us switch into the mode.
+The first thing we'll do is add to the `Keyboard` object, to implement the focus system.
+
+We'll do two things:
+ - Add a data field, `Keyboard.focus_item`, which will "point" to the object we're focused on.
+ - Edit `Keyboard.map_events()` to switch the mapping to `Keyboard.focus_item.events`.
+
+```javascript
+//  The keyboard.                                                                                                                                      
+var Keyboard = {
+    focus_item:  Buffer,
+
+    event_names: {
+        "\u001b[A": "UP",
+        "\u001b[B": "DOWN",
+        "\u001b[C": "RIGHT",
+        "\u001b[D": "LEFT",
+        "\u007f":   "BACKSPACE",
+        "\u000D":   "ENTER",
+        "\u0003":   "CTRL-C",
+        "\u0013":   "CTRL-S",
+    },
+
+    map_events: Keyboard_map_events
+
+};
+
+function Keyboard_map_events() {
+    //  Map keyboard input                                                                                                                             
+    var stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+
+    var _this = this;
+    var key_reaction = function(key) {
+
+        var event_name = _this.event_names[key];         /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+
+        if (typeof event_name == "string" && typeof _this.focus_item.events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+            _this.focus_item.events[event_name]();
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {        /**  Most keys, like letters, call the "TEXT" event.  **/
+            _this.focus_item.events["TEXT"](key);
+        }
+        Window.draw();                                   /**  Redraw the whole screen on any keypress.                               **/
+    };
+
+    stdin.on("data", key_reaction);
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-2">  ☑️ Step 2.  ☞ Test your code!   </h3>
+
+Run the code to make sure we can still move & edit the buffer, with this new system. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-3">  ☑️ Step 3.  Editing <code>FeedbackBar</code> </h3>
+
+In Feedback Mode, the Feedback Bar will use some extra data fields & methods.
+
+New data fields include:
+ - `FeedbackBar.input`, which is where users can type responses.
+ - `FeedbackBar.cursor_pos`, which allows the user to move back & forth within their answer.
+ - `FeedbackBar.confirm_event`, which stores a function to call when the user hits ENTER.
+
+New methods include:
+ - `FeedbackBar.focus()` will let us switch into FeedbackBar focus.
  - Then we'll edit `FeedbackBar.draw()` to include user's input.
  - When focused on  the FeedbackBar, `FeedbackBar.position_cursor()` will position the cursor relative to the input. 
+
+We'll also have some event methods, including:
+ - `FeedbackBar.events.TEXT(key)` which will add to `FeedbackBar.input`.
+ - `FeedbackBar.events.BACKSPACE()` which will delete from `FeedbackBar.input`.
+ - `FeedbackBar.events.ENTER()` which will call `FeedbackBar.confirm_event()` with the input.
 
 
 ```javascript
@@ -1745,22 +1821,245 @@ var FeedbackBar = {
     cursor_pos:      0,
     confirm_event:   function(response) {},
 
-    focus:           FeedbackBar_focus,
     draw:            FeedbackBar_draw,
+    focus:           FeedbackBar_focus,
     position_cursor: FeedbackBar_position_cursor,
+    
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        // "LEFT":       FeedbackBar_move_cursor_left,
+        // "RIGHT":      FeedbackBar_move_cursor_right,
+
+        "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
+	"BACKSPACE":  FeedbackBar_delete_from_text,
+        "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
+    }
 };
 function FeedbackBar_focus() {
-
+    Keyboard.focus_item  = this;
+    this.cursor_pos      = 0;
+    this.input           = "";
 }
 function FeedbackBar_draw() {
-    process.stdout.write("\x1b[2m");                               /**  Dim text.                         **/
+    if (Keyboard.focus_item === this) {
+        process.stdout.write("\x1b[36m");                          /**  Cyan text.                        **/
+    } else {
+        process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
+    }
     process.stdout.write("\x1b[" + (Window.height - 1) + ";0H");   /**  Moving to the bottom row.         **/
-    process.stdout.write(this.text + " " + this.input);
+    process.stdout.write(this.text + " ");
+    if (Keyboard.focus_item === this) {
+        process.stdout.write("\x1b[0m");
+        console.log(this.input);
+    }
     _feedback_bar = "";
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 function FeedbackBar_position_cursor() {
+    var cursor_x = this.text.length + this.cursor_pos + 2;
+    process.stdout.write("\x1b[" + (Window.height - 1) + ";" + cursor_x + "H");
+}
+// FeedbackBar event functions...
+function FeedbackBar_add_to_text(key) {
+    var _this = FeedbackBar;
+    var new_input = _this.input.slice(0, _this.cursor_pos);
+    new_input    += key;
+    new_input    += _this.input.slice(_this.cursor_pos, _this.input.length);
+    _this.input    = new_input;
+    _this.cursor_pos++;
+}
+function FeedbackBar_delete_from_text() {
+    var _this = FeedbackBar;
+    if ( _this.cursor_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+    var new_input  = _this.input.slice(0, _this.cursor_pos - 1);
+    new_input     += _this.input.slice(_this.cursor_pos, _this.input.length);
+    _this.input    = new_input;
+    _this.cursor_pos--;
+}
+```
 
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-4">  ☑️ Step 4.  Editing <code>Buffer</code> </h3>
+
+We'll add one function to Buffer: `Buffer.focus()`.
+It'll be implemented in `Buffer_focus()`, of course.
+
+```javascript
+var Buffer = {
+    text:        "",
+    filename:    "",
+    modified:    "",
+    cursor_pos:  0,
+    scroll:      0,
+
+    focus:             Buffer_focus,
+    load_file:         Buffer_load_file,
+    get_cursor_coords: Buffer_get_cursor_coords,
+    draw:              Buffer_draw,
+    position_cursor:   Buffer_position_cursor,
+
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       Buffer_move_cursor_left,
+        "RIGHT":      Buffer_move_cursor_right,
+        "UP":         Buffer_move_cursor_up,
+        "DOWN":       Buffer_move_cursor_down,
+
+        "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+        "BACKSPACE":  Buffer_delete_from_text,
+
+        "CTRL-S":     Buffer_save_to_file,
+
+        // "CTRL-Z":     p_undo,                                                                                                                      \
+                                                                                                                                                       
+        // "CTRL-R":     q_redo,                                                                                                                       
+    }
+
+};
+function Buffer_focus() {
+    Keyboard.focus_item = this;
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-5">  ☑️ Step 5.  Editing <code>Buffer.load_file</code> </h3>
+
+This is the first of 2 places we'll use FeedbackBar focus, in this version.
+
+When the user opens Ktty with no file name, we need to prompt the user.
+
+```javascript
+function Buffer_load_file() {
+    this.filename = process.argv[2];
+    if ( this.filename == undefined ) {
+    	FeedbackBar.focus();
+	FeedbackBar.text = "No file name given!  Enter a new filename:";
+	FeedbackBar.confirm_event = function(new_filename) {
+	    Buffer.filename = new_filename;
+	    Buffer.focus();
+	}
+    } else {
+        try {
+            this.text = fs.readFileSync( this.filename, {encoding: 'utf8'} );
+        } catch (err) {
+	    FeedbackBar.focus();
+	    FeedbackBar.text    = "Unable to find a file at '" + this.filepath + "'.  Enter a new filename:";
+	    FeedbackBar.input   = this.filename;
+	    FeedbackBar.confirm_event = function(new_filename) {
+	        Buffer.filename = new_filename;
+		Buffer.focus();
+	    }
+        }
+    }
+}
+```
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-6">  ☑️ Step 6.  ☞ Test your code!   </h3>
+
+Try opening Ktty without a filename.  You should see our first message!  
+Typing should let you add text to the filename.  
+Pressing ENTER should start you off editing that file, with Buffer focus.
+
+Now try opening Ktty with an *invalid* filename.  You should see the second message!
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-7">  ☑️ Step 7.  Edit <code>window.draw()</code>   </h3>
+
+We need to add one line to make position the cursor.
+
+```javascript
+function Window_draw() {
+    Buffer.draw();
+    StatusBar.draw();
+    FeedbackBar.draw();
+    Keyboard.focus_item.position_cursor();
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-8">  ☑️ Step 8.  ☞ Test your code!   </h3>
+
+Run ktty again with no file path.  This time, the cursor should appear where you're typing.  
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-9">  ☑️ Step 9.  Edit <code>FeedbackBar.events</code> to add cursor movement  </h3>
+
+We need to add two more events to the FeedbackBar:
+ - `FeedbackBar.events.LEFT`, and 
+ - `FeedbackBar.events.RIGHT`.
+Uncomment them in `FeedbackBar.events`, and implement them below.
+
+```javascript
+//  Feedback object & functions                                                                                                                        
+var FeedbackBar = {
+    text:            "",
+    input:           "",
+    cursor_pos:      0,
+    confirm_event:   function(response) {},
+
+    draw:            FeedbackBar_draw,
+    focus:           FeedbackBar_focus,
+    position_cursor: FeedbackBar_position_cursor,
+    
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       FeedbackBar_move_cursor_left,
+        "RIGHT":      FeedbackBar_move_cursor_right,
+
+        "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
+	"BACKSPACE":  FeedbackBar_delete_from_text,
+        "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
+    }
+};
+function FeedbackBar_focus() { ... }
+function FeedbackBar_draw() { ... }
+function FeedbackBar_position_cursor() { ... }
+// FeedbackBar event functions...
+function FeedbackBar_add_to_text(key) { ... }
+function FeedbackBar_delete_from_text() { ... }
+function FeedbackBar_move_cursor_left() {
+    var _this = FeedbackBar;
+    _this.cursor_pos -= 1;
+    if ( _this.cursor_pos < 0 ) {                  /**   Don't let the cursor position be negative.         **/
+        _this.cursor_pos++;
+    } else {
+        _this.draw();
+        _this.position_cursor();
+    }
+}
+function FeedbackBar_move_cursor_right() {
+    var _this = FeedbackBar;
+    _this.cursor_pos += 1;
+    if ( _this.cursor_pos > _this.input.length ) {  /**   Don't let the cursor position exceed the buffer.   **/
+        _this.cursor_pos--;
+    } else {
+        _this.draw();
+        _this.position_cursor();
+    }
 }
 
 ```
@@ -1769,7 +2068,77 @@ function FeedbackBar_position_cursor() {
 
 
 
-<h3 id="f-19">  ☑️ Step 19.  ❖  Part F review. </h3>
+<h3 id="f-10">  ☑️ Step 10.  ☞ Test your code!   </h3>
+
+Run ktty again, with an invalid file path.  
+
+When in feedback mode, try moving the cursor left and right inside the feedback bar input.  
+You should be able to edit your feedback input this way, now!  
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-11">  ☑️ Step 11.  Edit <code>Window.quit</code>  </h3>
+
+We can now use our FeedbackBar to prompt users for yes or no input when closing an unsaved file.
+
+```javascript
+function Window_quit() {
+    if (!Buffer.modified) {
+         console.clear();
+	 process.exit();
+    } else {
+        FeedbackBar.focus();
+	FeedbackBar.text = "Modified buffer exists!! Save before quitting? (y/n)";
+	FeedbackBar.confirm_event = function(response) {
+	    if (response.toLowerCase() == "y") {
+	        Buffer.events["CTRL-S"]();
+		console.clear();
+		process.exit();
+	    } else if (response.toLowerCase() == "n") {
+	        FeedbackBar.focus();
+		FeedbackBar.text = "Quit without saving? Changes will be lost! (y/n)";
+		FeedbackBar.confirm_event = function(response) {
+		    if (response.toLowerCase() == "y") {
+		        console.clear();
+		        process.exit();
+		    } else {
+		        FeedbackBar.text = "";
+		        Buffer.focus();
+		    }
+		}
+	    } else {
+	        FeedbackBar.text = "Modified buffer exists!! Save before quitting? (Respond with 'y' or 'n')";
+		FeedbackBar.input = "";
+		FeedbackBar.cursor_pos = 0;
+	    }
+	    
+	}
+    }
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-12">  ☑️ Step 12.  ☞ Test your code!   </h3>
+
+Test the code by opening a file with ktty, editing it, and then quitting without saving.
+
+There are 3 total options we need to test:
+ - Save & quit by typing `y` to the first question. 
+ - Quit WITHOUT saving by typing `n` to the first question and `y` to the second. 
+ - Don't quit, by typing `n` to the first question and `n` to the second.
+
+Finally, we need to make sure both questions can handle invalid input appropriately. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-13">  ☑️ Step 13.  ❖  Part F review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
