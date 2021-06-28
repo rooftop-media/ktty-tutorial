@@ -1857,9 +1857,8 @@ function FeedbackBar_draw() {
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 function FeedbackBar_position_cursor() {
-    var cursor_x = this.text.length + this.input.length + 2;
-    var cursor_y = Window.height - 1;
-    process.stdout.write("\x1b[" + cursor_y + ";" + cursor_x + "H");
+    var cursor_x = this.text.length + this.input.length;
+    process.stdout.write("\x1b[" + (Window.height - 1) + ";" + cursor_x + "H");
 }
 // FeedbackBar event functions...
 function FeedbackBar_add_to_text(key) {
@@ -2000,58 +1999,13 @@ function Window_draw() {
 
 <h3 id="f-8">  ☑️ Step 8.  ☞ Test your code!   </h3>
 
-Run ktty with no filename again.  This time, the cursor should appear when you type.
 <br/><br/><br/><br/>
 
 
 
-<h3 id="f-9">  ☑️ Step 9.  Edit events in <code>FeedbackBar</code>   </h3>
+<h3 id="f-9">  ☑️ Step 9.  Edit <code>FeedbackBar.events</code> to add cursor movement  </h3>
 
-```javascript
-//  Feedback object & functions                                                                                                                        
-var FeedbackBar = {
-    text:            "",
-    input:           "",
-    cursor_pos:      0,
-    confirm_event:   function(response) {},
 
-    draw:            FeedbackBar_draw,
-    focus:           FeedbackBar_focus,
-    position_cursor: FeedbackBar_position_cursor,
-    
-    events:            {
-        "CTRL-C":     function() {  Window.quit()  },
-
-        "LEFT":       FeedbackBar_move_cursor_left,
-        "RIGHT":      FeedbackBar_move_cursor_right,
-
-        "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
-	"BACKSPACE":  FeedbackBar_delete_from_text,
-        "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
-    }
-};
-function FeedbackBar_focus() { ... }
-function FeedbackBar_draw() { ... }
-// FeedbackBar event functions...
-function FeedbackBar_add_to_text(key) { ... }
-function FeedbackBar_delete_from_text() { ... }
-function FeedbackBar_move_cursor_left() {
-    this.cursor_pos -= 1;
-    if ( this.cursor_pos < 0 ) {         /**   Don't let the cursor position be negative.         **/
-        this.cursor_pos++;
-    } else {
-        this.draw();
-    }
-}
-function FeedbackBar_move_cursor_left() {
-    this.cursor_pos += 1;
-    if ( this.cursor_pos > this.input.length; ) {    /**   Don't let the cursor position exceed feedbackbar input length.   **/
-        this.cursor_pos--;
-    } else {
-        this.draw();
-    }
-}
-```
 
 <br/><br/><br/><br/>
 
@@ -2059,8 +2013,7 @@ function FeedbackBar_move_cursor_left() {
 
 <h3 id="f-10">  ☑️ Step 10.  ☞ Test your code!   </h3>
 
-Run ktty with no filename again.  
-Type a filename, and use the arrow keys to move the feedback bar's cursor. 
+
 
 <br/><br/><br/><br/>
 
@@ -2069,12 +2022,18 @@ Type a filename, and use the arrow keys to move the feedback bar's cursor.
 <h3 id="f-11">  ☑️ Step 11.  Edit <code>Window.quit</code>  </h3>
 
 
+
 <br/><br/><br/><br/>
 
 
 
+<h3 id="f-12">  ☑️ Step 12.  ☞ Test your code!   </h3>
 
-<h3 id="f-19">  ☑️ Step 19.  ❖  Part F review. </h3>
+<br/><br/><br/><br/>
+
+
+
+<h3 id="f-13">  ☑️ Step 13.  ❖  Part F review. </h3>
 
 At this point, we have our feedback prompt system working well!  
 The app now prompts us for a filename when we open it without one,  
