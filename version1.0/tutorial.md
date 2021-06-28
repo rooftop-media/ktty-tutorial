@@ -1999,13 +1999,62 @@ function Window_draw() {
 
 <h3 id="f-8">  ☑️ Step 8.  ☞ Test your code!   </h3>
 
+Run ktty again with no file path.  This time, the cursor should appear where you're typing.  
+
 <br/><br/><br/><br/>
 
 
 
 <h3 id="f-9">  ☑️ Step 9.  Edit <code>FeedbackBar.events</code> to add cursor movement  </h3>
 
+We need 
 
+```javascript
+//  Feedback object & functions                                                                                                                        
+var FeedbackBar = {
+    text:            "",
+    input:           "",
+    cursor_pos:      0,
+    confirm_event:   function(response) {},
+
+    draw:            FeedbackBar_draw,
+    focus:           FeedbackBar_focus,
+    position_cursor: FeedbackBar_position_cursor,
+    
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       FeedbackBar_move_cursor_left,
+        "RIGHT":      FeedbackBar_move_cursor_right,
+
+        "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
+	"BACKSPACE":  FeedbackBar_delete_from_text,
+        "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
+    }
+};
+function FeedbackBar_focus() { ... }
+function FeedbackBar_draw() { ... }
+function FeedbackBar_position_cursor() { ... }
+// FeedbackBar event functions...
+function FeedbackBar_add_to_text(key) { ... }
+function FeedbackBar_delete_from_text() { ... }
+function FeedbackBar_move_cursor_left() {
+    this.cursor_pos -= 1;
+    if ( this.cursor_pos < 0 ) {                  /**   Don't let the cursor position be negative.         **/
+        this.cursor_pos++;
+    } else {
+        this.draw();
+    }
+}
+function FeedbackBar_move_cursor_right() {
+    this.cursor_pos += 1;
+    if ( this.cursor_pos > this.input.length ) {  /**   Don't let the cursor position exceed the buffer.   **/
+        this.cursor_pos--;
+    } else {
+        this.draw();
+    }
+}
+```
 
 <br/><br/><br/><br/>
 
@@ -2013,7 +2062,10 @@ function Window_draw() {
 
 <h3 id="f-10">  ☑️ Step 10.  ☞ Test your code!   </h3>
 
+Run ktty again, with an invalid file path.  
 
+When in feedback mode, try moving the cursor left and right inside the feedback bar input.  
+You should be able to edit your feedback input this way, now!  
 
 <br/><br/><br/><br/>
 
@@ -2021,7 +2073,7 @@ function Window_draw() {
 
 <h3 id="f-11">  ☑️ Step 11.  Edit <code>Window.quit</code>  </h3>
 
-
+We can now use our FeedbackBar to prompt users for yes or no input when closing an unsaved file.
 
 <br/><br/><br/><br/>
 
