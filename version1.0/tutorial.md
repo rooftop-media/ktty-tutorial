@@ -2096,7 +2096,7 @@ function Window_quit() {
 	        Buffer.events["CTRL-S"]();
 		console.clear();
 		console.exit();
-	    } else if (response.toLowerCase() == "n" {
+	    } else if (response.toLowerCase() == "n") {
 	        FeedbackBar.focus();
 		FeedbackBar.text = "Quit without saving? Changes will be lost! (y/n)";
 		FeedbackBar.confirm_event = function(response) {
