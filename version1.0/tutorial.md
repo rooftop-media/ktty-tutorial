@@ -2189,9 +2189,8 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 <h3 id="g-2">  ☑️ Step 2.  Editing <code>Buffer</code> </h3>
 
-For this section we need two more variable:
- - an integer named `_scroll`.
- - a string named `_wrapped_buffer`.
+For this section we need to make sure we have:
+ - an integer at `Buffer.scroll`.
 
 ```javascript
 var Buffer = {
