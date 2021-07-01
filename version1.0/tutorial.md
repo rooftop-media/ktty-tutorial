@@ -2169,47 +2169,14 @@ Features in this section include:
  - Update file wrap on window resize.
 
 We need to react differently to edits to the buffer, vs. edits to the cursor's buffer position:
- - Buffer edits react in re-wrapping the buffer's text.
+ - Buffer edits react in re-wrapping the buffer's text. (Resize does this too)
  - Cursor movement reacts in a scroll check. 
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="g-1">  ☑️ Step 1.  Adding variables. </h3>
-
-For this section we need two more variable:
- - an integer named `_scroll`.
- - a string named `_wrapped_buffer`.
-
-```javascript
-////  SECTION 2:  APP MEMORY
-
-//  Setting up app memory. 
-var _mode              = "BUFFER-EDITOR";  //  Options: "BUFFER-EDITOR", "FEEDBACK-PROMPT"
-
-var _buffer            = "";      //  The text being edited. 
-var _filename          = "";      //  Filename - including extension.
-var _modified          = false;   //  Has the buffer been modified?
-var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
-var _scroll            = 0;
-var _wrapped_buffer    = "";
-
-var _feedback_bar      = "";      //  The text to display in the feedback bar.
-
-var _feedback_input    = "";      //  What has the user typed? 
-var _feedback_cursor   = 0;       //  Where is the feedback input cursor? 
-var _feedback_event    = function (response) {}; 
-
-var _window_h          = 0;       //  Window height (in text char's). 
-var _window_w          = 0;       //  Window width (in text char's).
-```
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="g-2">  ☑️ Step 2.  Adding long.txt </h3>
+<h3 id="g-1">  ☑️ Step 1.  Adding long.txt </h3>
 
 We're gonna need another sample text file, with a line that exceeds the _width_ of the window, in one place,
 and we're going to need to add enough lines that it exceeds the _height_ of the window.  
@@ -2218,6 +2185,50 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 <br/><br/><br/><br/>
 
+
+
+<h3 id="g-2">  ☑️ Step 2.  Editing <code>Buffer</code> </h3>
+
+For this section we need two more variable:
+ - an integer named `_scroll`.
+ - a string named `_wrapped_buffer`.
+
+```javascript
+var Buffer = {
+    text:        "",
+    filename:    "",
+    modified:    "",
+    cursor_pos:  0,
+    scroll:      0,
+
+    focus:             Buffer_focus,
+    load_file:         Buffer_load_file,
+    get_cursor_coords: Buffer_get_cursor_coords,
+    draw:              Buffer_draw,
+    position_cursor:   Buffer_position_cursor,
+
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       Buffer_move_cursor_left,
+        "RIGHT":      Buffer_move_cursor_right,
+        "UP":         Buffer_move_cursor_up,
+        "DOWN":       Buffer_move_cursor_down,
+
+        "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+        "BACKSPACE":  Buffer_delete_from_text,
+
+        "CTRL-S":     Buffer_save_to_file,
+
+        // "CTRL-Z":     p_undo, 
+        // "CTRL-R":     q_redo,    
+    }
+
+};
+```
+
+<br/><br/><br/><br/>
 
 
 <h3 id="g-3">  ☑️ Step 3.  <code>q_wrap_buffer()</code>. </h3>
