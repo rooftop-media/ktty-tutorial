@@ -1221,7 +1221,6 @@ var Buffer = {
   filename:    "",
   modified:    "",
   cursor_pos:  0,
-  scroll:      0,
   
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
@@ -1464,7 +1463,6 @@ var Buffer = {
   filename:    "",
   modified:    "",
   cursor_pos:  0,
-  scroll:      0,
   
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
@@ -1619,7 +1617,6 @@ var Buffer = {
   filename:    "",
   modified:    "",
   cursor_pos:  0,
-  scroll:      0,
   
   load_file:         Buffer_load_file,
   get_cursor_coords: Buffer_get_cursor_coords,
@@ -1896,7 +1893,6 @@ var Buffer = {
     filename:    "",
     modified:    "",
     cursor_pos:  0,
-    scroll:      0,
 
     focus:             Buffer_focus,
     load_file:         Buffer_load_file,
@@ -2190,18 +2186,26 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 <h3 id="g-2">  ☑️ Step 2.  Editing <code>Buffer</code> </h3>
 
 For this section we need to make sure we have:
- - an integer at `Buffer.scroll`.
+ - an integer at `Buffer.scroll_pos`. 
+ - a string at `Buffer.wrapped_text`, which will store a version of the text with wrapped lines.
+ - a method at `Buffer.get_wrapped_text()` which gets a version of the buffer with wrapped lines.
+ - a method at `Buffer.get_visible_chunk()` which gets the visible section of text.
+ - a method at `Buffer.scroll(amt)` which scrolls the page some amount.
 
 ```javascript
 var Buffer = {
-    text:        "",
-    filename:    "",
-    modified:    "",
-    cursor_pos:  0,
-    scroll:      0,
+    text:         "",
+    wrapped_text: "",
+    filename:     "",
+    modified:     "",
+    cursor_pos:   0,
+    scroll_pos:   0,
 
     focus:             Buffer_focus,
     load_file:         Buffer_load_file,
+    get_wrapped_text:  Buffer_get_wrapped_text,
+    get_visible_chunk: Buffer_get_visible_chunk,
+    scroll:            Buffer_scroll,
     get_cursor_coords: Buffer_get_cursor_coords,
     draw:              Buffer_draw,
     position_cursor:   Buffer_position_cursor,
