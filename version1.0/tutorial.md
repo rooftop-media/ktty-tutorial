@@ -2262,52 +2262,39 @@ function Buffer_get_visible_chunk() {
     
     }
 }
-function Buffer_scroll() {
-
-}
-```
-
-<br/><br/><br/><br/>
-
-
-<h3 id="g-3">  ☑️ Step 3.  <code>q_wrap_buffer()</code>. </h3>
-
-This function will make a version of `_buffer` with text lines that will fit in the screen's width.  
-
-```javascript
-function q_wrap_buffer() {
+function Buffer_scroll(amt) {
     
 }
 ```
+
 <br/><br/><br/><br/>
 
 
 
-<h3 id="g-4">  ☑️ Step 4.  Editing <code>draw_buffer()</code>. </h3>
+<h3 id="g-3">  ☑️ Step 3.  Editing <code>Buffer.draw()</code>. </h3>
 
-We need to edit `draw_buffer()` to draw line by line, for these reasons:
- - We DON'T want to draw lines before the value of `_scroll`.  If `_scroll == 2`, we should START at the 3rd line. 
- - Lines that overflow the `_screen_w` should be _wrapped_.  As we do this, keep track of the "true line count" (which is the `\n` marked line count + extra `overflow` lines.)
- - Stop drawing if the "true line count" gets to `screen_h + _scroll`. 
+We need to edit the `Buffer_draw()` to draw line by line, for these reasons:
+ - We DON'T want to draw lines before the value of `Buffer.scroll_pos`.  If `Buffer.scroll_pos == 2`, we should START at the 3rd line. 
+ - Lines that overflow the `Window.width` should be _wrapped_.  As we do this, keep track of the amount of extra `overflow` lines.
+ - Stop drawing if the line number gets to `Window.height + Buffer.scroll_pos - overflow`.  
 
 ```javascript
-//  Drawing the buffer. 
-function draw_buffer() {
+function Buffer_draw() {
 
     console.clear();
-    var buff_lines = _buffer.split("\n");
+    var buff_lines = this.text.split("\n");
     var overflow   = 1;
 
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
 	
-        if (i >= _scroll && i < (_window_h + _scroll - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
+        if (i >= this.scroll_pos && i < (Window.height + this.scroll_pos - overflow) ) {   /**  This IF statement ensures we draw the correct amount of lines!   **/
 	
-            while (line.length > _window_w) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
+            while (line.length > Window.width) {                          /**  This WHILE loop breaks down any lines that overflow _window_w.   **/     
                 overflow++;
-                var line_part = line.slice(0, _window_w - 1);
-                console.log(line_part + "\x1b[2m\\\x1b[0m");           /**  Dim, add "\", undim   **/
-                line = line.slice(_window_w - 1, line.length);
+                var line_part = line.slice(0, Window.width - 1);
+                console.log(line_part + "\x1b[2m\\\x1b[0m");              /**  Dim, add "\", undim   **/
+                line = line.slice(Window.width - 1, line.length);
             }
             console.log(line);
         }
