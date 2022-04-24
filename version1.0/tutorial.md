@@ -1666,7 +1666,7 @@ function Buffer_add_to_text(new_text) {
     }
 }
 function Buffer_delete_from_text() {
-    if ( Buffer.cursor_position == 0 ) {      /**   Don't let the cursor position be negative.    **/
+    if ( Buffer.cursor_pos == 0 ) {      /**   Don't let the cursor position be negative.    **/
         return;
     }
     var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos - 1);
