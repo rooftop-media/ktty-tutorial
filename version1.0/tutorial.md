@@ -1394,6 +1394,7 @@ var Keyboard = {
     "\u001b[C": "RIGHT",
     "\u001b[D": "LEFT",
     "\u007f":   "BACKSPACE",
+    "\u0008":   "BACKSPACE",  /*  for powershell  */
     "\u000D":   "ENTER",
     "\u0003":   "CTRL-C",
     "\u0013":   "CTRL-S",
@@ -1746,6 +1747,7 @@ var Keyboard = {
         "\u001b[C": "RIGHT",
         "\u001b[D": "LEFT",
         "\u007f":   "BACKSPACE",
+	"\u0008":   "BACKSPACE",  /*  for powershell  */
         "\u000D":   "ENTER",
         "\u0003":   "CTRL-C",
         "\u0013":   "CTRL-S",
