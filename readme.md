@@ -84,13 +84,13 @@ The first line will be used when we install this file as a global binary, in the
 *It’s telling our computer to interpret this as a Node file, and where to find Node’s source code.*
 
 The second line will log a message to the terminal console.
-*This is just to let us know that the script runs successfully – we’ll remove this line later. *
+*This is just to let us know that the script runs successfully – we’ll remove this line later.*
 
 <br/><br/><br/><br/>
 
 
 
-☑️ **Step 4**: R☞ Test the code!
+☑️ **Step 4**: ☞ Test the code!
 
 Back in our text terminal, we can test run our `ktty.js` file with NodeJS like so:
 
