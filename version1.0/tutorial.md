@@ -2401,10 +2401,10 @@ function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [
     }
     
     cursor_coords[0] -= Buffer.scroll_pos;
-    if (cursor_coords[0] == 0) {
+    if (cursor_coords[0] <= 0) {
         Buffer.scroll_pos--;
 	return Buffer.get_cursor_coords();
-    } else if (cursor_coords[0] > _window_h - 3) {
+    } else if (cursor_coords[0] > Window.height - 3) {
         Buffer.scroll_pos++;
 	return Buffer.get_cursor_coords();
     } else {
@@ -2420,7 +2420,10 @@ function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [
 
 <h3 id="f-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
 
-Using the cursor, navigate to the end of the file.  The text should scroll down!  
+Using the cursor, navigate to the first overflow line, and press down. 
+The cursor should skip to the next true line break!
+
+Now press down until the cursor gets to the end of the file.  The text should scroll down!  
 Type to make sure the cursor stays in sync. 
 
 Then, move back up to test scrolling up!
