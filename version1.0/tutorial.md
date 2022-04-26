@@ -2330,27 +2330,27 @@ We'll fix this by making the cursor jump to the NEXT line, rather than the secon
 
 
 
-<h3 id="f-5">  ☑️ Step 5.  Editing <code>d_get_cursor_pos()</code>. </h3>
+<h3 id="f-5">  ☑️ Step 5.  Editing <code>Buffer.get_cursor_coords()</code>. </h3>
 
-The error described in the previous test can be fixed in `d_get_cursor_pos()`.  
+The error described in the previous test can be fixed in `Buffer_get_cursor_coords()`.  
 
-We need to tweak the inside of that IF statement to account for lines longer than `_window_w - 1`.
+We need to tweak the inside of that IF statement to account for lines longer than `Window.width - 1`.
 
 ```javascript
-function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line, int char]           **/
+function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [int line, int char]           **/
 
-    var cursor_position = [1,1];                    //  line, char coord of cursor
-    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's  
+    var cursor_coords = [1,1];                   //  line, char coord of cursor
+    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's  
 
-        var current = _buffer[i];
-        if (current == "\n" || cursor_position[1] >= _window_w - 1) {
-            cursor_position[0]++;        /**  Advance a line.        **/
-	    cursor_position[1] = 1;      /**  Reset character pos.   **/
+        var current = this.text[i];
+        if (current == "\n" || cursor_coords[1] >= Window.width - 1) {
+            cursor_coords[0]++;        /**  Advance a line.        **/
+	    cursor_coords[1] = 1;      /**  Reset character pos.   **/
 	} else {
-            cursor_position[1]++;        /**  Advance a character.   **/
+            cursor_coords[1]++;        /**  Advance a character.   **/
         }
     }
-    return cursor_position;
+    return cursor_coords;
 
 }
 ```
@@ -2374,24 +2374,22 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 <h3 id="f-7">  ☑️ Step 7.  Editing <code>Buffer.get_cursor_coords()</code> again.</h3>
 
 The `Buffer_get_cursor_coords` algorithm is used to position the cursor on the buffer.  
-We need to edit it again to account for the overflow lines, and also the scroll offset.
-
-The overflow lines can be calculated by checking `cursor_coords[1] >= Window.width - 1`
-while adding up the "\n" line breaks. 
+We need to edit it again to account for the scroll offset.
 
 We can account for the scroll offset by subtracting `Buffer.scroll_pos` from `cursor_coords[1]`.
 
 The resulting line position may be negative, OR above the window height.  
 We'll check for those cases using an IF statement, and change `Buffer.scroll_pos` if needed. 
-This function returns an array, so once we change `Buffer.scroll_pos`, we can return the new calculation with `return Buffer.get_cursor_coords();`!
+This function returns an array, so once we change `Buffer.scroll_pos`, 
+we can return the new calculation with `return Buffer.get_cursor_coords();`, using recursion!
 
 ```javascript
 function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [int line, int char]           **/
 
     var cursor_coords = [1,1];                      //  line, char coord of cursor
-    for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's  
+    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's  
 
-        var current = _buffer[i];
+        var current = this.text[i];
         if (current == "\n" || cursor_coords[1] >= Window.width - 1) {
             cursor_coords[0]++;        /**  Advance a line.        **/
 	    cursor_coords[1] = 1;      /**  Reset character pos.   **/
@@ -2420,10 +2418,7 @@ function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [
 
 <h3 id="f-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
 
-Using the cursor, navigate to the first overflow line, and press down. 
-The cursor should skip to the next true line break!
-
-Now press down until the cursor gets to the end of the file.  The text should scroll down!  
+Press down until the cursor gets to the end of the file.  The text should scroll down!  
 Type to make sure the cursor stays in sync. 
 
 Then, move back up to test scrolling up!
