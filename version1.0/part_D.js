@@ -55,6 +55,7 @@ var _event_names = {            /**     L: Keycodes represented as strings, esca
     "\u001b[C": "RIGHT",
     "\u001b[D": "LEFT",
     "\u007f": "BACKSPACE",
+    "\u0008": "BACKSPACE",        /**     For powershell.   **/
     "\u000D": "ENTER",
     "\u0003": "CTRL-C",
     "\u0013": "CTRL-S",
@@ -171,6 +172,7 @@ function a_load_file_to_buffer() {       /**  Getting the file's contents, put i
     } else {
         try {
             _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
+            _buffer = _buffer.replace(/\r\n/g, '\n');
         } catch (err) {
             _buffer = "Unable to find a file at '" + _filepath + "'";
         }
