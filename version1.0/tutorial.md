@@ -965,6 +965,10 @@ Running the code now should draw the feedback bar every time we move the cursor.
 
 Our file is up to 331 lines! 
 
+<br/><br/>
+
+The complete code for part C is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_C.js).
+
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
 
@@ -1037,8 +1041,55 @@ but haven’t yet implemented it.
 <br/><br/><br/><br/>
 
 
+<h3 id="d-4">  ☑️ Step 4.  Edit <code>a_load_file_to_buffer()</code> to fix a Windows bug. </h3>
 
-<h3 id="d-4">  ☑️ Step 4.  <code>j_delete_from_buffer()</code> </h3>
+Up until this point, our program should work fine on both Windows and Mac/Unix machines. 
+Now, however, running the code on a Windows machine reveals a bug.  
+
+On a Windows terminal, like Powershell, open a text file with Ktty and navigate to the 
+last character of a line, before the cursor jumps to the next line, and type. 
+
+You'll find that text is strangely inserted into the *beginning* of that line, 
+while the cursor moves right as though typing a space at the *end* of the line.
+
+This bug is happening because Windows represents "newlines" in files 
+[differently](https://en.wikipedia.org/wiki/Newline#Issues_with_different_newline_formats) than 
+Mac/Unix machines.  On a Mac, new lines are represented with the newline character, 
+which can be written as "\n".  On Windows, new lines are represented with "\r\n", where 
+"\r" tells the machine to "return carriage", like you would on an old typewriter, or TeleType.
+
+Here's a quick fix involving the JS string .replace function and Regex:
+
+```javascript
+function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
+    _filename = process.argv[2]; 
+    if ( _filename == undefined ) {
+        _buffer = "";
+    } else {
+        try {
+            _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
+            _buffer = _buffer.replace(/\r\n/g, '\n');
+        } catch (err) {
+            _buffer = "Unable to find a file at '" + _filepath + "'";
+        }
+    }
+}
+```
+
+
+<br/><br/><br/><br/>
+
+
+<h3 id="d-5">  ☑️ Step 5.  ☞  Test the code! </h3>
+
+On a Windows machine, move the cursor to the end of a line, and try typing. 
+The letters should now appear properly at the end of the line. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="d-6">  ☑️ Step 6.  <code>j_delete_from_buffer()</code> </h3>
 This function will implement the backspace.  *Thank goodness.*
 
 ```javascript
@@ -1063,7 +1114,7 @@ function j_delete_from_buffer() {
 
 
 
-<h3 id="d-5">  ☑️ Step 5.  ☞ Test the code! </h3>
+<h3 id="d-7">  ☑️ Step 7.  ☞ Test the code! </h3>
 At this point, you should be able to type text, & then delete it!
 
 Make sure that pressing “backspace” at the beginning of the file doesn’t cause any errors. 
@@ -1072,7 +1123,7 @@ Make sure that pressing “backspace” at the beginning of the file doesn’t c
 
 
 
-<h3 id="d-6">  ☑️ Step 6.  <code>k_save_buffer_to_file()</code> </h3>
+<h3 id="d-8">  ☑️ Step 8.  <code>k_save_buffer_to_file()</code> </h3>
 This algorithm will save the file, & update the `_modified` variable.
 
 ```javascript
@@ -1087,7 +1138,7 @@ function k_save_buffer_to_file() {
 
 
 
-<h3 id="d-7">  ☑️ Step 7.  ☞ Test the code! </h3>
+<h3 id="d-9">  ☑️ Step 9.  ☞ Test the code! </h3>
 
 Try typing some text into the buffer, and deleting some text.  
 Then, save with ctrl-s, and quit.  Then open the file back up -- your changes should be saved!
@@ -1096,7 +1147,11 @@ Then, save with ctrl-s, and quit.  Then open the file back up -- your changes sh
 
 
 
-<h3 id="d-8">  ☑️ Step 8.  ❖ Part D review. </h3> 
+
+
+
+
+<h3 id="d-10">  ☑️ Step 10.  ❖ Part D review. </h3> 
 
 In this part, we added some basic editing controls. 
 
