@@ -61,6 +61,7 @@ function Buffer_load_file() {
     } else {
         try {
             this.text = fs.readFileSync( this.filename, {encoding: 'utf8'} );
+	    this.text = this.text.replace(/\r\n/g, '\n');
         } catch (err) {
 	    FeedbackBar.focus();
 	    FeedbackBar.text    = "Unable to find a file at '" + this.filepath + "'.  Enter a new filename:";
