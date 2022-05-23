@@ -2249,10 +2249,8 @@ For this section, the Buffer needs two new data fields:
  - an integer at `Buffer.scroll_pos`. 
  - a string at `Buffer.wrapped_text`, which will store a version of the text with wrapped lines.
 
-The Buffer also needs three more functions:
- - a method at `Buffer.get_wrapped_text()` which gets a version of the buffer with wrapped lines.
- - a method at `Buffer.get_visible_chunk()` which gets the visible section of text.
- - a method at `Buffer.scroll(amt)` which scrolls the page some amount.
+The Buffer also needs one more function:
+ - `Buffer.get_wrapped_text()` which gets a version of the buffer with wrapped lines.
 
 ```javascript
 var Buffer = {
@@ -2269,8 +2267,6 @@ var Buffer = {
     draw:              Buffer_draw,
     position_cursor:   Buffer_position_cursor,
     get_wrapped_text:  Buffer_get_wrapped_text,
-    get_visible_chunk: Buffer_get_visible_chunk,
-    scroll:            Buffer_scroll,
 
     events:            {
         "CTRL-C":     function() {  Window.quit()  },
@@ -2315,15 +2311,6 @@ function Buffer_get_wrapped_text() {
 	wrapped += line + "\n";
     }
     this.wrapped_text = wrapped;
-}
-function Buffer_get_visible_chunk() {
-    var lines   = this.wrapped_text.split("\n");
-    for (var i = this.scroll_pos; i < this.scroll_pos + Window.height; i++) {
-    
-    }
-}
-function Buffer_scroll(amt) {
-    
 }
 ```
 
