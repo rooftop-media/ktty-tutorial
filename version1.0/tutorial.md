@@ -2245,12 +2245,14 @@ You can find the long sample file I used [here](https://github.com/rooftop-media
 
 <h3 id="g-2">  ☑️ Step 2.  Editing <code>Buffer</code> </h3>
 
-For this section, the Buffer needs two new data fields:
- - an integer at `Buffer.scroll_pos`. 
- - a string at `Buffer.wrapped_text`, which will store a version of the text with wrapped lines.
+For this section, the Buffer needs a new data field: an integer at `Buffer.scroll_pos`. 
 
-The Buffer also needs one more function:
- - `Buffer.get_wrapped_text()` which gets a version of the buffer with wrapped lines.
+We also need to edit the `Buffer_draw()` to draw line by line, for these reasons:
+ - We DON'T want to draw lines before the value of `Buffer.scroll_pos`.  If `Buffer.scroll_pos == 2`, we should START at the 3rd line. 
+ - Lines that overflow the `Window.width` should be _wrapped_.  As we do this, keep track of the amount of extra `overflow` lines.
+ - Stop drawing if the line number gets to `Window.height + Buffer.scroll_pos - overflow`.  
+
+The code below has the added `scroll_pos` field, and the updated `Buffer_draw()` method.
 
 ```javascript
 var Buffer = {
@@ -2259,14 +2261,12 @@ var Buffer = {
     modified:     "",
     cursor_pos:   0,
     scroll_pos:   0,
-    wrapped_text: "",
 
     focus:             Buffer_focus,
     load_file:         Buffer_load_file,
     get_cursor_coords: Buffer_get_cursor_coords,
     draw:              Buffer_draw,
     position_cursor:   Buffer_position_cursor,
-    get_wrapped_text:  Buffer_get_wrapped_text,
 
     events:            {
         "CTRL-C":     function() {  Window.quit()  },
@@ -2290,42 +2290,6 @@ var Buffer = {
 function Buffer_focus()               { ... }
 function Buffer_load_file()           { ... }
 function Buffer_get_cursor_coords()   { ... }
-function Buffer_draw()                { ... }
-function Buffer_position_cursor()     { ... }
-function Buffer_move_cursor_left()    { ... }
-function Buffer_move_cursor_right()   { ... }
-function Buffer_move_cursor_up()      { ... }
-function Buffer_move_cursor_down()    { ... }
-function Buffer_add_to_text(new_text) { ... }
-function Buffer_delete_from_text()    { ... }
-function Buffer_save_to_file()        { ... }
-function Buffer_get_wrapped_text() {
-    var lines   = this.text.split("\n");
-    var wrapped = "";
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
-        while (line.length > Window.width) {
-	    wrapped += line.split(0,Window.width) + "\n";
-	    line     = line.split(Window.width, line.length);
-	}
-	wrapped += line + "\n";
-    }
-    this.wrapped_text = wrapped;
-}
-```
-
-<br/><br/><br/><br/>
-
-
-
-<h3 id="g-3">  ☑️ Step 3.  Editing <code>Buffer.draw()</code>. </h3>
-
-We need to edit the `Buffer_draw()` to draw line by line, for these reasons:
- - We DON'T want to draw lines before the value of `Buffer.scroll_pos`.  If `Buffer.scroll_pos == 2`, we should START at the 3rd line. 
- - Lines that overflow the `Window.width` should be _wrapped_.  As we do this, keep track of the amount of extra `overflow` lines.
- - Stop drawing if the line number gets to `Window.height + Buffer.scroll_pos - overflow`.  
-
-```javascript
 function Buffer_draw() {
 
     console.clear();
@@ -2347,13 +2311,21 @@ function Buffer_draw() {
         }
     }
 }
+function Buffer_position_cursor()     { ... }
+function Buffer_move_cursor_left()    { ... }
+function Buffer_move_cursor_right()   { ... }
+function Buffer_move_cursor_up()      { ... }
+function Buffer_move_cursor_down()    { ... }
+function Buffer_add_to_text(new_text) { ... }
+function Buffer_delete_from_text()    { ... }
+function Buffer_save_to_file()        { ... }
 ```
 
 <br/><br/><br/><br/>
 
 
 
-<h3 id="f-4">  ☑️ Step 4.  ☞ Test the code! </h3>
+<h3 id="g-3">  ☑️ Step 3.  ☞ Test the code! </h3>
 
 Test the code by using ktty to open long.txt.  
 
@@ -2375,7 +2347,7 @@ We'll fix this by making the cursor jump to the NEXT line, rather than the secon
 
 
 
-<h3 id="f-5">  ☑️ Step 5.  Editing <code>Buffer.get_cursor_coords()</code>. </h3>
+<h3 id="g-4">  ☑️ Step 4.  Editing <code>Buffer.get_cursor_coords()</code>. </h3>
 
 The error described in the previous test can be fixed in `Buffer_get_cursor_coords()`.  
 
@@ -2404,7 +2376,7 @@ function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [
 
 
 
-<h3 id="f-6">  ☑️ Step 6.  ☞ Test the code! </h3>
+<h3 id="g-5">  ☑️ Step 5.  ☞ Test the code! </h3>
 
 Open the same long.txt.  
 Move down past the overflow line by pressing DOWN, and make sure editing is still synced with the cursor.  
@@ -2416,7 +2388,7 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 
 
 
-<h3 id="f-7">  ☑️ Step 7.  Editing <code>Buffer.get_cursor_coords()</code> again.</h3>
+<h3 id="g-6">  ☑️ Step 6.  Editing <code>Buffer.get_cursor_coords()</code> again.</h3>
 
 The `Buffer_get_cursor_coords` algorithm is used to position the cursor on the buffer.  
 We need to edit it again to account for the scroll offset.
@@ -2461,7 +2433,7 @@ function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [
 
 
 
-<h3 id="f-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
+<h3 id="g-7">  ☑️ Step 7.  ☞ Test the code!  </h3>
 
 Press down until the cursor gets to the end of the file.  The text should scroll down!  
 Type to make sure the cursor stays in sync. 
@@ -2474,7 +2446,7 @@ Then, move back up to test scrolling up!
 
 
 
-<h3 id="f-9">  ☑️ Step 9.  Edit <code>draw_status_bar</code>  </h3>
+<h3 id="g-8">  ☑️ Step 8.  Edit <code>draw_status_bar</code>  </h3>
 
 We can add a single line to `draw_status_bar` to output the current page scroll. 
 
@@ -2509,7 +2481,7 @@ function draw_status_bar() {
 
 
 
-<h3 id="g-11">  ☑️ Step 10.  ❖  Part G review. </h3>
+<h3 id="g-9">  ☑️ Step 9.  ❖  Part G review. </h3>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
