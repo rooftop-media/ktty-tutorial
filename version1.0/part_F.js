@@ -116,7 +116,7 @@ function Buffer_move_cursor_right() {
 }
 function Buffer_move_cursor_up() {
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
-    var prev_line_length = 0;            /**   To find the length of the *prev* line, to jump back.  **/
+    var prev_line_length = -1;           /**   To find the length of the *prev* line, to jump back.  **/
     for (var i = 0; i < Buffer.cursor_pos; i++ ) {
         if (Buffer.text[i] == "\n") {
             prev_line_length = current_x_pos;
