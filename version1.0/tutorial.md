@@ -2388,10 +2388,13 @@ If it all works, we've handled the overflow wrap!  Let's move on to vertical scr
 
 
 
-<h3 id="g-6">  ☑️ Step 6.  Editing <code>Buffer.get_cursor_coords()</code> again.</h3>
+<h3 id="g-6">  ☑️ Step 6.  Editing <code>Buffer.get_cursor_coords()</code>.</h3>
+
+The next step is to make the page scroll down when the cursor reaches the end of the screen,
+or up when the cursor reaches the top of the page.
 
 The `Buffer_get_cursor_coords` algorithm is used to position the cursor on the buffer.  
-We need to edit it again to account for the scroll offset.
+We can to edit it again to account for the scroll offset.
 
 We can account for the scroll offset by subtracting `Buffer.scroll_pos` from `cursor_coords[1]`.
 
@@ -2435,13 +2438,174 @@ function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [
 
 <h3 id="g-7">  ☑️ Step 7.  ☞ Test the code!  </h3>
 
-Press down until the cursor gets to the end of the file.  The text should scroll down!  
-Type to make sure the cursor stays in sync. 
+Press down until the cursor gets to the end of the file.  
 
-Then, move back up to test scrolling up!
+You'll notice there's a bug -- the text doesn't scroll down until
+the down key is pressed _twice_ after reaching the end of the file. 
+
+This is because, right now, the `Buffer.get_cursor_coords()` function 
+is called *after* the screen has been drawn, in `Window.draw()`, in `Keyboard.focus_item.position_cursor()`.
+
+We'll need to refactor our code slightly to make this work. 
 
 <br/><br/><br/><br/>
 
+
+
+<h3 id="g-8">  ☑️ Step 8. Edit <code>Window_draw()</code>  </h3>
+
+To fix the bug, we'll edit `Window_draw()` to first calculate the 
+cursor position and scroll update, and *then* redraw the screen, and position the cursor. 
+
+```javascript
+function Window_draw() {
+    Keyboard.cursor_coords = Keyboard.focus_item.get_cursor_coords();
+
+    Buffer.draw();
+    StatusBar.draw();
+    FeedbackBar.draw();
+    
+    Keyboard.position_cursor();
+}
+```
+
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="g-9">  ☑️ Step 9. Edit the <code>Keyboard</code> object </h3>
+
+We're now storing our cursor coordinates in the Keyboard object's data. 
+
+We're also adding a method to Keyboard, `position_cursor()`, which will 
+move the cursor to the cursor's stored coordinates. 
+
+```javascript
+//  The keyboard.
+var Keyboard = {
+    focus_item:    Buffer,
+    cursor_coords: [0, 0],        /*  Cursor position coordinates: line, char */
+
+    event_names: {
+        "\u001b[A": "UP",
+        "\u001b[B": "DOWN",
+        "\u001b[C": "RIGHT",
+        "\u001b[D": "LEFT",
+        "\u007f":   "BACKSPACE",
+        "\u0008":   "BACKSPACE",  /*  for powershell  */
+        "\u000D":   "ENTER",
+        "\u0003":   "CTRL-C",
+        "\u0013":   "CTRL-S",
+    },
+  
+    position_cursor: function() {
+        process.stdout.write("\x1b[" + this.cursor_coords[0] + ";" + this.cursor_coords[1] + "f");
+    },
+    map_events: Keyboard_map_events
+  
+};
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="g-10">  ☑️ Step 10. Delete <code>Buffer_position_cursor</code> </h3>
+
+We can just delete this function completely.  
+
+We replaced its functionality with `Keyboard.position_cursor`, and 
+we already have `Buffer.get_cursor_coords`, so we're all set. 
+
+Here's what our Buffer object looks like now.  Remember to delete the `Buffer_position_cursor`
+function implementation as well. 
+
+```javascript
+var Buffer = {
+    text:         "",
+    filename:     "",
+    modified:     "",
+    cursor_pos:   0,
+    scroll_pos:   0,
+
+    focus:             Buffer_focus,
+    load_file:         Buffer_load_file,
+    get_cursor_coords: Buffer_get_cursor_coords,
+    draw:              Buffer_draw,
+
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       Buffer_move_cursor_left,
+        "RIGHT":      Buffer_move_cursor_right,
+        "UP":         Buffer_move_cursor_up,
+        "DOWN":       Buffer_move_cursor_down,
+
+        "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+        "BACKSPACE":  Buffer_delete_from_text,
+
+        "CTRL-S":     Buffer_save_to_file,
+
+        // "CTRL-Z":     p_undo,                                                                                                                           
+        // "CTRL-R":     q_redo, 
+    }
+  
+};
+```
+
+<br/><br/><br/><br/>
+
+
+<h3 id="g-11">  ☑️ Step 11. Rename <code>FeedbackBar_position_cursor</code> to <code>FeedbackBar_position_cursor</code> </h3>
+
+Finally, we need to rename `FeedbackBar_position_cursor` to `FeedbackBar_get_cursor_coords`.
+We also need to edit it slightly. 
+
+```javascript
+var FeedbackBar = {
+    text:            "",
+    input:           "",
+    cursor_pos:      0,
+    confirm_event:   function(response) {},
+
+    draw:            FeedbackBar_draw,
+    focus:           FeedbackBar_focus,
+    get_cursor_coords: FeedbackBar_get_cursor_coords,
+    
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       FeedbackBar_move_cursor_left,
+        "RIGHT":      FeedbackBar_move_cursor_right,
+
+        "TEXT":       function(key) {  FeedbackBar_add_to_text(key);   },
+	"BACKSPACE":  FeedbackBar_delete_from_text,
+        "ENTER":      function()    {  FeedbackBar.confirm_event(FeedbackBar.input);  },
+    }
+};
+function FeedbackBar_focus() { /*...*/ }
+function FeedbackBar_draw() { /*...*/ }
+function FeedbackBar_get_cursor_coords() {
+    var cursor_x = this.text.length + this.cursor_pos + 2;
+    var cursor_y = Window.height - 1;
+    return [cursor_y, cursor_x];
+}
+
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="g-12">  ☑️ Step 12.  ☞ Test the code!  </h3>
+
+Okay! At this point, that bug should be fixed. 
+
+Try moving the cursor to the end of the page, and see if the page scrolls down. 
+
+<br/><br/><br/><br/>
 
 
 
