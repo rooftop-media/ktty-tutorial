@@ -1627,8 +1627,11 @@ function Buffer_move_cursor_down() {
         } //  End of "if" statements
     } //  End of "for" loop
     
-    if (next_line_length >= current_x_pos) {          /**   If we're going down **into** a line...                **/
+    if (!found_line_start) {                          /**   If there is no next line...                    */
         Buffer.cursor_pos += current_line_length;
+    } 
+    else if (next_line_length >= current_x_pos) {     /**   If we're going down **into** a line...        **/
+	Buffer.cursor_pos += current_line_length;
     }
     else if (next_line_length < current_x_pos) {      /**   If we're going down **above** a line...                **/
         Buffer.cursor_pos += current_line_length;
