@@ -839,8 +839,9 @@ To move DOWN, we'll need to do the following:
  2. Get the `current_line_length`, to move forward correctly.
  3. Get the `next_line_length`.
  4. Branch depending on if the `current_x_position` exceeds the `next_line_length`.
- 5. &nbsp; IF `current_x_position` is bigger, go to the END of the next line.
- 6. &nbsp; IF `next_line_length` is bigger, go to the current X position on that line. 
+ 5. &nbsp; IF `found_line_start` is false, go to the end of the current line.
+ 6. &nbsp; IF `current_x_position` is bigger, go to the END of the next line.
+ 7. &nbsp; IF `next_line_length` is bigger, go to the current X position on that line. 
 
 ```javascript
 function h_move_cursor_down() {
@@ -877,8 +878,11 @@ function h_move_cursor_down() {
 	}
     }
     
-    if (next_line_length >= current_x_pos) {          /**   If we're going down **into** a line...        **/
+    if (!found_line_start) {                         /**   If there is no next line...                    */
         _cursor_buffer_pos += current_line_length;
+    } 
+    else if (next_line_length >= current_x_pos) {  /**   If we're going down **into** a line...        **/
+	_cursor_buffer_pos += current_line_length;
     }
     else if (next_line_length < current_x_pos) {    /**   If we're going down **above** a line...       **/
         _cursor_buffer_pos += current_line_length;
