@@ -125,7 +125,10 @@ function Buffer_move_cursor_up() {
             current_x_pos++;
         }
     }
-    if (prev_line_length > current_x_pos) {        /**   If we're going up **into** a line...        **/
+    if (prev_line_length == -1) {                  /**   If there is no previous line...              */
+        Buffer.cursor_pos = 0;
+    }
+    else if (prev_line_length > current_x_pos) {   /**   If we're going up **into** a line...        **/
         Buffer.cursor_pos -= prev_line_length;
     }
     else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
