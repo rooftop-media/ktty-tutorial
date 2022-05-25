@@ -156,11 +156,11 @@ function Buffer_move_cursor_up() {
             current_x_pos++;
         }
     }
-    if (!found_line_start) {                          /**   If there is no next line...                    */
-        Buffer.cursor_pos += current_line_length;
-    } 
-    else if (next_line_length >= current_x_pos) {     /**   If we're going down **into** a line...        **/
-	Buffer.cursor_pos += current_line_length;
+    if (prev_line_length == -1) {                  /**   If there is no previous line...              */
+        Buffer.cursor_pos = 0;
+    }
+    else if (prev_line_length > current_x_pos) {   /**   If we're going up **into** a line...        **/
+        Buffer.cursor_pos -= prev_line_length;
     }
     else if (prev_line_length <= current_x_pos) {  /**   If we're going up **above** a line...       **/
         Buffer.cursor_pos -= current_x_pos;
