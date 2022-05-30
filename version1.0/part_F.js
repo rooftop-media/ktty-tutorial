@@ -15,7 +15,7 @@ var fs           = require("fs");
 var Buffer = {
     text:        "",
     filename:    "",
-    modified:    "",
+    modified:    false,
     cursor_pos:  0,
     scroll:      0,
 
