@@ -1282,7 +1282,7 @@ The function for `Buffer.position_cursor()` is from `position_cursor()`.
 var Buffer = {
   text:        "",
   filename:    "",
-  modified:    "",
+  modified:    false,
   cursor_pos:  0,
   
   load_file:         Buffer_load_file,
@@ -1526,7 +1526,7 @@ we can't use `this` to access Buffer's data directly.
 var Buffer = {
   text:        "",
   filename:    "",
-  modified:    "",
+  modified:    false,
   cursor_pos:  0,
   
   load_file:         Buffer_load_file,
@@ -1686,7 +1686,7 @@ The function `Buffer_save_to_file()` comes from our `k_save_buffer_to_file()`.
 var Buffer = {
   text:        "",
   filename:    "",
-  modified:    "",
+  modified:    false,
   cursor_pos:  0,
   
   load_file:         Buffer_load_file,
@@ -1963,7 +1963,7 @@ It'll be implemented in `Buffer_focus()`, of course.
 var Buffer = {
     text:        "",
     filename:    "",
-    modified:    "",
+    modified:    false,
     cursor_pos:  0,
 
     focus:             Buffer_focus,
