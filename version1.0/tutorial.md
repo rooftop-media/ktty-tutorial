@@ -24,7 +24,7 @@ Click a part title to jump down to it, in this file.
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Complete, tested. | 10 |
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
-| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | In progress | 9 |
+| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
 | [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-h) | Todo | ? |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | Todo | ? |
 
@@ -1163,6 +1163,9 @@ Then, save with ctrl-s, and quit.  Then open the file back up -- your changes sh
 
 In this part, we added some basic editing controls. 
 
+The complete code for Part D is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_D.js).
+
+
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
 
@@ -1774,6 +1777,8 @@ Pressing `ctrl-s` should save your changes to the file.
 In this section, we reorganized our code to be Object Oriented!  
 Our code will be much easier to navigate from here on out.  
 
+The complete code for Part E is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_E.js).
+
 Next up, we'll add a feedback prompt mode!
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -2213,6 +2218,8 @@ At this point, we have our feedback prompt system working well!
 The app now prompts us for a filename when we open it without one,  
 and prompts us to save when we quit without saving.
 
+The complete code for Part F is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_F.js).
+
 Nice!
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -2629,7 +2636,7 @@ Try moving the cursor to the end of the page, and see if the page scrolls down.
 
 
 
-<h3 id="g-8">  ☑️ Step 8.  Edit <code>StatusBar_draw</code>  </h3>
+<h3 id="g-13">  ☑️ Step 13.  Edit <code>StatusBar_draw</code>  </h3>
 
 We can add a single line to `StatusBar_draw` to output the current page scroll. 
 We'll also change the "cursor on line" output to account for the scroll. 
@@ -2662,9 +2669,71 @@ function StatusBar_draw() {
 }
 ```
 
+<br/><br/><br/><br/>
 
 
-<h3 id="g-9">  ☑️ Step 9.  ❖  Part G review. </h3>
+
+<h3 id="g-14">  ☑️ Step 14.  ☞ Test the code!  </h3>
+
+The feedback bar should now display the scroll and line position.
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="g-15">  ☑️ Step 15.  Edit <code>Keyboard_map_events</code>  </h3>
+
+Finally, we'll make sure the window gets refreshed properly when it's resized. 
+
+```javascript
+function Keyboard_map_events() {
+    //  Map keyboard input                                                                                                                         
+    var stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+
+    var _this = this;
+    var key_reaction = function(key) {
+
+	      var event_name = _this.event_names[key];             /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+
+        if (typeof event_name == "string" && typeof _this.focus_item.events[event_name] == "function") {   /**  "CTRL-C", "ENTER", etc   **/
+            _this.focus_item.events[event_name]();
+        } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {            /**  Most keys, like letters, call the "TEXT" event.  **/
+            _this.focus_item.events["TEXT"](key);
+        }
+	      Window.draw();                                       /**  Redraw the whole screen on any keypress.                               **/
+    };
+
+    stdin.on("data", key_reaction);
+
+    process.stdout.on('resize', () => {
+        Window.get_size();
+        Window.draw();
+    });
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="g-16">  ☑️ Step 16.  ☞ Test the code!  </h3>
+
+Open up a text file with overflow text, and resize the window.  
+Everything should continue to look nice!
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="g-17">  ☑️ Step 17.  ❖  Part G review. </h3>
+
+In this section, we added handling for text lines that overflow the window width, 
+scrolling for files that exceed window height, and proper resizing. 
+
+The complete code for Part G is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_G.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
