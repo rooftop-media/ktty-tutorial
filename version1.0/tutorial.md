@@ -2629,36 +2629,36 @@ Try moving the cursor to the end of the page, and see if the page scrolls down.
 
 
 
-<h3 id="g-8">  ☑️ Step 8.  Edit <code>draw_status_bar</code>  </h3>
+<h3 id="g-8">  ☑️ Step 8.  Edit <code>StatusBar_draw</code>  </h3>
 
-We can add a single line to `draw_status_bar` to output the current page scroll. 
+We can add a single line to `StatusBar_draw` to output the current page scroll. 
+We'll also change the "cursor on line" output to account for the scroll. 
 
 ```javascript
 //  Drawing the file's status bar -- filename, modified status, and cursor position.                                                                   
-function draw_status_bar() {
+function StatusBar_draw() {
+    process.stdout.write("\x1b[" + (Window.height - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write("\x1b[7m");                               /**  Reverse video.                    **/
 
-    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
-    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
-
-    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
-    if (_modified) {                                           /**  Add the [modified] indicator.     **/
+    var status_bar_text = "  " + Buffer.filename;                  /**  Add the filename                  **/
+    if (Buffer.modified) {                                         /**  Add the [modified] indicator.     **/
         status_bar_text += "     [modified]";
     } else {
         status_bar_text += "               ";
     }
 
-    var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
-    status_bar_text += "  cursor on line " + cursor_position[0];
+    var cursor_position = Buffer.get_cursor_coords(); 
+    status_bar_text += "  cursor on line " + (cursor_position[0] + Buffer.scroll_pos);
     status_bar_text += ", row " + cursor_position[1];
 
-    status_bar_text += "   Scroll: " + _scroll;
+    status_bar_text += "   Scroll: " + Buffer.scroll_pos;
 
-    while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
+    while (status_bar_text.length < Window.width) {                   /**  Padding it with whitespace.       **/
         status_bar_text += " ";
     }
 
-    process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
-    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+    process.stdout.write(status_bar_text);                            /**  Output the status bar string.     **/
+    process.stdout.write("\x1b[0m");                                  /**  No more reverse video.            **/
 }
 ```
 
