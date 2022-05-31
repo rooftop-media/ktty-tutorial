@@ -2577,7 +2577,7 @@ var Buffer = {
 <br/><br/><br/><br/>
 
 
-<h3 id="g-11">  ☑️ Step 11. Rename <code>FeedbackBar_position_cursor</code> to <code>FeedbackBar_position_cursor</code> </h3>
+<h3 id="g-11">  ☑️ Step 11. Rename <code>FeedbackBar_position_cursor</code> to <code>FeedbackBar_get_cursor_coords</code> </h3>
 
 Finally, we need to rename `FeedbackBar_position_cursor` to `FeedbackBar_get_cursor_coords`.
 We also need to edit it slightly. 
