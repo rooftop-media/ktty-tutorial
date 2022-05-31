@@ -266,8 +266,10 @@ function StatusBar_draw() {
     }
 
     var cursor_position = Buffer.get_cursor_coords(); 
-    status_bar_text += "  cursor on line " + cursor_position[0];
+    status_bar_text += "  cursor on line " + (cursor_position[0] + Buffer.scroll_pos);
     status_bar_text += ", row " + cursor_position[1];
+
+    status_bar_text += "   Scroll: " + Buffer.scroll_pos;
 
     while (status_bar_text.length < Window.width) {                   /**  Padding it with whitespace.       **/
         status_bar_text += " ";
