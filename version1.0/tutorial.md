@@ -2271,7 +2271,7 @@ The code below has the added `scroll_pos` field, and the updated `Buffer_draw()`
 var Buffer = {
     text:         "",
     filename:     "",
-    modified:     "",
+    modified:     false,
     cursor_pos:   0,
     scroll_pos:   0,
 
@@ -2307,7 +2307,7 @@ function Buffer_draw() {
 
     console.clear();
     var buff_lines = this.text.split("\n");
-    var overflow   = 1;
+    var overflow   = 0;
 
     for (var i = 0; i < buff_lines.length; i++) {
         var line = buff_lines[i];
@@ -2321,7 +2321,7 @@ function Buffer_draw() {
 	
         if (
             i >= this.scroll_pos - overflow &&               /* Start drawing at the line at scroll_pos - overflow */
-            i < (Window.height + this.scroll_pos - overflow) /* Stop drawing at the window height plus this offset. */
+            i < (Window.height + this.scroll_pos - overflow - 3) /* Stop drawing at the window height plus this offset. */
            ) {  
             for (var j = 0; j < overflow_lines.length; j++) {
                 console.log(overflow_lines[j] + "\x1b[2m\\\x1b[0m");   /**  Dim, add "\", undim   **/
