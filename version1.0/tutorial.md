@@ -2741,6 +2741,148 @@ The complete code for Part G is available [here](https://github.com/rooftop-medi
 
 <h2 id="part-h" align="center">  Part H:   Undo & Redo </h2>
 
+In this section, we'll add two new events to Buffer Mode:
+ - `ctrl-z` will undo the previous action
+ - `ctrl-y` will *redo* the previous action that was undone. 
+
+To implement this, we'll need to store the user's actions in a list. 
+We'll also need to mark which action came last, especially if some have been "undone". 
+
+Finally, we'll need a mechanism to actually undo and redo these actions. 
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="h-1">  ☑️ Step 1.  Edit the <code>Keyboard</code> object </h3>
+
+First, we'll need to add the appropriate keycodes for detecting `ctrl-z` and `ctrl-y`. 
+
+Here's our updated `Keyboard` object:
+
+```javascript
+//  The keyboard.
+var Keyboard = {
+    focus_item:    Buffer,
+    cursor_coords: [0, 0],        /*  Cursor position coordinates: line, char */
+
+    event_names: {
+        "\u001b[A": "UP",
+        "\u001b[B": "DOWN",
+        "\u001b[C": "RIGHT",
+        "\u001b[D": "LEFT",
+        "\u007f":   "BACKSPACE",
+        "\u0008":   "BACKSPACE",  /*  for powershell  */
+        "\u000D":   "ENTER",
+        "\u0003":   "CTRL-C",
+        "\u0013":   "CTRL-S",
+        "\u001a":   "CTRL-Z",
+        "\u0019":   "CTRL-Y",
+    },
+  
+    position_cursor: function() {
+        process.stdout.write("\x1b[" + this.cursor_coords[0] + ";" + this.cursor_coords[1] + "f");
+    },
+    map_events: Keyboard_map_events
+  
+};
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="h-2">  ☑️ Step 2.  Edit the <code>Buffer</code> object </h3>
+
+Next, we'll need to update the Buffer object. 
+
+We'll add an array to track the user's `actions_history`, and an integer to track the user's `undo_count`. 
+
+We'll also add events to react to CTRL-Z and CTRL-Y.
+
+```javascript
+var Buffer = {
+    text:         "",
+    filename:     "",
+    modified:     false,
+    cursor_pos:   0,
+    scroll_pos:   0,
+    actions_history:      [],
+    undo_count:   0,
+
+    focus:             Buffer_focus,
+    load_file:         Buffer_load_file,
+    get_cursor_coords: Buffer_get_cursor_coords,
+    draw:              Buffer_draw,
+
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       Buffer_move_cursor_left,
+        "RIGHT":      Buffer_move_cursor_right,
+        "UP":         Buffer_move_cursor_up,
+        "DOWN":       Buffer_move_cursor_down,
+
+        "TEXT":       function(key) {  Buffer_add_to_text(key);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n");  },
+        "BACKSPACE":  Buffer_delete_from_text,
+
+        "CTRL-S":     Buffer_save_to_file,
+
+        "CTRL-Z":     Buffer_undo,                                                                                                                           
+        "CTRL-Y":     Buffer_redo, 
+    }
+  
+};
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="h-3">  ☑️ Step 3.  Edit <code>Buffer_add_to_text</code> </h3>
+
+Next, we'll need to update the `Buffer_add_to_text` function. 
+
+If `undo_count` is above zero, we'll reset it here.
+
+We'll add a single line at the bottom, adding the action to our `action_history`. 
+
+```javascript
+function Buffer_add_to_text(new_text) {
+    if (this.undo_count > 0) {
+        // TODO: Update actions_history to this point.
+        this.undo_count = 0;
+    }
+    var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos);
+    new_buffer    += new_text;
+    new_buffer    += Buffer.text.slice(Buffer.cursor_pos, Buffer.text.length);
+    Buffer.text    = new_buffer;
+    Buffer.cursor_pos++;
+    FeedbackBar.text = "Typed '" + new_text + "'";
+    if (!Buffer.modified) {
+        Buffer.modified = true;
+    }
+    this.actions_history.push("added:" + new_text + "," + Buffer.cursor_pos);
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="h-4">  ☑️ Step 4.  Add <code>Buffer_undo</code> </h3>
+
+We're now ready to add the `Buffer_undo` function.  Nice!
+
+We'll add a single line at the bottom, adding the action to our `action_history`. 
+
+```javascript
+function Buffer_undo() {
+    this.actions_history.push("added:" + new_text + "," + Buffer.cursor_pos);
+}
+```
+
 <br/><br/><br/><br/>
 
 
