@@ -2798,6 +2798,8 @@ Next, we'll need to update the Buffer object.
 
 We'll add an array to track the user's `actions_history`, and an integer to track the user's `undo_count`. 
 
+In the events, we'll change the `"TEXT"`, `"ENTER"`, and `"BACKSPACE"` events to use 
+a true or false argument, which will indicate whether we're recording those actions as undoable history.  
 We'll also add events to react to CTRL-Z and CTRL-Y.
 
 ```javascript
@@ -2823,9 +2825,9 @@ var Buffer = {
         "UP":         Buffer_move_cursor_up,
         "DOWN":       Buffer_move_cursor_down,
 
-        "TEXT":       function(key) {  Buffer_add_to_text(key);   },
-        "ENTER":      function()    {  Buffer_add_to_text("\n");  },
-        "BACKSPACE":  Buffer_delete_from_text,
+        "TEXT":       function(key) {  Buffer_add_to_text(key, true);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n", true);  },
+        "BACKSPACE":  function()    {  Buffer_delete_from_text(true)    },
 
         "CTRL-S":     Buffer_save_to_file,
 
@@ -2844,15 +2846,16 @@ var Buffer = {
 
 Next, we'll need to update the `Buffer_add_to_text` function. 
 
+We'll use the "record" argument, a boolean, to indicate if we're adding to undoable history.
+
 If `undo_count` is above zero, we'll reset it here.
 
 We'll add a single line at the bottom, adding the action to our `action_history`. 
 
 ```javascript
-function Buffer_add_to_text(new_text) {
-    if (this.undo_count > 0) {
-        // TODO: Update actions_history to this point.
-        this.undo_count = 0;
+function Buffer_add_to_text(new_text, record) {
+    if (Buffer.undo_count > 0 && record) {
+        Buffer.undo_count = 0;
     }
     var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos);
     new_buffer    += new_text;
@@ -2863,7 +2866,10 @@ function Buffer_add_to_text(new_text) {
     if (!Buffer.modified) {
         Buffer.modified = true;
     }
-    this.actions_history.push("added:" + new_text + "," + Buffer.cursor_pos);
+    if (record) {
+        Buffer.actions_history.push("add:" + new_text + "," + Buffer.cursor_pos);
+    }
+
 }
 ```
 
@@ -2871,7 +2877,18 @@ function Buffer_add_to_text(new_text) {
 
 
 
-<h3 id="h-4">  ☑️ Step 4.  Add <code>Buffer_undo</code> </h3>
+<h3 id="h-4">  ☑️ Step 4.  Edit <code>Buffer_delete_from_text</code> </h3>
+
+We also need to edit the `Buffer_delete_from_text` function.  
+
+
+```javascript
+
+```
+
+
+
+<h3 id="h-5">  ☑️ Step 5.  Add <code>Buffer_undo</code> </h3>
 
 We're now ready to add the `Buffer_undo` function.  Nice!
 
@@ -2879,7 +2896,26 @@ We'll add a single line at the bottom, adding the action to our `action_history`
 
 ```javascript
 function Buffer_undo() {
-    this.actions_history.push("added:" + new_text + "," + Buffer.cursor_pos);
+    var last_action_index = Buffer.actions_history.length - Buffer.undo_count - 1;
+    if (last_action_index < 0) {
+        return;
+    }
+    var last_action = Buffer.actions_history[last_action_index];
+    last_action = last_action.split(":");
+    var action_type = last_action[0];
+    var action_data = last_action[1].split(",");
+    var text = action_data[0];
+    var cursor_position = Number(action_data[1]);
+    
+    if (action_type == "add") {
+        Buffer.cursor_pos = cursor_position;
+        Buffer.events["BACKSPACE"]();
+        Window.draw();
+        Buffer.undo_count++;
+        FeedbackBar.text = "Undid an adding action, at cursor pos: " + cursor_position;
+    } else {
+        FeedbackBar.text = "Undid the previous action";
+    }
 }
 ```
 
