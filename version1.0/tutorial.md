@@ -2959,6 +2959,37 @@ function Buffer_undo() {
 
 
 
+<h3 id="h-6">  ☑️ Step 6.  ☞ Test the code!  </h3>
+
+Running the program now, you'll get an error about `Buffer_redo` not being implemented yet, fix that
+by adding an empty function with that name.
+
+You should now be able to undo actions!
+
+Move anywhere in a document, type a bit, and delete a bit. 
+Then, press ctrl-z to undo those actions.  Ctrl-z should stop working once everything's undone.
+
+Try typing and pressing ctrl-z again, somewhere else, to make it works the same a second time.
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="h-7">  ☑️ Step 7.  Add <code>Buffer_redo</code> </h3>
+
+The redo function works any time `undo_count` is above 0.
+
+```javascript
+
+```
+
+</h3>
+
+<br/><br/><br/><br/>
+
+
+
+
 <h3 id="h-?">  ☑️ Step ?:  ❖  Part H review. </h3>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
