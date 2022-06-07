@@ -2854,7 +2854,10 @@ We'll add a single line at the bottom, adding the action to our `action_history`
 
 ```javascript
 function Buffer_add_to_text(new_text, record) {
-    if (Buffer.undo_count > 0 && record) {
+    if (Buffer.undo_count > 0 && record) {            /**   Reset undo count if we're recording */
+        var last = Buffer.actions_history.length - 1;
+        var last_undoable = last - Buffer.undo_count;
+        Buffer.actions_history = Buffer.actions_history.slice(last_undoable, last);
         Buffer.undo_count = 0;
     }
     var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos);
@@ -2881,10 +2884,39 @@ function Buffer_add_to_text(new_text, record) {
 
 We also need to edit the `Buffer_delete_from_text` function.  
 
+Again, we'll add a `record` boolean to indicate if this is a recorded action. 
+
+We'll reset the `undo_count` if we're recording.  And we'll record the delete action too. 
+
 
 ```javascript
-
+function Buffer_delete_from_text(record) {
+    if ( Buffer.cursor_position == 0 ) {      /**   Don't let the cursor position be negative.    **/
+        return;
+    }
+    if (Buffer.undo_count > 0 && record) {    /**   Reset undo count if we're recording */
+        var last = Buffer.actions_history.length - 1;
+        var last_undoable = last - Buffer.undo_count;
+        Buffer.actions_history = Buffer.actions_history.slice(last_undoable, last);
+        Buffer.undo_count = 0;
+    }
+    if (record) {
+        var text = Buffer.text[Buffer.cursor_pos - 1];
+        Buffer.actions_history.push("delete:" + text + "," + Buffer.cursor_pos);
+    }
+    var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos - 1);
+    new_buffer    += Buffer.text.slice(Buffer.cursor_pos, Buffer.text.length);
+    Buffer.text = new_buffer;
+    Buffer.cursor_pos--;
+    FeedbackBar.text = "Text deleted.";
+    if (!Buffer.modified && Buffer.cursor_pos != 0) {
+        Buffer.modified = true;
+    }
+    
+}
 ```
+
+<br/><br/><br/><br/>
 
 
 
@@ -2909,12 +2941,16 @@ function Buffer_undo() {
     
     if (action_type == "add") {
         Buffer.cursor_pos = cursor_position;
-        Buffer.events["BACKSPACE"]();
+        Buffer_delete_from_text(false);
         Window.draw();
         Buffer.undo_count++;
-        FeedbackBar.text = "Undid an adding action, at cursor pos: " + cursor_position;
-    } else {
-        FeedbackBar.text = "Undid the previous action";
+        FeedbackBar.text = "Undo!";
+    } else if (action_type == "delete") {
+        Buffer.cursor_pos = cursor_position - 1;
+        Buffer_add_to_text(text, false);
+        Window.draw();
+        Buffer.undo_count++;
+        FeedbackBar.text = "Undo!";
     }
 }
 ```
