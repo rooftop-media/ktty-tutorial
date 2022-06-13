@@ -2979,11 +2979,51 @@ Try typing and pressing ctrl-z again, somewhere else, to make it works the same 
 
 The redo function works any time `undo_count` is above 0.
 
-```javascript
+If the last action to be undone was typing text, we'll retype that text. 
+If the last action to be undone was deleting text, we'll re-delete that text. 
 
+```javascript
+function Buffer_redo() {
+    if (Buffer.undo_count <= 0) {
+        return;
+    }
+    var action_to_redo_index = Buffer.actions_history.length - Buffer.undo_count;
+    var action_to_redo = Buffer.actions_history[action_to_redo_index];
+    action_to_redo = action_to_redo.split(":");
+    var action_type = action_to_redo[0];
+    var action_data = action_to_redo[1].split(",");
+    var text = action_data[0];
+    var cursor_position = Number(action_data[1]);
+    
+    if (action_type == "add") {
+        Buffer.cursor_pos = cursor_position - 1;
+        Buffer_add_to_text(text, false);
+        Window.draw();
+        Buffer.undo_count--;
+        FeedbackBar.text = "Redo!";
+    } else if (action_type == "delete") {
+        Buffer.cursor_pos = cursor_position;
+        Buffer_delete_from_text(false);
+        Window.draw();
+        Buffer.undo_count--;
+        FeedbackBar.text = "Redo!";
+        // FeedbackBar.text = "Undo a delete action!";
+    }
+}
 ```
 
 </h3>
+
+<br/><br/><br/><br/>
+
+
+
+<h3 id="h-8">  ☑️ Step 8.  ☞ Test the code!  </h3>
+
+Running the program now, you'll still be able to undo with `ctrl-z`. 
+Now, you'll also be able to redo with `ctrl-y` as well.
+
+If you press undo a few times, and then newly type or delete text, you should not be able to undo anymore.
 
 <br/><br/><br/><br/>
 
