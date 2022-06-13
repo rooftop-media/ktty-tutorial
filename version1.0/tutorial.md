@@ -25,7 +25,7 @@ Click a part title to jump down to it, in this file.
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
 | [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
-| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-h) | Todo | ? |
+| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-h) | Completed, tested. | 9 |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | Todo | ? |
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -2855,9 +2855,8 @@ We'll add a single line at the bottom, adding the action to our `action_history`
 ```javascript
 function Buffer_add_to_text(new_text, record) {
     if (Buffer.undo_count > 0 && record) {            /**   Reset undo count if we're recording */
-        var last = Buffer.actions_history.length - 1;
-        var last_undoable = last - Buffer.undo_count;
-        Buffer.actions_history = Buffer.actions_history.slice(last_undoable, last);
+        var last_undoable = Buffer.actions_history.length - Buffer.undo_count;
+        Buffer.actions_history = Buffer.actions_history.slice(0, last_undoable);
         Buffer.undo_count = 0;
     }
     var new_buffer = Buffer.text.slice(0, Buffer.cursor_pos);
@@ -2895,9 +2894,8 @@ function Buffer_delete_from_text(record) {
         return;
     }
     if (Buffer.undo_count > 0 && record) {    /**   Reset undo count if we're recording */
-        var last = Buffer.actions_history.length - 1;
-        var last_undoable = last - Buffer.undo_count;
-        Buffer.actions_history = Buffer.actions_history.slice(last_undoable, last);
+        var last_undoable = Buffer.actions_history.length - Buffer.undo_count;
+        Buffer.actions_history = Buffer.actions_history.slice(0, last_undoable);
         Buffer.undo_count = 0;
     }
     if (record) {
@@ -2944,14 +2942,13 @@ function Buffer_undo() {
         Buffer_delete_from_text(false);
         Window.draw();
         Buffer.undo_count++;
-        FeedbackBar.text = "Undo!";
     } else if (action_type == "delete") {
         Buffer.cursor_pos = cursor_position - 1;
         Buffer_add_to_text(text, false);
         Window.draw();
         Buffer.undo_count++;
-        FeedbackBar.text = "Undo!";
     }
+    FeedbackBar.text = "Undo!";
 }
 ```
 
@@ -3007,7 +3004,6 @@ function Buffer_redo() {
         Window.draw();
         Buffer.undo_count--;
         FeedbackBar.text = "Redo!";
-        // FeedbackBar.text = "Undo a delete action!";
     }
 }
 ```
@@ -3030,7 +3026,11 @@ If you press undo a few times, and then newly type or delete text, you should no
 
 
 
-<h3 id="h-?">  ☑️ Step ?:  ❖  Part H review. </h3>
+<h3 id="h-9">  ☑️ Step 9:  ❖  Part H review. </h3>
+
+In this section, we added two new key commands, to undo actions, and to redo actions.
+
+The complete code for Part H is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_H.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
