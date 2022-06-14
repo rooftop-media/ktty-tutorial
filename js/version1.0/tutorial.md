@@ -6,7 +6,7 @@
 
 ##  Prerequisites
 
-This tutorial requires that you've completed the [initial set up steps](https://github.com/rooftop-media/ktty-tutorial/blob/main/readme.md#initial-steps).
+This tutorial requires that you've completed the [initial set up steps](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/setup.md).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -18,15 +18,15 @@ Click a part title to jump down to it, in this file.
 
 | Tutorial Parts              | Status | # of Steps |
 | --------------------------- | ------ | ---------- |
-| [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-a) | Complete, tested. | 12 |
-| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-b) | Complete, tested. | 11 |
-| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-c) | Complete, tested.  | 14 |
-| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-d) | Complete, tested. | 10 |
-| [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
-| [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
-| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
-| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#part-h) | Completed. | 9 |
-| [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md#v2) | Todo | ? |
+| [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-a) | Complete, tested. | 12 |
+| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-b) | Complete, tested. | 11 |
+| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | Complete, tested.  | 14 |
+| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | Complete, tested. | 10 |
+| [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
+| [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
+| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
+| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-h) | Completed. | 9 |
+| [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#v2) | Todo | ? |
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -323,7 +323,7 @@ When you're done testing, `ctrl-c` should quit the program.
 
 <h3 id="a-11"> ☑️ Step 12. ❖ Part A review. </h3>
 
-The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_A.js).
+The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_A.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -584,7 +584,7 @@ but now the cursor should reposition in the upper left corner of the screen afte
 
 In this part, we drew the status bar below the buffer!  We'll implement features to our status bar as we go on. 
 
-The complete code for Part B is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_B.js) .
+The complete code for Part B is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_B.js) .
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -975,7 +975,7 @@ Our file is up to 331 lines!
 
 <br/><br/>
 
-The complete code for part C is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_C.js).
+The complete code for part C is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_C.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -1163,7 +1163,7 @@ Then, save with ctrl-s, and quit.  Then open the file back up -- your changes sh
 
 In this part, we added some basic editing controls. 
 
-The complete code for Part D is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_D.js).
+The complete code for Part D is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_D.js).
 
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -1207,7 +1207,7 @@ the objects for the Buffer, StatusBar, & FeedbackBar will all have a `draw()` me
 
 The key to refactoring is having a well understood plan.  
 Here's a diagram of how our new code will look:
-![Part E refactor plan](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial_assets/partE_summary.png?raw=true)
+![Part E refactor plan](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial_assets/partE_summary.png?raw=true)
 
 <br/><br/><br/><br/>
 
@@ -1777,7 +1777,7 @@ Pressing `ctrl-s` should save your changes to the file.
 In this section, we reorganized our code to be Object Oriented!  
 Our code will be much easier to navigate from here on out.  
 
-The complete code for Part E is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_E.js).
+The complete code for Part E is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_E.js).
 
 Next up, we'll add a feedback prompt mode!
 
@@ -2218,7 +2218,7 @@ At this point, we have our feedback prompt system working well!
 The app now prompts us for a filename when we open it without one,  
 and prompts us to save when we quit without saving.
 
-The complete code for Part F is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_F.js).
+The complete code for Part F is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_F.js).
 
 Nice!
 
@@ -2257,7 +2257,7 @@ We need to react differently to edits to the buffer, vs. edits to the cursor's b
 We're gonna need another sample text file, with a line that exceeds the _width_ of the window, in one place,
 and we're going to need to add enough lines that it exceeds the _height_ of the window.  
 
-You can find the long sample file I used [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/long.txt).
+You can find the long sample file I used [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/long.txt).
 
 <br/><br/><br/><br/>
 
@@ -2733,7 +2733,7 @@ Everything should continue to look nice!
 In this section, we added handling for text lines that overflow the window width, 
 scrolling for files that exceed window height, and proper resizing. 
 
-The complete code for Part G is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_G.js).
+The complete code for Part G is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_G.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -3030,7 +3030,7 @@ If you press undo a few times, and then newly type or delete text, you should no
 
 In this section, we added two new key commands, to undo actions, and to redo actions.
 
-The complete code for Part H is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_H.js).
+The complete code for Part H is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/part_H.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
