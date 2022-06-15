@@ -57,24 +57,28 @@ The second line will log a message to the terminal console.
 
 
 
-☑️ **Step 4**: ☞ Test the code!
+☑️ **Step 4**: Install a C++ compiler
 
-Back in our text terminal, we can test run our `ktty.cpp` file with NodeJS like so:
+To run your C++ code, you'll need to install a C++ compiler. 
 
-```shell
-$ node ./ktty.js   #  If you’re in the right folder, this should run it!
-Starting ktty!
-```
+If you're using Mac OS or Linux, you probably already have a C++ compiler installed. 
+Two C++ compiler commands are `clang` or `g++`.  
 
-If you get an error on this step, make sure have [NodeJS](https://nodejs.org/en/) installed.  
-Also, make sure you're in the /ktty/ folder.
+If your terminal has either of those commands, you're all set. 
+
+If you're using a Windows machine, your command line app will be Powershell, 
+which unfortunately does not have a C++ compiler. 
+
+For windows users, I recommend [installing Ubuntu for Windows](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#3-download-ubuntu). 
+
+With the Ubuntu terminal, run `sudo apt install clang` to install a c++ compiler. 
 
 
 <br/><br/><br/><br/>
 
 
 
-☑️ **Step 5**: 
+☑️ **Step 5**: ☞ Compile and test!
 
 
 
