@@ -1,2 +1,7 @@
 #include <iostream>
-std::cout << “Starting ktty!”;
+using namespace std;
+
+int main() {
+  cout << "Starting ktty!";
+  return 0;
+} 

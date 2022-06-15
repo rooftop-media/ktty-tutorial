@@ -45,12 +45,17 @@ We'll add two lines to our file:
 
 ```js
 #include <iostream>
-cout << “Starting ktty!”;
+using namespace std;
+
+int main() {
+  cout << "Starting ktty!\n";
+  return 0;
+} 
 ```
 
-The first line imports the standard "input/output stream" tools for C++.
+The first two lines import the tools we'll need.
 
-The second line will log a message to the terminal console.
+The `main` function will log a message to the terminal console, and then exit the program.
 *This is just to let us know that the script runs successfully – we’ll remove this line later.*
 
 <br/><br/><br/><br/>
@@ -71,8 +76,11 @@ which unfortunately does not have a C++ compiler.
 
 For windows users, I recommend [installing Ubuntu for Windows](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#3-download-ubuntu). 
 
-With the Ubuntu terminal, run `sudo apt install clang` to install a c++ compiler. 
+With the Ubuntu terminal, run this to install a c++ compiler:
+`sudo apt update`
+`sudo apt install g++`
 
+Make sure the `g++` command is then working. 
 
 <br/><br/><br/><br/>
 
@@ -80,7 +88,12 @@ With the Ubuntu terminal, run `sudo apt install clang` to install a c++ compiler
 
 ☑️ **Step 5**: ☞ Compile and test!
 
+In your terminal, in the `ktty` file, enter this to compile the file: 
 
+`g++ ./ktty.cpp`
+
+This will generate an executable file called `a.out`. 
+Run it by entering `./a.out`. 
 
 <br/><br/><br/><br/>
 
@@ -89,7 +102,9 @@ With the Ubuntu terminal, run `sudo apt install clang` to install a c++ compiler
 ☑️ **Step 6**: Install `ktty` as a global PATH command.
 
 
-This step isn't *strictly* required, for the tutorial, as you can run the ktty file with Clang.  
+This step isn't *strictly* required, for the tutorial, as you can run the ktty file with g++.  
+
+[To do: actually write this part]
 
 <br/><br/><br/><br/>
 
