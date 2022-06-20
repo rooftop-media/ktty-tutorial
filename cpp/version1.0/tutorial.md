@@ -114,7 +114,7 @@ using namespace std;
 
 
 
-☑️ Step 4. App data
+<h3 id="a-4">☑️ Step 4. App data </h3>
 
 We’ll declare our variables in section 2. For now, we'll make two variables: (Note that I name global variables starting with an underscore, like \_buffer. )
 
@@ -135,7 +135,7 @@ string _filename          = "";      //  Filename - including extension.
 
 
 
-☑️ Step 5. Outline boot()
+<h3 id="a-5">☑️ Step 5. Outline boot()</h3>
 
 Now, in section 3 of the code, we’ll outline the boot function.
 
@@ -173,7 +173,7 @@ int main() {
 
 
 
-☑️ Step 6. a_load_file_to_buffer()
+<h3 id="a-6">☑️ Step 6. a_load_file_to_buffer()</h3>
 
 This is an algorithm we called in the boot() function.
 We’ll implement it in section 6, with the algorithms.
@@ -207,7 +207,7 @@ void a_load_file_to_buffer(filename_to_load) {
 
 
 
-☑️ Step 7. Outline draw()
+<h3 id="a-7">☑️ Step 7. Outline draw()</h3>
 
 Now, in the code’s 5th section, we’ll outline the draw() function. This function will ultimately call 4 different other functions to draw the screen.
 
@@ -229,7 +229,7 @@ void draw() {
 
 
 
-☑️ Step 8. draw_buffer()
+<h3 id="a-8">☑️ Step 8. draw_buffer()</h3>
 
 Now let’s implement draw_buffer(), which we'll put right below our draw() function.
 
@@ -249,7 +249,7 @@ function draw_buffer() {
 
 
 
-☑️ Step 9. map_events()
+<h3 id="a-9">☑️ Step 9. map_events()</h3>
 
 Back in the Events section of the code, add this to the end of the main function:
 
@@ -283,7 +283,7 @@ Later, we'll need to modify the keys so the behaviour is linked to the buffer. F
 
 
 
-☑️ Step 10. b_quit()
+<h3 id="a-10">☑️ Step 10. b_quit()</h3>
 
 The quit function is important -- without it, we'll have a hard time quitting ktty. 
 For now, we'll keep the quitting process simple -- clear the screen, then exit. We’ll implement it in section 6:
@@ -303,7 +303,7 @@ function b_quit() {
 
 
 
-☑️ Step 11. ☞ Test the code!
+<h3 id="a-11">☑️ Step 11. ☞ Test the code!</h3>
 
 Running this code should open the file on the screen, let you move the cursor, and type. If it throws an error, check for typos & missing code.
 
@@ -319,7 +319,7 @@ When you're done testing, ctrl-c should quit the program.
 
 
 
-☑️ Step 12. ❖ Part A review.
+<h3 id="a-12">☑️ Step 12. ❖ Part A review.</h3>
 
 The complete code for Part A is available [here]().
 
