@@ -89,7 +89,7 @@ function a_load_file_to_buffer() {       /**  Getting the file's contents, put i
         try {
             _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
         } catch (err) {
-            _buffer = "Unable to find a file at '" + _filepath + "'";
+            _buffer = "Unable to find a file at '" + _filename + "'";
         }
     }
 }
