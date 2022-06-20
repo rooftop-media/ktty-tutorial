@@ -180,7 +180,7 @@ boot();  //  Boot it!!
 <h3 id="a-6"> ☑️ Step 6. <code>a_load_file_to_buffer()</code> </h3>
 
 This is an algorithm we called in the `boot()` function.  
-We’ll implement it in section 6, with the algorithms.
+We’ll implement it in section 6 of our code, with the algorithms.
 
 ```javascript
 ////  SECTION 6:  Algorithms.
@@ -194,7 +194,7 @@ function a_load_file_to_buffer() {
         try {
             _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
         } catch (err) {
-            _buffer = "Unable to find a file at '" + _filepath + "'";
+            _buffer = "Unable to find a file at '" + _filename + "'";
         }
     }
 }
