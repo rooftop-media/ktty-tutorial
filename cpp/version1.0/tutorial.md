@@ -76,9 +76,7 @@ Let’s go into ktty.js and add some comments to plan our architecture.
 Delete the 2nd line, which was  `console.log("Starting ktty!");`.  
 We’ll outline 6 sections. Here’s what we’ll write:
 
-```javascript
-#!/usr/bin/env node
-
+```cpp
 ////  SECTION 1:  Imports.
 
 ////  SECTION 2:  App memory. 
@@ -100,15 +98,110 @@ We’ll reference these 6 sections throughout the rest of this version.
 
 <h3 id="a-3"> ☑️ Step 3. Imports </h3>
 
-We’ll import two standard libraries from NodeJS.  That’s all for the imports, for this version. 
+We’ll import three standard libraries from c++.  That’s all for the imports, for this version. 
+We'll also include the "std" namespace, which stands for "standard". 
 
-
-```javascript
+```cpp
 ////  SECTION 1:  Imports.
 
-//  Importing NodeJS libraries.
-var process      = require("process");
-var fs           = require("fs");
+#include <iostream>
+#include <cstring>
+#include <fstream>
+using namespace std;
 ```
 
 <br/><br/><br/><br/>
+
+
+
+☑️ Step 4. App data
+
+We’ll declare our variables in section 2. For now, we'll make two variables: (Note that I name global variables starting with an underscore, like \_buffer. )
+
+We’ll save the text contents to a string called \_buffer. The buffer can be modified without modifying the file it’s pulled from.
+(That’s why it’s called the buffer – it’s buffered, aka separate, from the final saved file!)
+
+We’ll also record another string of text, the \_filename being edited.
+
+```cpp
+////  SECTION 2:  APP MEMORY
+
+//  Setting up app memory.
+string _buffer            = "";      //  The text being edited. 
+string _filename          = "";      //  Filename - including extension. 
+```
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 5. Outline boot()
+
+Now, in section 3 of the code, we’ll outline the boot function.
+
+Ultimately, we'll have four function calls in boot():
+
+ - Loading in a file’s content, by filename.
+ - Then, get the window height & width.
+ - Then, start capturing keyboard events.
+ - Finally, draw the screen for the first time.
+
+We'll leave get_window_size() commented out for now, and use it in Part B.
+
+```cpp
+////  SECTION 3:  Boot stuff.
+
+int main() {
+  
+  /**  Load a file to the buffer.       **/
+  a_load_file_to_buffer();
+
+  /**  Load window height & width.      **/
+  // c_get_window_size();
+
+  /**  Map the event listeners.         **/
+  map_events();
+
+  /**  Update the screen.               **/
+  draw();
+    
+  return 0;
+} 
+```
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 6. a_load_file_to_buffer()
+
+This is an algorithm we called in the boot() function.
+We’ll implement it in section 6, with the algorithms.
+
+
+```cpp
+////  SECTION 6:  Algorithms.
+
+//  Getting the file's contents, put it in the "buffer".
+void a_load_file_to_buffer(filename_to_load) {
+    _filename = filename_to_load; 
+    if ( _filename == undefined ) {
+        _buffer = "";
+    } else {
+        ofstream fileToRead;
+        fileToRead.open (_filename);
+        if (fileToRead.is_open()) {
+            while ( getline (fileToRead, line) ) {
+                _buffer += line;
+                _buffer += "\n";
+            }
+            fileToRead.close();
+        } else {
+            _buffer = "Unable to open a file at '" + _filename;
+        }
+    }
+}
+```
+
+
+
