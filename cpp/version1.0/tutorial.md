@@ -203,5 +203,131 @@ void a_load_file_to_buffer(filename_to_load) {
 }
 ```
 
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 7. Outline draw()
+
+Now, in the code’s 5th section, we’ll outline the draw() function. This function will ultimately call 4 different other functions to draw the screen.
+
+For now, just call the first function draw_buffer(). Comment the rest.
+
+```cpp
+////  SECTION 5:  DRAW FUNCTIONS
+
+//  The draw function -- called after any data change.
+void draw() {
+    draw_buffer();
+    // draw_status_bar();
+    // draw_feedback_bar();
+    // position_cursor();
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 8. draw_buffer()
+
+Now let’s implement draw_buffer(), which we'll put right below our draw() function.
+
+```cpp
+////  SECTION 5:  DRAW FUNCTIONS 
+
+function draw() {  ...  }
+
+//  Drawing the buffer.
+function draw_buffer() {
+    cout << "\x1B[2J\x1B[H";  //  Clear the screen
+    cout << _buffer;
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 9. map_events()
+
+Back in the Events section of the code, add this to the end of the main function:
+
+```cpp
+////  SECTION 4:  EVENTS
+
+//  Map keyboard input.
+function map_events() {
+
+	//  Map keyboard input 
+	var stdin = process.stdin;
+	stdin.setRawMode(true);
+	stdin.resume();
+	stdin.setEncoding("utf8");
+	stdin.on("data", function(key) {
+		//  Exit on ctrl-c
+		if (key === "\u0003") {
+			b_quit();
+		}
+		process.stdout.write(key);
+	});
+
+}
+```
+
+We’ll need to modify the keys so the behaviour is linked to the buffer. For now, we’ll be able to move the cursor anywhere on the page.
+
+Later, we'll need to modify the keys so the behaviour is linked to the buffer. For now, we’ll be able to move the cursor anywhere on the page.
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 10. b_quit()
+
+The quit function is important -- without it, we'll have a hard time quitting ktty. 
+For now, we'll keep the quitting process simple -- clear the screen, then exit. We’ll implement it in section 6:
+
+```cpp
+////  SECTION 6:  Algorithms.
+
+function a_load_file_to_buffer() {  ...  }
+
+function b_quit() {
+    console.clear();
+    process.exit();
+}
+```
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 11. ☞ Test the code!
+
+Running this code should open the file on the screen, let you move the cursor, and type. If it throws an error, check for typos & missing code.
+
+```bash
+$ ktty sample.txt
+```
+
+If you didn't install the ktty command globally, you can run node ./ktty.js sample.txt instead.
+
+When you're done testing, ctrl-c should quit the program. 
+
+<br/><br/><br/><br/>
+
+
+
+☑️ Step 12. ❖ Part A review.
+
+The complete code for Part A is available [here]().
+
+<br/><br/><br/><br/>
+
+
+
+
+
 
 
