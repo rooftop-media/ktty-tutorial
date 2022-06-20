@@ -183,9 +183,9 @@ We’ll implement it in section 6, with the algorithms.
 ////  SECTION 6:  Algorithms.
 
 //  Getting the file's contents, put it in the "buffer".
-void a_load_file_to_buffer(filename_to_load) {
+void a_load_file_to_buffer(string filename_to_load) {
     _filename = filename_to_load; 
-    if ( _filename == undefined ) {
+    if ( _filename == "" ) {
         _buffer = "";
     } else {
         ofstream fileToRead;
