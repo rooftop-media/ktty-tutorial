@@ -79,7 +79,7 @@ We’ll outline 6 sections. Here’s what we’ll write:
 ```cpp
 ////  SECTION 1:  Imports.
 
-////  SECTION 2:  App memory. 
+////  SECTION 2:  App memory & function declarations.
 
 ////  SECTION 3:  Boot stuff.
 
@@ -104,10 +104,18 @@ We'll also include the "std" namespace, which stands for "standard".
 ```cpp
 ////  SECTION 1:  Imports.
 
-#include <iostream>
-#include <cstring>
-#include <fstream>
+#include <iostream>   //  For output to terminal
+#include <cstring>    //  For using the "string" datatype
+#include <fstream>    //  For reading from files
+#include <curses.h>   //  For detecting keypress, on a Unix machine
 using namespace std;
+```
+
+The final library we're including, `curses.h`, is not a standard library. 
+We'll need to install it using this command, which I got from [here](https://stackoverflow.com/questions/8792317/where-is-the-conio-h-header-file-on-linux-why-cant-i-find-conio-h):
+
+```bash
+sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
 
 <br/><br/><br/><br/>
@@ -124,7 +132,7 @@ We’ll save the text contents to a string called \_buffer. The buffer can be mo
 We’ll also record another string of text, the \_filename being edited.
 
 ```cpp
-////  SECTION 2:  APP MEMORY
+////  SECTION 2:  App memory & function declarations
 
 //  Setting up app memory.
 string _buffer            = "";      //  The text being edited. 
@@ -257,7 +265,7 @@ Back in the Events section of the code, add this to the end of the main function
 ////  SECTION 4:  EVENTS
 
 //  Map keyboard input.
-function map_events() {
+void map_events() {
 
 	//  Map keyboard input 
 	var stdin = process.stdin;
