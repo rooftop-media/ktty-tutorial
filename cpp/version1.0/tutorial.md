@@ -247,7 +247,7 @@ Now let’s implement draw_buffer(), which we'll put right below our draw() func
 function draw() {  ...  }
 
 //  Drawing the buffer.
-function draw_buffer() {
+void draw_buffer() {
     cout << "\x1B[2J\x1B[H";  //  Clear the screen
     cout << _buffer;
 }
@@ -265,20 +265,24 @@ Back in the Events section of the code, add this to the end of the main function
 ////  SECTION 4:  EVENTS
 
 //  Map keyboard input.
-void map_events() {
+int map_events() {
+
+    //  Set up ncurses
+    initscr();
+    cbreak();
 
 	//  Map keyboard input 
-	var stdin = process.stdin;
-	stdin.setRawMode(true);
-	stdin.resume();
-	stdin.setEncoding("utf8");
-	stdin.on("data", function(key) {
-		//  Exit on ctrl-c
-		if (key === "\u0003") {
-			b_quit();
-		}
-		process.stdout.write(key);
-	});
+    char key_press;
+    int ascii_value;
+    while (1) {
+        key_press = getch();
+        ascii_value = key_press;
+        if (ascii_value == 27) // For ESC
+            break;
+    }
+
+    endwin();
+    return 0;
 
 }
 ```
