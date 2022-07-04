@@ -165,7 +165,7 @@ function draw_feedback_bar() {
 
 ////  SECTION 6:  Algorithms.
 
-function a_load_file_to_buffer() {       /**  Getting the file's contents, put it in the "buffer".    **/
+function a_load_file_to_buffer() {       /**  Get the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
         _buffer = "";
