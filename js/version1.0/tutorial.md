@@ -40,6 +40,8 @@ The steps in this part will culminate in us displaying the text file on the scre
 
 Along the way, we’ll break the code into 6 code sections with comments, and add some code to each section.  
 
+*Estimated time: 12 minutes*
+
 <br/><br/><br/><br/>
 
 
@@ -185,7 +187,7 @@ We’ll implement it in section 6 of our code, with the algorithms.
 ```javascript
 ////  SECTION 6:  Algorithms.
 
-//  Getting the file's contents, put it in the "buffer".
+//  Get the file's contents, put it in the "buffer".
 function a_load_file_to_buffer() {
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
@@ -278,8 +280,7 @@ We’ll need to modify the keys so the behaviour is linked to the buffer.
 For now, we’ll be able to move the cursor anywhere on the page.  
 
 
-*Later, we'll need to modify the keys so the behaviour is linked to the buffer.
-For now, we’ll be able to move the cursor anywhere on the page.*
+*Later, we'll need to modify the keys so the behaviour is linked to the buffer.*
 <br/><br/><br/><br/>
 
 
