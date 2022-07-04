@@ -32,6 +32,8 @@ Click a part title to jump down to it, in this file.
 
 <h2 id="part-a" align="center">  Part A:  Drawing the Menu Bar </h2>
 
+In this section, we'll add a new object to our object-oriented plan -- the MenuBar.
+The user will be able to press the ESC key to enter Menu Bar mode, and select a menu bar option.
 
 <br/><br/><br/><br/>
 
