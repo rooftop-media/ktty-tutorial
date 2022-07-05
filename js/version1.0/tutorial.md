@@ -16,10 +16,10 @@ This tutorial requires that you've completed the [initial set up steps](https://
 
 Click a part title to jump down to it, in this file.
 
-| Tutorial Parts              | Status | # of Steps |
+| Tutorial Parts              | Est. Time | # of Steps |
 | --------------------------- | ------ | ---------- |
-| [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-a) | Complete, tested. | 12 |
-| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-b) | Complete, tested. | 11 |
+| [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-a) | 12 min. | 12 |
+| [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-b) | 14 min. | 11 |
 | [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | Complete, tested.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | Complete, tested. | 10 |
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
@@ -335,14 +335,15 @@ The complete code for Part A is available [here](https://github.com/rooftop-medi
 In this step, we’ll draw the *status bar*, which will display below the text buffer.
 
 The status bar will have the file name, cursor position, & modified status for the buffer above.
+
+*Estimated time: 14 minutes*
 <br/><br/><br/><br/>
 
 
 
 <h3 id="b-1"> ☑️ Step 1. Adding variables. </h3>
-The status bar will describe some app new variables.  
-
-Let’s declare them here:
+First, we'll need to add some new variables, including a `_modified` boolean, 
+the `_cursor_buffer_pos`, and the window height and width. 
 
 ```javascript
 ////  SECTION 2:  APP MEMORY
@@ -432,7 +433,8 @@ function draw() {
 <h3 id="b-5"> ☑️ Step 5. <code>draw_status_bar()</code> </h3>
 
 In this step, we’re going to draw the status bar at the bottom of the window.  
-The status bar will be reverse-video, drawn 2 spaces from the BOTTOM of the screen.
+The status bar will be displayed in "reverse-video", meaning the text's colors will be inverted. 
+The status bar will also be drawn 2 spaces from the BOTTOM of the screen.
 
 The status bar will include:
  - the name of the file being edited,
@@ -484,7 +486,7 @@ Notice that we used an algorithm `d_get_cursor_pos()`.  We'll define that next!
 
 In that last function, we called the algorithm `d_get_cursor_pos()` . 
 
-The cursor is stored as a single integer, in the global variable _cursor_buffer_pos.
+The cursor is stored as a single integer, in the global variable `_cursor_buffer_pos`.
 This variable is relative to the characters in _buffer’s string.
 
 But that variable doesn’t take into account line breaks, 
@@ -531,7 +533,7 @@ at the end of the status bar.  We’ll fix that in the next step.
 
 <h3 id="b-8"> ☑️ Step 8.  Editing <code>draw()</code> again </h3>
 
-Let’s go back into our draw function and make sure we’re calling that position_cursor() function.
+Let’s go back into our draw function and make sure we’re calling that `position_cursor()` function.
 
 ```javascript
 ////  SECTION 5:  DRAW FUNCTIONS 
