@@ -21,7 +21,7 @@ Click a part title to jump down to it, in this file.
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-a) | 12 min. | 12 |
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-b) | 14 min. | 11 |
 | [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | 24 min.  | 14 |
-| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | Complete, tested. | 10 |
+| [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | 11 min. | 10 |
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
 | [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
@@ -991,6 +991,8 @@ The complete code for part C is available [here](https://github.com/rooftop-medi
 
 <h2 id="part-d" align="center">  Part D:  File Editing </h2>
 In this section, we’ll add some more events we outlined, including typing characters, backspace, & enter.  
+
+*Estimated time: 11 minutes*
 <br/><br/><br/><br/>
 
 
@@ -1049,6 +1051,7 @@ function i_add_to_buffer(new_text) {
 
 
 <h3 id="d-3">  ☑️ Step 3.  ☞  Test the code! </h3>
+
 Our `i_add_to_buffer( text )` function is used inserting text characters OR line breaks into the text buffer.  Try it out!
 
 Note that “backspace” will throw an error now, since we uncommented the function, 
@@ -1065,7 +1068,7 @@ Now, however, running the code on a Windows machine reveals a bug.
 On a Windows terminal, like Powershell, open a text file with Ktty and navigate to the 
 last character of a line, before the cursor jumps to the next line, and type. 
 
-You'll find that text is strangely inserted into the *beginning* of that line, 
+You'll likely find that text is strangely inserted into the *beginning* of that line, 
 while the cursor moves right as though typing a space at the *end* of the line.
 
 This bug is happening because Windows represents "newlines" in files 
@@ -1106,7 +1109,9 @@ The letters should now appear properly at the end of the line.
 
 
 <h3 id="d-6">  ☑️ Step 6.  <code>j_delete_from_buffer()</code> </h3>
-This function will implement the backspace.  *Thank goodness.*
+This function will implement the backspace.  
+
+*Thank goodness for the ability to backspace.*
 
 ```javascript
 function j_delete_from_buffer() {
