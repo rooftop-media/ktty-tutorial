@@ -20,7 +20,7 @@ Click a part title to jump down to it, in this file.
 | --------------------------- | ------ | ---------- |
 | [Part A - Drawing the Buffer](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-a) | 12 min. | 12 |
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-b) | 14 min. | 11 |
-| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | Complete, tested.  | 14 |
+| [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | 24 min.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | Complete, tested. | 10 |
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
@@ -603,6 +603,9 @@ the cursor should jump to the beginning of the next line.
 And typing should insert a character into the buffer, rather than replacing a character.
 
 We’ll also log key events to the *feedback bar* in this part. 
+
+*Estimated time: 24 minutes*
+
 <br/><br/><br/><br/>
 
 
@@ -780,6 +783,8 @@ function f_move_cursor_right() {
 <h3 id="c-7"> ☑️ Step 7.  ☞  Test the code! </h3>
 
 Before we get to the UP/DOWN arrows, run the code to make sure you can navigate left & right.
+
+(The code will throw an error unless you comment out the lines that reference `g_move_cursor_up` and `h_move_cursor_down`, or add empty functions with those names.  We'll implement them next.)
 
 When pressing RIGHT, the cursor should go to the end of the first line, then jump to the next,
 and stop at the end of the file.
