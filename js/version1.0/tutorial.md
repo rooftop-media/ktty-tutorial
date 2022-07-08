@@ -22,7 +22,7 @@ Click a part title to jump down to it, in this file.
 | [Part B - Drawing the Status Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-b) | 14 min. | 11 |
 | [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | 24 min.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | 11 min. | 10 |
-| [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | Complete, tested. | 11 |
+| [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | 32 min. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
 | [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
 | [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-h) | Completed. | 9 |
@@ -1192,8 +1192,8 @@ This refactoring will be a bit tedious.  You may find yourself asking,
 "Why are we doing this? This seems like *more* work."
 
 It *is* more work, you're right.  It will be even more work to think about.
-But in return for that investment, we'll have a clear, interconnected web  
-of discrete, well-understood parts. 
+But as our program grows in complexity, you'll be glad we took the time to 
+separate the features into distinct parts, with clear connections.
 
 **=== Here's what we'll keep:**
 
@@ -1218,9 +1218,9 @@ implement the different features in different ways.
 There won't be a single "draw" function, for example, but  
 the objects for the Buffer, StatusBar, & FeedbackBar will all have a `draw()` method. 
 
-The key to refactoring is having a well understood plan.  
+<!--The key to refactoring is having a well understood plan.  
 Here's a diagram of how our new code will look:
-![Part E refactor plan](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial_assets/partE_summary.png?raw=true)
+![Part E refactor plan](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial_assets/partE_summary.png?raw=true)-->
 
 <br/><br/><br/><br/>
 
