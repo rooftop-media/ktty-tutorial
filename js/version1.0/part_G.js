@@ -51,11 +51,12 @@ function Buffer_focus() {
 function Buffer_load_file() {
     this.filename = process.argv[2];
     if ( this.filename == undefined ) {
-	      FeedbackBar.focus();
-	      FeedbackBar.text = "No file name given!  Enter a new filename:";
-	      FeedbackBar.confirm_event = function(new_filename) {
+	FeedbackBar.focus();
+	FeedbackBar.text = "No file name given!  Enter a new filename:";
+	FeedbackBar.confirm_event = function(new_filename) {
 	      Buffer.filename = new_filename;
 	      Buffer.focus();
+	      FeedbackBar.text = "";
 	}
     } else {
         try {
@@ -69,6 +70,7 @@ function Buffer_load_file() {
             FeedbackBar.confirm_event = function(new_filename) {
                 Buffer.filename = new_filename;
                 Buffer.focus();
+		FeedbackBar.text = "";
             }
         }
     }
