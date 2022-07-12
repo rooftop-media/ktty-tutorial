@@ -23,7 +23,7 @@ Click a part title to jump down to it, in this file.
 | [Part C - Cursor & Feedback Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-c) | 24 min.  | 14 |
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | 11 min. | 10 |
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | 32 min. | 11 |
-| [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | Complete, tested. | 13 |
+| [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | 30 min. | 13 |
 | [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
 | [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-h) | Completed. | 9 |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#v2) | Todo | ? |
@@ -1185,6 +1185,8 @@ The complete code for Part D is available [here](https://github.com/rooftop-medi
 
 <h2 id="part-e" align="center">  Part E:   Object Oriented Refactor </h2>
 
+*Estimated time: 32 minutes*
+
 Before we implement a feedback prompt system, we're going to do a *refactor*, 
 from *functional* programming into *object oriented* programming. 
 
@@ -1799,6 +1801,8 @@ Next up, we'll add a feedback prompt mode!
 
 
 <h2 id="part-f" align="center">  Part F:   Feedback Prompt </h2>
+
+*Estimated time: 30 minutes*
 
 Up until now, keyboard input edits the contents of `Buffer.text`.
 
