@@ -2034,6 +2034,7 @@ function Buffer_load_file() {
 	FeedbackBar.confirm_event = function(new_filename) {
 	    Buffer.filename = new_filename;
 	    Buffer.focus();
+	    FeedbackBar.text = "";
 	}
     } else {
         try {
@@ -2046,6 +2047,7 @@ function Buffer_load_file() {
 	    FeedbackBar.confirm_event = function(new_filename) {
 	        Buffer.filename = new_filename;
 		Buffer.focus();
+		FeedbackBar.text = "";
 	    }
         }
     }
