@@ -25,7 +25,7 @@ Click a part title to jump down to it, in this file.
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | 32 min. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | 30 min. | 13 |
 | [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | 24 min. | 17 |
-| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-h) | Completed. | 9 |
+| [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-h) | 20 min. | 9 |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#v2) | Todo | ? |
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -2771,6 +2771,8 @@ We'll also need to mark which action came last, especially if some have been "un
 
 Finally, we'll need a mechanism to actually undo and redo these actions. 
 
+*Estimated time: 20 minutes*
+
 <br/><br/><br/><br/>
 
 
@@ -2943,7 +2945,8 @@ function Buffer_delete_from_text(record) {
 
 We're now ready to add the `Buffer_undo` function.  Nice!
 
-We'll add a single line at the bottom, adding the action to our `action_history`. 
+In this function, we'll read the most recent record in our "action history".  
+We'll use that record to undo a text deletion or addition.
 
 ```javascript
 function Buffer_undo() {
