@@ -24,7 +24,7 @@ Click a part title to jump down to it, in this file.
 | [Part D - File Editing](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-d) | 11 min. | 10 |
 | [Part E - Object Oriented Refactor](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-e) | 32 min. | 11 |
 | [Part F - Feedback Mode](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-f) | 30 min. | 13 |
-| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | Complete, tested. | 17 |
+| [Part G - Scroll & Resize](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-g) | 24 min. | 17 |
 | [Part H - Undo & Redo](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#part-h) | Completed. | 9 |
 | [Version 2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md#v2) | Todo | ? |
 
@@ -2266,6 +2266,8 @@ Features in this section include:
 We need to react differently to edits to the buffer, vs. edits to the cursor's buffer position:
  - Buffer edits react in re-wrapping the buffer's text. (Resize does this too)
  - Cursor movement reacts in a scroll check. 
+
+*Estimated time: 24 minutes*
 
 <br/><br/><br/><br/>
 
