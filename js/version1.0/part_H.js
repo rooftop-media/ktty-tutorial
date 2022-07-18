@@ -315,15 +315,13 @@ function Buffer_redo() {
         Buffer_add_to_text(text, false);
         Window.draw();
         Buffer.undo_count--;
-        FeedbackBar.text = "Redo!";
     } else if (action_type == "delete") {
         Buffer.cursor_pos = cursor_position;
         Buffer_delete_from_text(false);
         Window.draw();
         Buffer.undo_count--;
-        FeedbackBar.text = "Redo!";
-        // FeedbackBar.text = "Undo a delete action!";
     }
+    FeedbackBar.text = "Redo!";
 }
 
 //  The status bar
