@@ -1,5 +1,10 @@
 # NodeJS Tutorial for Ktty, version 1.0
 
+This is a tutorial for building kTTY version 1.0 with NodeJS.  
+This version creates a text editor all the basic essential features.  
+
+*Total estimated time for this tutorial: 2 hours 15 minutes*
+
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
 
