@@ -19,10 +19,12 @@ Click a part title to jump down to it, in this file.
 | Tutorial Parts              | Description  | Status | # of Steps |
 | --------------------------- | ------------ | ------ | ---------- |
 | [Part A - Adding the Menu Bar](https://github.com/rooftop-media/ktty-tutorial/blob/main/version2.0/tutorial.md#part-a) | Draw the Manu Bar at the top of the screen. | Todo | ? |
-|  |   | Todo | ? |
-|  |   | Todo | ? |
-|  |   | Todo | ? |
-|  |   | Todo | ? |
+| Part B - Save As... |   | Todo | ? |
+| Part C - Find and Replace |   | Todo | ? |
+| Part D - Selecting Text |   | Todo | ? |
+| Part E - Copy, Cut and Paste |   | Todo | ? |
+| Part F - Context Menu |  | Todo | ? |
+| Part G - Multiple Cursors |  | Todo | ? | 
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -39,7 +41,13 @@ The user will be able to press the ESC key to enter Menu Bar mode, and select a 
 
 
 
-<h3 id="a-1">  ☑️ Step 1:   </h3>
+<h3 id="a-1">  ☑️ Step 1: Add the <code>MenuBar</code> object  </h3>
+
+We'll add a new object called the `MenuBar` right after the end of the `FeedbackBar` functions. 
+
+```javascript
+
+```
 
 <br/><br/><br/><br/>
 
@@ -60,14 +68,14 @@ The user will be able to press the ESC key to enter Menu Bar mode, and select a 
 
 <h3 id="a-?"> ☑️ Step ?. ❖ Part A review. </h3>
 
-The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/part_A.js).
+The complete code for Part A is available [here](https://github.com/rooftop-media/ktty-tutorial/blob/main/version2.0/part_A.js).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
 
 
 
-<h2 id="part-b" align="center">  Part B:   Syntax Highlighting </h2>
+<h2 id="part-b" align="center">  Part B:    </h2>
 
 <br/><br/><br/><br/>
 
