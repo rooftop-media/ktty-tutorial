@@ -160,9 +160,148 @@ Unfortunately, it's also blocking the first line of our file.  We'll fix that in
 
 <h3 id="a-4"> ☑️ Step 4. Editing <code>Buffer</code>  </h3>
 
+We'll make three changes to the buffer. 
+ - We'll update the Buffer's `draw` function, to account for the menu bar. This includes:
+   - Drawing the buffer text one line lower.
+   - Stopping the overflow text one line higher.
+ - We'll update the `get_cursor_coords` function to position the cursor correctly. 
+ - We'll add the `ESC` key event, to shift the focus to the MenuBar.
+
+```javascript
+var Buffer = {
+    text:         "",
+    filename:     "",
+    modified:     false,
+    cursor_pos:   0,
+    scroll_pos:   0,
+    actions_history:      [],
+    undo_count:   0,
+
+    focus:             Buffer_focus,
+    load_file:         Buffer_load_file,
+    get_cursor_coords: Buffer_get_cursor_coords,
+    draw:              Buffer_draw,
+
+    events:            {
+        "CTRL-C":     function() {  Window.quit()  },
+
+        "LEFT":       Buffer_move_cursor_left,
+        "RIGHT":      Buffer_move_cursor_right,
+        "UP":         Buffer_move_cursor_up,
+        "DOWN":       Buffer_move_cursor_down,
+
+        "TEXT":       function(key) {  Buffer_add_to_text(key, true);   },
+        "ENTER":      function()    {  Buffer_add_to_text("\n", true);  },
+        "BACKSPACE":  function()    {  Buffer_delete_from_text(true)    },
+
+        "CTRL-S":     Buffer_save_to_file,
+
+        "CTRL-Z":     Buffer_undo,                                                                                                                           
+        "CTRL-Y":     Buffer_redo, 
+
+        "ESC":        function()     {  MenuBar.focus();  },
+    }
+  
+};
+
+/**  Other buffer functions  **/
+
+function Buffer_get_cursor_coords() {            /**  Returns a 2 index array, [int line, int char]           **/
+
+    var cursor_coords = [2,1];                      //  line, char coord of cursor
+    for (var i = 0; i < this.cursor_pos; i++) {  //  Loop through the buffer to count \n's  
+
+        var current = this.text[i];
+        if (current == "\n" || cursor_coords[1] >= Window.width - 1) {
+            cursor_coords[0]++;        /**  Advance a line.        **/
+	          cursor_coords[1] = 1;      /**  Reset character pos.   **/
+	      } else {
+            cursor_coords[1]++;        /**  Advance a character.   **/
+        }
+    }
+    
+    cursor_coords[0] -= Buffer.scroll_pos;
+    if (cursor_coords[0] <= 0) {
+        Buffer.scroll_pos--;
+	      return Buffer.get_cursor_coords();
+    } else if (cursor_coords[0] > Window.height - 3) {
+        Buffer.scroll_pos++;
+	      return Buffer.get_cursor_coords();
+    } else {
+    	  return cursor_coords;
+    }
+
+}
+function Buffer_draw() {
+
+    console.clear();
+    process.stdout.write("\x1b[2;0H");   /**  Moving down one line to account for the menu bar.  **/
+    var buff_lines = this.text.split("\n");
+    var overflow   = 0;
+
+    for (var i = 0; i < buff_lines.length; i++) {
+        var line = buff_lines[i];
+        var overflow_lines = [];
+        while (line.length > Window.width) {                          /**  This WHILE loop breaks down any lines that overflow Window.width.   **/     
+            overflow++;
+            var line_part = line.slice(0, Window.width - 1);
+            overflow_lines.push(line_part);
+            line = line.slice(Window.width - 1, line.length);
+        }
+	
+        if (
+            i >= this.scroll_pos - overflow &&               /* Start drawing at the line at scroll_pos - overflow */
+            i < (Window.height + this.scroll_pos - overflow - 4) /* Stop drawing at the window height plus this offset. */
+           ) {  
+            for (var j = 0; j < overflow_lines.length; j++) {
+                console.log(overflow_lines[j] + "\x1b[2m\\\x1b[0m");   /**  Dim, add "\", undim   **/
+            }
+            console.log(line);
+        }
+    }
+}
+```
 
 
 <br/><br/><br/><br/>
+
+
+
+<h3 id="a-5"> ☑️ Step 5. Editing <code>Keyboard</code>  </h3>
+
+We'll also need to update the Keyboard object's "event names" to include the `ESC` key. 
+
+```javascript
+//  The keyboard.
+var Keyboard = {
+    focus_item:    Buffer,
+    cursor_coords: [0, 0],        /*  Cursor position coordinates: line, char */
+
+    event_names: {
+        "\u001b[A": "UP",
+        "\u001b[B": "DOWN",
+        "\u001b[C": "RIGHT",
+        "\u001b[D": "LEFT",
+        "\u007f":   "BACKSPACE",
+        "\u0008":   "BACKSPACE",  /*  for powershell  */
+        "\u000D":   "ENTER",
+        "\u0003":   "CTRL-C",
+        "\u0013":   "CTRL-S",
+        "\u001a":   "CTRL-Z",
+        "\u0019":   "CTRL-Y",
+        "\u001b":   "ESC",
+    },
+  
+    position_cursor: function() {
+        process.stdout.write("\x1b[" + this.cursor_coords[0] + ";" + this.cursor_coords[1] + "f");
+    },
+    map_events: Keyboard_map_events
+  
+};
+```
+
+<br/><br/><br/><br/>
+
 
 
 
