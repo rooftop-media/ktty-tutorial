@@ -160,11 +160,13 @@ Unfortunately, it's also blocking the first line of our file.  We'll fix that in
 
 <h3 id="a-4"> ☑️ Step 4. Editing <code>Buffer</code>  </h3>
 
-We'll make three changes to the buffer. 
+We'll change the Buffer object in three places: 
  - We'll update the Buffer's `draw` function, to account for the menu bar. This includes:
    - Drawing the buffer text one line lower.
    - Stopping the overflow text one line higher.
- - We'll update the `get_cursor_coords` function to position the cursor correctly. 
+ - We'll update the `get_cursor_coords` function, including:
+   - Starting the cursor at [2,1] instead of [1,1]
+   - Scrolling up when the cursor is equal to 1, instead of 0
  - We'll add the `ESC` key event, to shift the focus to the MenuBar.
 
 ```javascript
