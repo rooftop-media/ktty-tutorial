@@ -88,6 +88,7 @@ var MenuBar = {
         "RIGHT":      MenuBar_move_cursor_right,
 
         "ENTER":      function()    {  MenuBar.confirm_event();  },
+	"ESC":        function()    {  Buffer.focus();  },
     }
 }
 function MenuBar_draw() {
