@@ -111,16 +111,22 @@ function MenuBar_draw() {
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 function MenuBar_focus() {
-
+    Keyboard.focus_item = this;
+    FeedbackBar.text = "Focusing on the menu bar";
 }
 function MenuBar_get_cursor_coords() {
-
+    return [0,0];
 }
 function MenuBar_move_cursor_left() {
-
+    if (MenuBar.cursor_x > 0) {
+        MenuBar.cursor_x--;
+    }
 }
 function MenuBar_move_cursor_right() {
-
+    var options = Object.keys(MenuBar.options);
+    if (MenuBar.cursor_x < options.length) {
+        MenuBar.cursor_x++;
+    }
 }
 ```
 
