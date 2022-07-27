@@ -92,16 +92,21 @@ var MenuBar = {
     }
 }
 function MenuBar_draw() {
-    if (Keyboard.focus_item !== this) {
-        process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
-    }
-    process.stdout.write("\x1b[7m");                               /**  Reverse video.                    **/
+    
+    process.stdout.write("\x1b[47m");                              /**  White background.                    **/
+    process.stdout.write("\x1b[30m");                              /**  Black text.                    **/
 
     process.stdout.write("\x1b[1;0H");                             /**  Moving to the top row.         **/
     var menuBarText = " ktty   ";
     var menuOpts = Object.keys(MenuBar.options);
     for (var i = 0; i < menuOpts.length; i++) {
-        menuBarText += menuOpts[i] + "   ";
+        if (Keyboard.focus_item == this && i == MenuBar.cursor_x) {
+            menuBarText += "\x1b[44m\x1b[37m"; 
+            menuBarText += menuOpts[i] + "   ";
+            menuBarText += "\x1b[47m\x1b[30m"; 
+        } else {
+            menuBarText += menuOpts[i] + "   ";
+        }
     }
     process.stdout.write(menuBarText)
     for (var i = menuBarText.length; i < Window.width; i++) {
