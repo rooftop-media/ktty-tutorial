@@ -54,18 +54,18 @@ var MenuBar = {
 
     options: {
         "file": {
-            "save": function() {},
-            "save as...": function() {},
-            "quit": function() {},
+            "save       ctrl-s": function() { Buffer_save_to_file(); },
+            "save as... ": function() {},
+            "quit       ctrl-c": function() { Window_quit(); },
         },
         "edit": {
             "copy": function() {},
-            "cut": function() {},
-            "paste": function() {},
-            "undo": function() {},
-            "redo": function() {},
-            "find": function() {},
-            "replace": function() {},
+            "cut        ctrl-x": function() {},
+            "paste      ctrl-v": function() {},
+            "undo       ctrl-z": function() { Buffer_undo(); },
+            "redo       ctrl-y": function() { Buffer_redo(); },
+            "find       ctrl-f": function() {},
+            "replace    ctrl-r": function() {},
         },
         "view": {
             "file type >": {
@@ -86,9 +86,11 @@ var MenuBar = {
 
         "LEFT":       MenuBar_move_cursor_left,
         "RIGHT":      MenuBar_move_cursor_right,
+        "UP":         MenuBar_move_cursor_up,
+        "DOWN":       MenuBar_move_cursor_down,
 
         "ENTER":      function()    {  MenuBar.confirm_event();  },
-	"ESC":        function()    {  Buffer.focus();  },
+        "ESC":        function()    {  Buffer.focus();  },
     }
 }
 function MenuBar_draw() {
@@ -100,7 +102,11 @@ function MenuBar_draw() {
     var menuBarText = " ktty   ";
     var menuOpts = Object.keys(MenuBar.options);
     for (var i = 0; i < menuOpts.length; i++) {
-        if (Keyboard.focus_item == this && i == MenuBar.cursor_x) {
+        if (
+            Keyboard.focus_item == this && 
+            i == MenuBar.cursor_x &&
+            MenuBar.cursor_y == 0
+           ) {
             menuBarText += "\x1b[44m\x1b[37m"; 
             menuBarText += menuOpts[i] + "   ";
             menuBarText += "\x1b[47m\x1b[30m"; 
@@ -113,24 +119,88 @@ function MenuBar_draw() {
         process.stdout.write(" ");
     }
 
+    if (Keyboard.focus_item != MenuBar) {
+        process.stdout.write("\x1b[0m"); 
+        return;
+    }
+
+    //  Drawing the current dropdown menu
+    var row_num = 9;
+    for (var x = 0; x < MenuBar.cursor_x; x++) {
+        row_num += menuOpts[x].length + 3
+    }
+    var subMenu = MenuBar.options[menuOpts[MenuBar.cursor_x]];
+    var subMenuOpts = Object.keys(subMenu);
+    for (var i = 0; i < subMenuOpts.length; i++) {
+        process.stdout.write("\x1b[" + (i+2) + ";" + row_num + "H");
+        if (MenuBar.cursor_y - 1 == i) {
+            process.stdout.write("\x1b[44m\x1b[37m");
+            process.stdout.write(subMenuOpts[i]);
+        } else {
+            process.stdout.write(subMenuOpts[i]);
+        }
+        
+        for (var y = subMenuOpts[i].length; y < 20; y++) {
+            process.stdout.write(" ");
+        }
+        if (MenuBar.cursor_y - 1 == i) {
+            process.stdout.write("\x1b[47m\x1b[30m");
+        }
+    }
+
     process.stdout.write("\x1b[0m");                               /**  Back to undim text.               **/
 }
 function MenuBar_focus() {
     Keyboard.focus_item = this;
+    MenuBar.cursor_x = 0;
+    MenuBar.cursor_y = 0;
     FeedbackBar.text = "Focusing on the menu bar";
 }
 function MenuBar_get_cursor_coords() {
-    return [0,0];
+    var options = Object.keys(MenuBar.options);
+    var row_num = 9;
+    for (var x = 0; x < MenuBar.cursor_x; x++) {
+        row_num += options[x].length + 3
+    }
+    return [MenuBar.cursor_y+1,row_num];
 }
 function MenuBar_move_cursor_left() {
     if (MenuBar.cursor_x > 0) {
         MenuBar.cursor_x--;
+        MenuBar.cursor_y = 0;
     }
 }
 function MenuBar_move_cursor_right() {
     var options = Object.keys(MenuBar.options);
-    if (MenuBar.cursor_x < options.length) {
+    if (MenuBar.cursor_x < options.length - 1) {
         MenuBar.cursor_x++;
+        MenuBar.cursor_y = 0;
+    }
+}
+function MenuBar_move_cursor_up() {
+    if (MenuBar.cursor_y > 0) {
+        MenuBar.cursor_y--;
+    }
+    if (MenuBar.cursor_y > 0) {
+        var options = Object.keys(MenuBar.options);
+        var subMenu = MenuBar.options[options[MenuBar.cursor_x]];
+        var subMenuOpts = Object.keys(subMenu);
+        MenuBar.confirm_event = subMenu[subMenuOpts[MenuBar.cursor_y-1]];
+    } else {
+        MenuBar.confirmEvent = function() {};
+    }
+}
+function MenuBar_move_cursor_down() {
+    var options = Object.keys(MenuBar.options);
+    var subMenu = MenuBar.options[options[MenuBar.cursor_x]];
+    var subMenuOpts = Object.keys(subMenu);
+    if (MenuBar.cursor_y < subMenuOpts.length) {
+        MenuBar.cursor_y++;
+    }
+    if (MenuBar.cursor_y > 0) {
+        MenuBar.confirm_event = subMenu[subMenuOpts[MenuBar.cursor_y-1]];
+    } else {
+        MenuBar.confirmEvent = function() {};
     }
 }
 ```
@@ -315,6 +385,12 @@ var Keyboard = {
 ```
 
 <br/><br/><br/><br/>
+
+
+<h3 id="a-6"> ☑️ Step 6. ☞ Test the code!  </h3>
+
+<br/><br/><br/><br/>
+
 
 
 
