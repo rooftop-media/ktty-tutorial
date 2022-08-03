@@ -2,6 +2,8 @@
 
 If you want to build kTTY using nodeJS, start here.
 
+This code follows a NodeJS [style guide](https://github.com/felixge/node-style-guide) created by Felix Geisendörfer.
+
 <br/><br/><br/><br/>
 
 
