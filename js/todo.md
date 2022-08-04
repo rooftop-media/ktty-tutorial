@@ -1,2 +1,3 @@
  - [ ] Move the buffer's scroll functionality to its own function, for clearer labelling.
  - [ ] Make access functions for MenuBar submenus and submenu items
+ - [ ] Issue in part H where the cursor is offset when skipping a line that overflows, when the overflow matches the terminal width. 
