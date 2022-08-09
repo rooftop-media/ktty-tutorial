@@ -3064,6 +3064,13 @@ The complete code for Part H is available [here](https://github.com/rooftop-medi
 
 
 
+<h2 id="v2" align="center">  Version 2: The Menu Bar </h2>
+
+With this section complete, you're ready to move on to the tutorial for [version 2.0](https://github.com/rooftop-media/ktty-tutorial/edit/main/js/version2.0/tutorial.md)!
+
+<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
 
 
 
