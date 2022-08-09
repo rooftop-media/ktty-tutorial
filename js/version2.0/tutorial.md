@@ -6,7 +6,7 @@
 
 ##  Prerequisites
 
-This tutorial requires that you've completed the [version 1.0 tutorial](https://github.com/rooftop-media/ktty-tutorial/blob/main/version1.0/tutorial.md).
+This tutorial requires that you've completed the [version 1.0 tutorial](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md).
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
