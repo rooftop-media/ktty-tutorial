@@ -4,16 +4,16 @@
 ////  SECTION 1:  Imports.
 
 //  Importing NodeJS libraries. 
-var process      = require("process");
-var fs           = require("fs");
+var process      = require('process');
+var fs           = require('fs');
 
 
 
 ////  SECTION 2:  App memory. 
 
 //  Setting up app memory.
-var _buffer            = "";      //  The text being edited. 
-var _filename          = "";      //  Filename - including extension. 
+var _buffer            = '';      //  The text being edited. 
+var _filename          = '';      //  Filename - including extension. 
 
 
 
@@ -48,10 +48,10 @@ function map_events() {
     var stdin = process.stdin;
     stdin.setRawMode(true);
     stdin.resume();
-    stdin.setEncoding("utf8");
-    stdin.on("data", function(key) {
+    stdin.setEncoding('utf8');
+    stdin.on('data', function(key) {
 	    //  Exit on ctrl-c
-	    if (key === "\u0003") {
+	    if (key === '\u0003') {
 		b_quit();
 	    }
 	    process.stdout.write(key);
