@@ -84,7 +84,7 @@ function draw_buffer() {
 function a_load_file_to_buffer() {       /**  Get the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
-        _buffer = "";
+        _buffer = '';
     } else {
         try {
             _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
