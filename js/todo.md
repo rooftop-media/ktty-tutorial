@@ -1,5 +1,10 @@
- - [ ] Finish V2 part A by adding undo and redo to the menu bar
+ - [x] Finish V2 part A by adding undo and redo to the menu bar
  - [ ] Move the buffer's scroll functionality to its own function, for clearer labelling.
- - [ ] Make access functions for MenuBar submenus and submenu items
+   - Currently in `Buffer_get_cursor_coords`, from part G
+ - [ ] ~~Make access functions for MenuBar submenus and submenu items~~
  - [ ] Issue in part H where the cursor is offset when skipping a line that overflows, when the overflow matches the terminal width. 
  - [ ] Fix v1 to comply with the NodeJS style guide
+   - [ ] Single quote strings
+   - [ ] Naming conventions?
+   - [ ] Triple === sign?
+   - [ ] Write small functions
