@@ -8,7 +8,10 @@ Javascript is a scripting language used by web browsers. I find it fairly easy t
 NodeJS lets you use Javascript outside of the web browser, to interact with our computer's files and text terminal, instead of browser pages.
 
 NodeJS has some [nice documentation](https://nodejs.org/en/docs/).  
-This code follows a NodeJS [style guide](https://github.com/felixge/node-style-guide) created by Felix Geisendörfer.
+This code follows a NodeJS [style guide](https://github.com/felixge/node-style-guide) created by Felix Geisendörfer.  
+The two style rules I struggle with most, and break on occasion, are:
+ - Always use single quotes for strings.
+ - Limit functions to 15-20 lines of code. 
 
 <br/><br/><br/><br/>
 
