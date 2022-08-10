@@ -41,7 +41,7 @@ Click a part title to jump down to it, in this file.
 
 <h2 id="part-a" align="center">  Part A:  Drawing the Buffer </h2>
 
-The steps in this part will culminate in us displaying the text file on the screen, along with controls to move and type.  
+The steps in Part A will culminate in us displaying the text file on the screen, along with controls to move and type.  
 
 Along the way, we’ll break the code into 6 code sections with comments, and add some code to each section.  
 
@@ -80,7 +80,7 @@ Our goal will be to open & edit this file with ktty.
 
 Let’s go into ktty.js and add some comments to plan our architecture.  
 
-Delete the 2nd line, which was  `console.log("Starting ktty!");`.  
+Delete the 2nd line, which was  `console.log('Starting ktty!');`.  
 We’ll outline 6 sections. Here’s what we’ll write:
 
 ```javascript
@@ -114,8 +114,8 @@ We’ll import two standard libraries from NodeJS.  That’s all for the imports
 ////  SECTION 1:  Imports.
 
 //  Importing NodeJS libraries.
-var process      = require("process");
-var fs           = require("fs");
+var process      = require('process');
+var fs           = require('fs');
 ```
 
 <br/><br/><br/><br/>
@@ -137,8 +137,8 @@ We’ll also record another string of text, the `_filename` being edited.
 ////  SECTION 2:  APP MEMORY
 
 //  Setting up app memory.
-var _buffer            = "";      //  The text being edited. 
-var _filename          = "";      //  Filename - including extension. 
+var _buffer            = '';      //  The text being edited. 
+var _filename          = '';      //  Filename - including extension. 
 ```
 
 <br/><br/><br/><br/>
@@ -196,7 +196,7 @@ We’ll implement it in section 6 of our code, with the algorithms.
 function a_load_file_to_buffer() {
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
-        _buffer = "";
+        _buffer = '';
     } else {
         try {
             _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
@@ -269,10 +269,10 @@ function map_events() {
 	var stdin = process.stdin;
 	stdin.setRawMode(true);
 	stdin.resume();
-	stdin.setEncoding("utf8");
-	stdin.on("data", function(key) {
+	stdin.setEncoding('utf8');
+	stdin.on('data', function(key) {
 		//  Exit on ctrl-c
-		if (key === "\u0003") {
+		if (key === '\u0003') {
 			b_quit();
 		}
 		process.stdout.write(key);
@@ -354,8 +354,8 @@ the `_cursor_buffer_pos`, and the window height and width.
 ////  SECTION 2:  APP MEMORY
 
 //  Setting up app memory.
-var _buffer            = "";      //  The text being edited.
-var _filename          = "";      //  Filename - including extension.
+var _buffer            = '';      //  The text being edited.
+var _filename          = '';      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
@@ -459,26 +459,26 @@ function draw_buffer() { ... }
 //  Drawing the file's status bar -- filename, modified status, and cursor position. 
 function draw_status_bar() {
 
-    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
-    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
+    process.stdout.write('\x1b[' + (_window_h - 2) + ';0H');   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write('\x1b[7m');                           /**  Reverse video.                    **/
 
-    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
+    var status_bar_text = '  ' + _filename;                    /**  Add the filename                  **/
     if (_modified) {                                           /**  Add the [modified] indicator.     **/
-        status_bar_text += "     [modified]";
+        status_bar_text += '     [modified]';
     } else {
-        status_bar_text += "               ";
+        status_bar_text += '               ';
     }
 
     var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
-    status_bar_text += "  cursor on line " + cursor_position[0];
-    status_bar_text += ", row " + cursor_position[1];
+    status_bar_text += '  cursor on line ' + cursor_position[0];
+    status_bar_text += ', row ' + cursor_position[1];
 
     while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
-        status_bar_text += " ";
+        status_bar_text += ' ';
     }
 
     process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
-    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+    process.stdout.write('\x1b[0m');                           /**  No more reverse video.            **/
 }
 ```
 
@@ -510,7 +510,7 @@ function d_get_cursor_pos() {            //  Returns a 2 index array, [int line,
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
 
 	var current = _buffer[i];
-        if (current == "\n") {
+        if (current == '\n') {
             cursor_position[0]++;        /**  Advance a line.        **/
             cursor_position[1] = 1;      /**  Reset character pos.   **/
         } else {
@@ -572,7 +572,7 @@ function draw_status_bar() {  ...  }
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
     var cursor_position = d_get_cursor_pos(); //  d_get_cursor_pos is an algorithm.
-    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+    process.stdout.write('\x1b[' + cursor_position[0] + ';' + cursor_position[1] + 'f');
 }
 ```
 <br/><br/><br/><br/>
@@ -624,12 +624,12 @@ It will store a string of text.
 ////  SECTION 2:  APP MEMORY
 
 //  Setting up app memory. 
-var _buffer            = "";      //  The text being edited. 
-var _filename          = "";      //  Filename - including extension.
+var _buffer            = '';      //  The text being edited. 
+var _filename          = '';      //  Filename - including extension.
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
-var _feedback_bar      = "";      //  The text to display in the feedback bar.
+var _feedback_bar      = '';      //  The text to display in the feedback bar.
 
 var _window_h          = 0;       //  Window height (in text char's). 
 var _window_w          = 0;       //  Window width (in text char's).
@@ -647,16 +647,16 @@ In our events section, we'll make a dictionary to rename such codes...
 ////  SECTION 4:  EVENTS 
 
 //  A dictionary naming some special keys.
-var _event_names = {            /**     L: Keycodes represented as strings, escaped with "\u".   R: Event names!   **/
-  "\u001b[A": "UP",
-  "\u001b[B": "DOWN",
-  "\u001b[C": "RIGHT",
-  "\u001b[D": "LEFT",
-  "\u007f": "BACKSPACE",
-  "\u0008": "BACKSPACE",        /**     For powershell.   **/
-  "\u000D": "ENTER",
-  "\u0003": "CTRL-C",
-  "\u0013": "CTRL-S",
+var _event_names = {            /**     L: Keycodes represented as strings, escaped with '\u'.   R: Event names!   **/
+  '\u001b[A': 'UP',
+  '\u001b[B': 'DOWN',
+  '\u001b[C': 'RIGHT',
+  '\u001b[D': 'LEFT',
+  '\u007f': 'BACKSPACE',
+  '\u0008': 'BACKSPACE',        /**     For powershell.   **/
+  '\u000D': 'ENTER',
+  '\u0003': 'CTRL-C',
+  '\u0013': 'CTRL-S',
 };
 
 function map_events() { ... }
@@ -678,23 +678,23 @@ For now, we'll leave a lot of the event function calls commented out.
 
 var _event_names = { ... }
 
-//  These functions fire in response to "events" like keyboard input. 
+//  These functions fire in response to 'events' like keyboard input. 
 var _events      = {
-    "CTRL-C":     b_quit,
+    'CTRL-C':     b_quit,
 
-    "LEFT":       e_move_cursor_left,
-    "RIGHT":      f_move_cursor_right,
-    "UP":         g_move_cursor_up,
-    "DOWN":       h_move_cursor_down,
+    'LEFT':       e_move_cursor_left,
+    'RIGHT':      f_move_cursor_right,
+    'UP':         g_move_cursor_up,
+    'DOWN':       h_move_cursor_down,
 
-    // "TEXT":       function(key) {  i_add_to_buffer(key);   },
-    // "ENTER":      function()    {  i_add_to_buffer("\n");  },
-    // "BACKSPACE":  j_delete_from_buffer,  
+    // 'TEXT':       function(key) {  i_add_to_buffer(key);   },
+    // 'ENTER':      function()    {  i_add_to_buffer('\n');  },
+    // 'BACKSPACE':  j_delete_from_buffer,  
 
-    // "CTRL-S":     k_save_buffer_to_file, 
+    // 'CTRL-S':     k_save_buffer_to_file, 
 
-    // "CTRL-Z":     p_undo, 
-    // "CTRL-R":     q_redo,   
+    // 'CTRL-Z':     p_undo, 
+    // 'CTRL-R':     q_redo,   
 };
 
 function map_events() { ... }
@@ -726,12 +726,12 @@ function map_events() {
     stdin.setEncoding( 'utf8' );
     stdin.on( 'data', function( key ){
 
-	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like "CTRL-C" from "\u0003".  **/
+	var event_name = _event_names[key];        /**  Getting the event name from the keycode, like 'CTRL-C' from '\u0003'.  **/
 	
-	if (typeof event_name == "string" && typeof _events[event_name] == "function") {       /**  "CTRL-C", "ENTER", etc     **/
+	if (typeof event_name == 'string' && typeof _events[event_name] == 'function') {       /**  'CTRL-C', 'ENTER', etc     **/
 	    _events[event_name]();
         } else if (key.charCodeAt(0) > 31 && key.charCodeAt(0) < 127) {   /**  Most keys, like letters, call the "TEXT" event.  **/
-	    _events["TEXT"](key);
+	    _events['TEXT'](key);
 	}
 
         draw();                                    /**  Redraw the whole screen on any keypress.                               **/
@@ -754,7 +754,7 @@ function e_move_cursor_left() {
     if ( _cursor_buffer_pos < 0 ) {      /**   Don't let the cursor position be negative.         **/
         _cursor_buffer_pos++;
     } else {
-        _feedback_bar = "Moved left.";
+        _feedback_bar = 'Moved left.';
     }
 
 }
@@ -776,7 +776,7 @@ function f_move_cursor_right() {
     if ( _cursor_buffer_pos > buff_limit ) {
         _cursor_buffer_pos--;
     } else {
-        _feedback_bar = "Moved right.";
+        _feedback_bar = 'Moved right.';
     }
 
 }
@@ -820,7 +820,7 @@ function g_move_cursor_up() {
     var current_x_pos = 1;               /**   To find the xpos of the cursor on the current line.   **/
     var prev_line_length = -1;           /**   To find the length of the *prev* line, to jump back.  **/
     for (var i = 0; i < _cursor_buffer_pos; i++ ) {
-        if (_buffer[i] == "\n") {
+        if (_buffer[i] == '\n') {
             prev_line_length = current_x_pos;
             current_x_pos = 1;
         } else {
@@ -838,7 +838,7 @@ function g_move_cursor_up() {
         _cursor_buffer_pos -= current_x_pos;
     }
 
-    _feedback_bar = "Moved up.";
+    _feedback_bar = 'Moved up.';
 
 }
 ```
@@ -870,14 +870,14 @@ function h_move_cursor_down() {
     for (var i = 0; i < _buffer.length; i++ ) {
     
     	if ( i < _cursor_buffer_pos ) {      /**    1. Get current_x_pos           **/
-            if (_buffer[i] == "\n") {
+            if (_buffer[i] == '\n') {
                 current_x_pos = 1;
             } else {
                 current_x_pos++;
             }
 	    
 	} else if ( !found_line_start ) {    /**    2. Get current_line_length     **/
-	    if (_buffer[i] == "\n") {
+	    if (_buffer[i] == '\n') {
 	    	current_line_length += current_x_pos;
 	        found_line_start = true;
 	    }
@@ -886,7 +886,7 @@ function h_move_cursor_down() {
 	    }
 	    
 	} else if ( found_line_start ) {     /**    3. Get next_line_length        **/
-	    if (_buffer[i] == "\n") {
+	    if (_buffer[i] == '\n') {
 	        break;   // Exit for loop early 
 	    } else {
 	        next_line_length++;
@@ -910,7 +910,7 @@ function h_move_cursor_down() {
     if ( _cursor_buffer_pos > buff_limit ) {
         _cursor_buffer_pos--;
     } else {
-        _feedback_bar = "Moved down.";
+        _feedback_bar = 'Moved down.';
     }
 
 }
@@ -964,11 +964,11 @@ function position_cursor() {  ...  }
 
 //  Drawing the feedback bar.
 function draw_feedback_bar() {
-    process.stdout.write("\x1b[2m");                           /**  Dim text.                         **/
-    process.stdout.write("\x1b[" + (_window_h - 1) + ";0H");   /**  Moving to the bottom row.         **/
+    process.stdout.write('\x1b[2m');                           /**  Dim text.                         **/
+    process.stdout.write('\x1b[' + (_window_h - 1) + ';0H');   /**  Moving to the bottom row.         **/
     process.stdout.write(_feedback_bar);
-    _feedback_bar = "";
-    process.stdout.write("\x1b[0m");                           /**  Back to undim text.               **/
+    _feedback_bar = '';
+    process.stdout.write('\x1b[0m');                           /**  Back to undim text.               **/
 }
 ```
 <br/><br/><br/><br/>
