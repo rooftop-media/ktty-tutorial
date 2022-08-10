@@ -4,16 +4,16 @@
 ////  SECTION 1:  Imports.
 
 //  Importing NodeJS libraries. 
-var process      = require("process");
-var fs           = require("fs");
+var process      = require('process');
+var fs           = require('fs');
 
 
 
 ////  SECTION 2:  App memory. 
 
 //  Setting up app memory.
-var _buffer            = "";      //  The text being edited. 
-var _filename          = "";      //  Filename - including extension. 
+var _buffer            = '';      //  The text being edited. 
+var _filename          = '';      //  Filename - including extension. 
 var _modified          = false;   //  Has the buffer been modified?
 var _cursor_buffer_pos = 0;       //  The position of the cursor in the text.
 
@@ -53,10 +53,10 @@ function map_events() {
     var stdin = process.stdin;
     stdin.setRawMode(true);
     stdin.resume();
-    stdin.setEncoding("utf8");
-    stdin.on("data", function(key) {
+    stdin.setEncoding('utf8');
+    stdin.on('data', function(key) {
 	    //  Exit on ctrl-c
-	    if (key === "\u0003") {
+	    if (key === '\u0003') {
 		b_quit();
 	    }
 	    process.stdout.write(key);
@@ -85,32 +85,32 @@ function draw_buffer() {
 //  Drawing the file's status bar -- filename, modified status, and cursor position. 
 function draw_status_bar() {
 
-    process.stdout.write("\x1b[" + (_window_h - 2) + ";0H");   /**  Moving to the 2nd to bottom row.  **/
-    process.stdout.write("\x1b[7m");                           /**  Reverse video.                    **/
+    process.stdout.write('\x1b[' + (_window_h - 2) + ';0H');   /**  Moving to the 2nd to bottom row.  **/
+    process.stdout.write('\x1b[7m');                           /**  Reverse video.                    **/
 
-    var status_bar_text = "  " + _filename;                    /**  Add the filename                  **/
+    var status_bar_text = '  ' + _filename;                    /**  Add the filename                  **/
     if (_modified) {                                           /**  Add the [modified] indicator.     **/
-        status_bar_text += "     [modified]";
+        status_bar_text += '     [modified]';
     } else {
-        status_bar_text += "               ";
+        status_bar_text += '               ';
     }
 
     var cursor_position = d_get_cursor_pos();                  /**  Using our algorithm d_get_cursor_pos!   **/
-    status_bar_text += "  cursor on line " + cursor_position[0];
-    status_bar_text += ", row " + cursor_position[1];
+    status_bar_text += '  cursor on line ' + cursor_position[0];
+    status_bar_text += ', row ' + cursor_position[1];
 
     while (status_bar_text.length < _window_w) {               /**  Padding it with whitespace.       **/
-        status_bar_text += " ";
+        status_bar_text += ' ';
     }
 
     process.stdout.write(status_bar_text);                     /**  Output the status bar string.     **/
-    process.stdout.write("\x1b[0m");                           /**  No more reverse video.            **/
+    process.stdout.write('\x1b[0m');                           /**  No more reverse video.            **/
 }
 
 //  Move the cursor to its position in the buffer.   
 function position_cursor() {
     var cursor_position = d_get_cursor_pos(); //  d_get_cursor_pos is an algorithm.
-    process.stdout.write("\x1b[" + cursor_position[0] + ";" + cursor_position[1] + "f");
+    process.stdout.write('\x1b[' + cursor_position[0] + ';' + cursor_position[1] + 'f');
 }
 
 
@@ -120,7 +120,7 @@ function position_cursor() {
 function a_load_file_to_buffer() {       /**  Get the file's contents, put it in the "buffer".    **/
     _filename = process.argv[2]; 
     if ( _filename == undefined ) {
-        _buffer = "";
+        _buffer = '';
     } else {
         try {
             _buffer = fs.readFileSync( _filename, {encoding: 'utf8'} );
@@ -146,7 +146,7 @@ function d_get_cursor_pos() {            /**  Returns a 2 index array, [int line
     for (var i = 0; i < _cursor_buffer_pos; i++) {  //  Loop through the buffer to count \n's
 
 	var current = _buffer[i];
-        if (current == "\n") {
+        if (current == '\n') {
             cursor_position[0]++;        /**  Advance a line.        **/
             cursor_position[1] = 1;      /**  Reset character pos.   **/
         } else {
