@@ -2,7 +2,7 @@
 
 If you want to build kTTY using nodeJS, start here.
 
-[NodeJS] is a free, open source Javascript runtime environment.  
+[NodeJS](https://en.wikipedia.org/wiki/Node.js) is a free, open source Javascript runtime environment.  
 
 Javascript is a scripting language used by web browsers. I find it fairly easy to understand, which is why I'm using it. 
 NodeJS lets you use Javascript outside of the web browser, to interact with our computer's files and text terminal, instead of browser pages.
