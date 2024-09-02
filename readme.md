@@ -27,6 +27,11 @@ Each tutorial is organized into 2 stable, usable **versions** -- version 1.0 and
   <th>Approx. length</th>
  </tr>
  <tr>
+  <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/js/setup.md">Setup </a></td>
+  <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/cpp/setup.md">Setup</a></td>
+  <td></td>
+  <td></td>
+ <tr>
   <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md">v1.0</a></td>
   <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/cpp/version1.0/tutorial.md">v1.0</a></td>
   <td>Text editor basics</td>
