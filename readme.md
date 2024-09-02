@@ -17,12 +17,30 @@ Ktty is a text editor app for text terminals.  You can see the finished code [he
 You can build kTTY using either NodeJS, or c++.  There are two separate tutorials for this,
 which both create the same end product. 
 
-Each tutorial is organized into 3 stable, usable **versions** -- version 1.0, 2.0, and 3.0.   
-| Version                                                                                        | Topic              | Approx. length  |
-|------------------------------------------------------------------------------------------------|--------------------|-----------------|
-| [v1.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md)    | Text editor basics | 2 hours 15 min. |
-| [v2.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version2.0/tutorial.md)    | Fancy features     | Not finished    |
-| [v3.0.](https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version3.0/tutorial.md)    | Email client!      | Not started     |
+Each tutorial is organized into 2 stable, usable **versions** -- version 1.0 and 2.0.   
+
+<table>
+ <tr>
+  <th>JS</th>
+  <th>C++</th>
+  <th>Topic</th>
+  <th>Approx. length</th>
+ </tr>
+ <tr>
+  <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version1.0/tutorial.md">v1.0</a></td>
+  <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/cpp/version1.0/tutorial.md">v1.0</a></td>
+  <td>Text editor basics</td>
+  <td>2 hours 15 min.</td>
+ </tr>
+ <tr>
+  <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/js/version2.0/tutorial.md">v2.0</a></td>
+  <td><a href="https://github.com/rooftop-media/ktty-tutorial/blob/main/cpp/version2.0/tutorial.md">v2.0</a></td>
+  <td>Fancy features</td>
+  <td>Not finished</td>
+ </tr>
+ 
+</table>
+
 
 *You can see a bird’s eye view of each version in that version's corresponding tutorial.md.*  
 
