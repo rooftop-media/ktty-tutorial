@@ -8,9 +8,9 @@ If you want to build kTTY using C++, start here.
 
 ##  Initial Steps
 
-☑️ **Step 1**: Find a text terminal app.   
+☑️ **Step 1**: Find a text terminal app on a Linux computer.   
 
-Ktty is a program for text terminal.  You can write it in any text terminal emulator that supports NodeJS. For Mac, I recommend Terminal.app.  For Windows, I recommend Powershell.exe.  
+Ktty is a program for text terminal.  The cpp version is only guaranteed to work on Linux. 
 
 Open your text terminal app.
 
@@ -40,20 +40,21 @@ $ pwd           # Print Working Directory – expected output below.
 
 ☑️ **Step 3**: Create & edit ktty.cpp with a code editor of choice.
 
-With some code editor, like [emacs](https://www.gnu.org/software/emacs/) or [Visual Studio Code](https://code.visualstudio.com/), create a new file in your /ktty/ called `ktty.cpp`.
-We'll add two lines to our file:
+Create a new folder called  `/src/` in the `/ktty` directory.
+
+With some code editor, like [emacs](https://www.gnu.org/software/emacs/) or [Visual Studio Code](https://code.visualstudio.com/), create a new file in /ktty/src/ called `ktty.cpp`.
+We'll add six lines to our file:
 
 ```js
 #include <iostream>
-using namespace std;
 
 int main() {
-  cout << "Starting ktty!\n";
+  std::cout << "Starting ktty!\n";
   return 0;
 } 
 ```
 
-The first two lines import the tools we'll need.
+The first line imports the tools we'll need.
 
 The `main` function will log a message to the terminal console, and then exit the program.
 *This is just to let us know that the script runs successfully – we’ll remove this line later.*
@@ -66,7 +67,7 @@ The `main` function will log a message to the terminal console, and then exit th
 
 To run your C++ code, you'll need to install a C++ compiler. 
 
-If you're using Mac OS or Linux, you probably already have a C++ compiler installed. 
+If you're using ~~Mac OS or~~ Linux, you probably already have a C++ compiler installed. 
 Two C++ compiler commands are `clang` or `g++`.  
 
 If your terminal has either of those commands, you're all set. 
@@ -86,20 +87,40 @@ Make sure the `g++` command is then working.
 
 
 
-☑️ **Step 5**: ☞ Compile and test!
+☑️ **Step 5**: Createa a Makefile
 
-In your terminal, in the `ktty` file, enter this to compile the file: 
+Create another file, directly in the `ktty/` folder, called `Makefile`. Add this: 
 
-`g++ ./ktty.cpp`
+```
+all: src/*.cpp
+	@echo "🚧 Building..."
+	g++ ./src/app.cpp -o ./bin/main
 
-This will generate an executable file called `a.out`. 
-Run it by entering `./a.out`. 
+run: clean all
+#	clear
+	@echo "🚀 Executing..."
+	./bin/main
+
+clean:
+	@echo "🧹 Clearing..."
+	-rm ./bin/*
+```
 
 <br/><br/><br/><br/>
 
 
 
-☑️ **Step 6**: Install `ktty` as a global PATH command.
+☑️ **Step 6**: ☞ Compile and test!
+
+In your terminal, in the `ktty` directory, enter this to compile and run file: 
+
+`make run`
+
+<br/><br/><br/><br/>
+
+
+
+☑️ **Step 7**: Install `ktty` as a global PATH command.
 
 
 This step isn't *strictly* required, for the tutorial, as you can run the ktty file with g++.  
@@ -111,6 +132,6 @@ This step isn't *strictly* required, for the tutorial, as you can run the ktty f
 
 
 
-☑️ **Step 7**: The rest of the tutorials.
+☑️ **Step 8**: The rest of the tutorials.
 
 From here, you're ready to start coding [version 1.0](https://github.com/rooftop-media/ktty-tutorial/blob/main/cpp/version1.0/tutorial.md)!
